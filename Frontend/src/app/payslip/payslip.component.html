@@ -1,0 +1,67 @@
+<div class="employee-profile-container">
+  <div class="header-container">
+    <h2 class="table-title">Payslip Upload</h2>
+    <div class="search-wrapper">
+      <input
+        type="text"
+        placeholder="Search employees..."
+        class="search-bar"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="employee-table">
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Select Month</th>
+          <th>Choose File (PDF only)</th>
+          <th>Upload Payslip</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of filteredEmployees">
+          <td>{{ emp.empId }}</td>
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.role }}</td>
+
+          <!-- Select Month dropdown with placeholder -->
+          <td>
+            <select
+              [(ngModel)]="selectedMonths[emp.empId]"
+              class="dropdown"
+            >
+              <option  value="''" disabled selected  >Select Month</option>
+              <option *ngFor="let month of months" [ngValue]="month">{{ month }}</option>
+            </select>
+          </td>
+
+          <!-- File input and bind file change -->
+          <td>
+            <input
+              type="file"
+              accept="application/pdf"
+              class="file-upload"
+              (change)="onFileSelected($event, emp.empId)"
+              #fileInput
+              (click)="registerFileInput(emp.empId, fileInput)"
+            />
+          </td>
+
+          <!-- Upload button -->
+          <td>
+            <button class="edit-btn" (click)="uploadPayslip(emp.empId)">
+              Upload
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

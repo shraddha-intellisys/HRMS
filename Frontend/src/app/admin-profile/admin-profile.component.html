@@ -1,0 +1,73 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="profile-container">
+  <h2 class="title">Admin Profiles</h2>
+
+    <div *ngFor="let profile of profiles; let i = index" class="admin-box">
+    <div class="admin-header">
+    <label class="photo-upload-label" *ngIf="editMode[i]">
+   <div class="profile-photo-wrapper">
+    <img [src]="profilePhotos[i] || defaultPhoto" 
+         alt="Profile Photo" 
+         class="profile-photo" 
+         [class.editable]="editMode[i]" />
+    <div class="photo-overlay">Change Photo</div>
+     </div>
+    <input type="file" 
+         (change)="onPhotoChange($event, i)" 
+         accept="image/*" 
+         style="display: none;" />
+  </label>
+
+<div class="profile-photo-wrapper" *ngIf="!editMode[i]">
+  <img [src]="profilePhotos[i] || defaultPhoto" 
+       alt="Profile Photo" 
+       class="profile-photo" />
+</div>
+
+      
+      <h3 class="admin-name">{{ adminNames[i] }}</h3>
+      
+      <button *ngIf="!editMode[i]" (click)="enableEdit(i)" class="edit-btn">
+        <span class="material-icons">edit</span> Edit
+      </button>
+      <button *ngIf="editMode[i]" (click)="onSave(i)" class="save-btn">
+        <span class="material-icons">save</span> Save
+      </button>
+    </div>
+
+    <form [formGroup]="profile" class="admin-form">
+      <div class="form-group">
+        <label [for]="'email-' + i">Email:</label>
+        <input 
+          [id]="'email-' + i" 
+          type="email" 
+          formControlName="email" 
+          [disabled]="!editMode[i]" 
+        />
+      </div>
+
+      <div class="form-group">
+        <label [for]="'password-' + i">Password:</label>
+        <div class="password-wrapper">
+          <input 
+            [id]="'password-' + i" 
+            [type]="showPassword[i] ? 'text' : 'password'" 
+            formControlName="password" 
+            [disabled]="!editMode[i]" 
+          />
+          <button 
+            type="button" 
+            class="eye-icon"
+            (click)="togglePassword(i)"
+            *ngIf="editMode[i]"
+          >
+            <span class="material-icons">
+              {{ showPassword[i] ? 'visibility_off' : 'visibility' }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

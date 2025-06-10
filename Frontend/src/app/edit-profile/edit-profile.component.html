@@ -1,0 +1,177 @@
+
+
+<div class="navbar">
+  <div class="logo">Intellisys IT Solution Pvt Ltd</div>
+</div>
+
+<div class="employee-container">
+  <!-- Employee header with name and photo -->
+  <div class="employee-image">
+    <img [src]="profileData.imageUrl || 'assets/employee (1).png'" alt="Employee Image" />
+  </div>
+  
+  <div class="employee-header">
+    <!-- Form Starts -->
+    <form #editForm="ngForm" (ngSubmit)="submitprofile(editForm)">
+
+      <!-- Employee name as a headline -->
+      <div class="headline">
+        <input type="text" name="name" [(ngModel)]="profileData.name" placeholder="Enter name" required />
+      </div>
+
+      <!-- Flex container for employee details -->
+      <div class="flex-row">
+        <div class="flex-item">
+          <div class="detail">
+            <label>Employee Code:</label>
+            <input type="text" name="employeeCode" [(ngModel)]="profileData.employeeCode" required />
+          </div>
+          <div class="detail">
+            <label>Location:</label>
+            <input type="text" name="location" [(ngModel)]="profileData.location" />
+          </div>
+        </div>
+
+        <div class="flex-item">
+          <div class="detail">
+            <label>Department:</label>
+            <input type="text" name="department" [(ngModel)]="profileData.department" />
+          </div>
+          <div class="detail">
+            <label>Manager:</label>
+            <input type="text" name="manager" [(ngModel)]="profileData.manager" />
+          </div>
+        </div>
+
+        <div class="flex-item">
+          <div class="detail">
+            <label>Joining Date:</label>
+            <input type="date" name="joiningDate" [(ngModel)]="profileData.joiningDate" />
+          </div>
+          <div class="detail">
+            <label>Salary:</label>
+            <input type="number" name="salary" [(ngModel)]="profileData.salary" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Info Cards -->
+      <div class="card-container">
+        <div class="card">
+          <div class="card-header">PF Applicable</div>
+          <div class="card-body">
+            <label>PF No:</label>
+            <input type="text" name="panNumber" [(ngModel)]="profileData.panNumber" />
+            <label>UAN:</label>
+            <input type="text" name="aadharNumber" [(ngModel)]="profileData.aadharNumber" />
+            <label>Prv Member ID:</label>
+            <input type="text" name="previousMemberId" [(ngModel)]="profileData.previousMemberId" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Pension Applicable</div>
+          <div class="card-body">
+            <label>EPS Joining Date:</label>
+            <input type="date" name="epsJoiningDate" [(ngModel)]="profileData.epsJoiningDate" />
+            <label>EPS Exit Date:</label>
+            <input type="date" name="epsExitDate" [(ngModel)]="profileData.epsExitDate" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Esic Applicable</div>
+          <div class="card-body">
+            <label>ESIC NO:</label>
+            <input type="text" name="esicNo" [(ngModel)]="profileData.esicNo" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">PT Applicable</div>
+          <div class="card-body">
+            <label>EPS NO:</label>
+            <input type="text" name="epsNo" [(ngModel)]="profileData.epsNo" />
+          </div>
+        </div>
+      </div>
+
+      <!-- KYC Details -->
+      <div class="container2">
+        <p><strong>KYC Detail:</strong></p>
+      </div>
+
+      <div class="card-container">
+        <div class="card">
+          <div class="card-header">PAN Number:</div>
+          <div class="card-body">
+            <input type="text" name="kycPan" [(ngModel)]="profileData.panNumber" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Aadhar Number:</div>
+          <div class="card-body">
+            <input type="text" name="kycAadhar" [(ngModel)]="profileData.aadharNumber" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Status -->
+      <div class="container2">
+        <p><strong>Employee Status:</strong></p>
+      </div>
+
+      <div class="card-container">
+        <div class="card">
+          <div class="card-header">Branch:</div>
+          <div class="card-body">
+            <input type="text" name="branch" [(ngModel)]="profileData.branch" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Department:</div>
+          <div class="card-body">
+            <input type="text" name="departmentStatus" [(ngModel)]="profileData.department" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Grade:</div>
+          <div class="card-body">
+            <input type="text" name="grade" [(ngModel)]="profileData.grade" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Designation:</div>
+          <div class="card-body">
+            <input type="text" name="designation" [(ngModel)]="profileData.designation" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Employee Category:</div>
+          <div class="card-body">
+            <input type="text" name="employeeCategory" [(ngModel)]="profileData.employeeCategory" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Project Type:</div>
+          <div class="card-body">
+            <input type="text" name="projectType" [(ngModel)]="profileData.projectType" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button type="submit" [disabled]="editForm.invalid">Submit</button>
+        <button type="button" (click)="canceledit(editForm)">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

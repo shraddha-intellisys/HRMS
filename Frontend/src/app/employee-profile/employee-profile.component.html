@@ -1,0 +1,51 @@
+
+
+<div class="employee-profile-container">
+  <div class="header-container">
+  <div class="header">
+     <h2 class="table-title">Employee List</h2>
+     </div>
+    <div class="search-wrapper">
+      <input
+        type="text"
+        placeholder="Search employee..."
+        [(ngModel)]="searchQuery"
+        class="search-bar"
+      />
+      <span class="search-icon">🔍</span>
+  
+</div>
+   
+  </div>
+
+  <div class="table-responsive">
+    <table class="employee-table">
+      <thead>
+        <tr>
+          <th>Sr No</th>
+          <th>Employee Name</th>
+          <th>EmpID</th>
+          <th>Phone</th>
+          <th>Joining Date</th>
+          <th>Role</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of filteredEmployees">
+          <td> {{ emp.sr }}</td>
+          <td> <a [routerLink]="['/employee', emp.empId]" class="employee-link">{{ emp.name }}</a></td>
+          <td>{{ emp.empId }}</td>
+          <td>{{ emp.phone }}</td>
+          <td>{{ emp.joiningDate }}</td>
+          <td>{{ emp.role }}</td>
+          <td><button class="edit-btn" [routerLink]="['/employee', emp.empId]">Edit</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="add-employee-container">
+  <button class="add-employee-btn" routerLink="/employee">+ Add New Employee</button>
+</div>
+  </div>
+</div>
