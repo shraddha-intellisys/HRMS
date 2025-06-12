@@ -1,7 +1,7 @@
-
 *
 {
   font-family: Arial, sans-serif;
+  
 }
 
 /* Main Container */
@@ -20,9 +20,7 @@
 
 /* Centered Company Name */
 .company-name {
-  position: fixed;
-  left: 56%;
-  transform: translateX(-50%);
+
   font-size: 19px;
   font-weight: bold;
   color: #e3d4d4;
@@ -87,6 +85,8 @@
   align-items: center;
   margin-left: 6px;
   width: 99%;
+  text-align: center;
+  justify-content: center;
 
 }
 
@@ -117,10 +117,14 @@
 }
 
 .welcome-message {
-  margin-left:26%;
-  margin-top: -35px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
   font-size: 16px; /* Slightly smaller font size than heading */
   color: #666;
+}
+.welcome-message p{
+      margin-top: -3%;
 }
 
 .makeflex
@@ -135,6 +139,8 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  text-align: center;
+  justify-content: center;
 }
 
 .employee-img {
@@ -161,6 +167,9 @@
 
 .officelogo {
   flex-shrink: 0;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
   
 }
 
@@ -348,12 +357,14 @@ text-align: center;
   width: 50px;
   height: 50px;
   object-fit: cover;
-  margin-left: 15px;
+  
+   text-align: center;
+  justify-content: center;
 }
 
 
 .content-remind {
-  margin-top: -47%;
+  
   border: 1px solid #dee2e6;
   padding: 20px;
   border-radius: 8px;
@@ -390,8 +401,8 @@ text-align: center;
 .search-container {
   display: flex;
  align-items: center;
-  margin-top: -32px;
-  margin-left: -10%;
+ text-align: center;
+ justify-content: center;
 }
 
 .search-bar {
@@ -424,7 +435,7 @@ text-align: center;
 
 .content-joinee
 {
-  margin-top: -14%;
+ 
   background-color: white;
   border: 1px solid #dee2e6;
   padding: 60px;
@@ -466,7 +477,7 @@ text-align: center;
 
   .employee-info {
     flex-direction: column;
-    align-items: flex-start;
+
   }
 
   .welcome-text h2 {
@@ -540,9 +551,7 @@ text-align: center;
   margin-top: 15%;
  }
 
- .content-feed{
-  margin-top: -66%;
- }
+
 } 
 
 
@@ -564,55 +573,19 @@ text-align: center;
   {
     margin-top: 65px;
   }
-  .content-feed
-  {
-    margin-top: -67%;
-  }
+ 
   
 
 
 
 }
 
-@media(max-width:1155px)
-{
-  
-  .content-feed
-  {
-    margin-top: -70%;
-  }
-}
-
-@media(max-width:1105px)
-{
-  
-  .content-feed
-  {
-    margin-top: -75%;
-  }
-}
-
-@media(max-width:1124px)
-{
-  
-  .content-feed
-  {
-    margin-top: -82%;
-  }
-}
 
 
-@media(max-width:1000px)
-
-{
-  .welcome-message
-  
-  {
-    margin-top: -5px;
-  }
 
 
-}
+
+
 @media(max-width:975px)
 {
 
@@ -621,19 +594,13 @@ text-align: center;
     padding: 0px;
   }
 
-  .employee-info
-  {
-    font-size: 1.5rem;
-  }
+
 
   .search-container
   {
     margin-left: -15%;
   }
-  .content-feed
-  {
-    margin-top: -89%;
-  }
+
   .welcome-message 
   {
     margin-top: -15px;
@@ -653,9 +620,7 @@ text-align: center;
     left: 46%;
    }
   
-   .content-feed{
-    margin-top: -110%;
-   }
+   
   
 }
 
@@ -671,9 +636,7 @@ text-align: center;
   .content-box{
     height: 38%;
   }
-  .content-feed{
-    margin-top: 0px;
-  }
+  
 }
 
 @media(max-width:880px)
@@ -691,14 +654,41 @@ text-align: center;
   .welcome-section
   {
     align-items: center;
+    margin-top: -5px;
   }
   .employee-img{
     margin-left: 80px;
     width: 77px;
     height: 77px;
   }
-  .officelogo{
-    width: 150px;
-    margin-left: -50%;
+  .welcome-message p
+  {
+        margin-top: 2%;
   }
+
+ 
+}
+
+/* Add to admin-dashboard.component.css */
+.logout-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #d32f2f;
+}
+
+.logout-btn i {
+  font-size: 16px;
 }

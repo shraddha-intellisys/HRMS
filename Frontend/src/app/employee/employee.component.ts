@@ -104,37 +104,56 @@ this.employeeForm = this.fb.group({
 
   // ✅ Submit form (create or update employee)
   submitEmployeeForm(): void {
-    if (this.employeeForm.invalid) {
-      alert('⚠️ Please fill in all required fields correctly.');
-      return;
-    }
+  if (this.employeeForm.invalid) {
+    alert('⚠️ Please fill in all required fields correctly.');
+    return;
+  }
 
-    const token = this.authService.getToken();
-    if (!token || this.authService.isTokenExpired()) {
-      alert('❌ Session expired. Please log in again.');
-      this.router.navigate(['/login']);
-      return;
-    }
+  this.isSubmitting = true;
+  const formData = this.prepareFormData();
 
-    this.isSubmitting = true;
-    const formData = this.employeeForm.value;
-
-    const request$: Observable<any> = this.profileData && this.profileData._id
-      ? this.employeeService.updateEmployee(this.profileData._id, formData)
-      : this.employeeService.addEmployee(formData);
-
-    request$.subscribe({
+  this.http.post('http://localhost:5000/api/employees/add', this.employeeForm.value)
+    .subscribe({
       next: () => {
-        alert('🎉 Employee details saved successfully!');
-        this.loadEmployeeProfile();
+        alert('✅ Employee created:');
+        this.employeeForm.reset();
         this.isSubmitting = false;
       },
       error: (err: any) => {
+        console.error('❌ Error:', err);
         alert(err.error?.message || 'An error occurred while saving employee data.');
         this.isSubmitting = false;
       }
     });
-  }
+}
+
+loadProfileAfterAdd(id: string) {
+  this.employeeService.getEmployeeById(id).subscribe({
+    next: (data) => {
+      console.log("✅ Loaded newly added profile:", data);
+      this.profileData = data;
+    },
+    error: (err) => {
+      console.error("❌ Error fetching new profile:", err);
+    }
+  });
+}
+
+// 🔧 Prepare form data with date format correction
+private prepareFormData(): any {
+  const raw = { ...this.employeeForm.value };
+
+  const dateFields = ['joiningDate', 'dateOfBirth', 'epsJoiningDate', 'epsExitDate'];
+  dateFields.forEach(field => {
+    if (raw[field]) {
+      raw[field] = new Date(raw[field]).toISOString();
+    }
+  });
+
+  return raw;
+}
+
+
 
   // ✅ Handle image upload
   onImageUpload(event: Event): void {

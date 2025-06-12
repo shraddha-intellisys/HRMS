@@ -128,6 +128,11 @@ export class RightComponent implements OnInit {
     });
   }
 
+   logout(): void {
+  this.authService.logout();
+  this.router.navigate(['/login']);
+}
+
   private setCurrentDate(): void {
     const today = new Date();
     this.currentDate = today.toLocaleDateString(undefined, {

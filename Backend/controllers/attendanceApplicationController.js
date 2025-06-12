@@ -64,45 +64,56 @@ exports.getPendingApplications = async (req, res) => {
   }
 };
 
-// ✅ Approve Application
-exports.approveApplication = async (req, res) => {
+exports.getApprovedApplications = async (req, res) => {
   try {
-    const { empId, applicationDate } = req.body;
-
-    const updated = await AttendanceApplication.findOneAndUpdate(
-      { employeeCode: empId, applicationDate },
-      { $set: { status: 'Approved' } },
-      { new: true }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ message: 'Application not found' });
-    }
-
-    res.status(200).json({ message: 'Application approved', data: updated });
-  } catch (error) {
-    console.error('❌ Error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    const approvedApps = await AttendanceApplication.find({ status: 'approved' });
+    res.json(approvedApps);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch approved attendance applications' });
   }
 };
 
+// ✅ Approve Application
+exports.approveApplication = async (req, res) => {
+  const { empId, applicationDate } = req.body;
+  try {
+    const result = await AttendanceApplication.updateOne(
+      { empId, applicationDate },
+      { $set: { approved: true } }
+    );
+    res.status(200).json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 
 // ✅ Reject Application (FIXED: key `employeeCode`)
 exports.rejectApplication = async (req, res) => {
+  const { empId, applicationDate } = req.body;
   try {
-    const { empId, applicationDate } = req.body;
-
-    const updated = await AttendanceApplication.findOneAndUpdate(
-      { employeeCode: empId, applicationDate },
-      { status: 'rejected' },
-      { new: true }
+    const result = await AttendanceApplication.updateOne(
+      { empId, applicationDate },
+      { $set: { rejected: true } }
     );
+    res.status(200).json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+exports.approveAttendanceApplication = async (req, res) => {
+  try {
+    // Your approval logic here
+    res.status(200).json({ message: "Attendance approved successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error approving attendance", error: err.message });
+  }
+};
 
-    if (!updated) return res.status(404).json({ message: 'Application not found' });
-
-    res.status(200).json({ message: 'Application rejected', data: updated });
-  } catch (error) {
-    console.error('❌ Error rejecting application:', error);
-    res.status(500).json({ message: 'Server error' });
+exports.rejectAttendanceApplication = async (req, res) => {
+  try {
+    // Your rejection logic here
+    res.status(200).json({ message: "Attendance rejected successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error rejecting attendance", error: err.message });
   }
 };

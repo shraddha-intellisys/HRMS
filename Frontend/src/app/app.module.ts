@@ -18,7 +18,9 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { ResignationComponent } from './resignation/resignation.component';
 import { AdminLoginComponent } from './adminlogin/adminlogin.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './services/auth.interceptor';
+
 import { NgChartsModule } from 'ng2-charts';
 
 
@@ -44,9 +46,13 @@ import { NgChartsModule } from 'ng2-charts';
     ScheduleComponent,
     ResignationComponent,
     AdminLoginComponent,
-    DashboardComponent,
-    NgChartsModule,
+
+        NgChartsModule,
   ],
+
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ]
   
   
 })

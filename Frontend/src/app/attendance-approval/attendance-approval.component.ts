@@ -9,14 +9,20 @@ interface AttendanceRequest {
   expanded: boolean;
   applicationDate?: string;
   applicationType?: string;
-  type?: string;
+  type?: string;  // ✅ Add this line
+  leaveType?: string;
+  reason?: string;
+  remarks?: string;
+  ccTo?: string;
+  attendanceBasis?: string;
   fromDate?: string;
-  fromTime?: string;
   toDate?: string;
-  toTime?: string;
   fromHalf?: string;
   toHalf?: string;
-  reason?: string;
+  fromTime?: string;
+  toTime?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 interface CalendarDay {
@@ -84,10 +90,14 @@ export class AttendanceApprovalComponent implements OnInit {
     const request = this.requests[index];
     this.http.put('http://localhost:5000/api/attendance-application/approve', {
   empId: request.empId,
-  applicationDate: request.applicationDate
+  applicationDate: request.applicationDate,
+  startTime: request.fromTime,
+  endTime: request.toTime,
+  employeeName: request.empName
 }).subscribe({
   next: () => {
     console.log('✅ Approved');
+    this.requests.splice(index, 1); // remove from pending UI
   },
   error: (err) => {
     console.error('❌ Error approving request:', err);

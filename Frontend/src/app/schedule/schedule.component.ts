@@ -97,30 +97,35 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.loadApprovedAttendanceApplications();
   }
 
-  loadApprovedAttendanceApplications(): void {
+loadApprovedAttendanceApplications(): void {
   this.http.get<any[]>('http://localhost:5000/api/attendance-application/approved')
     .subscribe({
       next: (data) => {
-        const approvedEvents = data.map(item => ({
-          title: `${item.employeeName}\n🕘 ${item.startTime} - ${item.endTime}`,
-          date: item.applicationDate,
-          textColor: 'green',
-          display: 'block'
-        }));
+        data.forEach(item => {
 
-        // Merge with existing calendar events
-        this.calendarOptions = {
-          ...this.calendarOptions,
-          events: [...(this.calendarOptions.events as any[]), ...approvedEvents]
-        };
+          // ✅ correctly parse date string
+          const date = moment(item.applicationDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
-        console.log('✅ Approved Attendance Events Loaded:', approvedEvents);
+          // ✅ Store into attendanceByDate
+          this.attendanceByDate[date] = {
+            ...(this.attendanceByDate[date] || {}),
+            markIn: item.startTime,
+            markOut: item.endTime
+          };
+
+          // ✅ Update calendar event for that date
+          this.updateCalendarEvent(date);
+        });
+
+        console.log('✅ Approved Attendance Events Added to Calendar:', data);
       },
       error: (err) => {
         console.error('❌ Failed to load approved attendance:', err);
       }
     });
 }
+
+
 
 
   loadAttendanceRecords(): void {

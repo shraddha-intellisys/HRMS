@@ -13,7 +13,7 @@ import { EmployeeComponent } from './employee/employee.component';
 import { Holiday } from './holiday/holiday.component';
 import { ResignationComponent } from './resignation/resignation.component';
 //import { AdminLoginComponent } from './adminlogin/adminlogin.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+// import { DashboardComponent } from './dashboard/dashboard.component';
 import { AttendanceApprovalComponent } from './attendance-approval/attendance-approval.component';
 import { LeavesApprovalComponent } from './leaves-approval/leaves-approval.component';
 import { ResignationApprovalComponent } from './resignation-approval/resignation-approval.component';
@@ -21,6 +21,9 @@ import { EmployeeProfileComponent } from './employee-profile/employee-profile.co
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { PayslipComponent} from './payslip/payslip.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
+ import { UserPayslipComponentComponent } from './user-payslip/user-payslip.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+ 
 
 
 export const routes: Routes = [
@@ -38,13 +41,16 @@ export const routes: Routes = [
 {path:'holiday',component:Holiday},
 { path: 'resignation', component: ResignationComponent },
 //{ path: 'adminlogin', component: AdminLoginComponent },
-{ path: 'dashboard', component: DashboardComponent },
+// { path: 'dashboard', component: DashboardComponent },
 { path: 'attendance-approval', component: AttendanceApprovalComponent},
 { path: 'leaves-approval', component: LeavesApprovalComponent},
 {path : 'resignation-approval', component: ResignationApprovalComponent},
 { path: 'employee-profile', component: EmployeeProfileComponent },
 { path: 'employee/:id', component: EditProfileComponent },
  { path: 'payroll', component: PayslipComponent},
- {path:'admin-profile', component: AdminProfileComponent}
+ {path:'admin-profile', component: AdminProfileComponent},
+ { path: 'userpay', component: UserPayslipComponentComponent},
+ { path: 'admin-dashboard', component: AdminDashboardComponent},
+ 
     ]
  

@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Employee = require('../models/employeeSchema');
-const authMiddleware = require('../middleware/authMiddleware');
+
 
 // ✅ Get Employee Profile for Logged-in User (Based on employeeCode in token)
-router.get('/profile', authMiddleware, async (req, res) => {
+router.get('/profile',  async (req, res) => {
   try {
     const employeeCode = req.user.employeeId; // assuming employeeId in token refers to employeeCode
 

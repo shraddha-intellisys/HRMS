@@ -32,6 +32,11 @@ export interface Employee {
   providedIn: 'root'
 })
 export class EmployeeService {
+  apiUrl: any;
+  // Removed duplicate getEmployeeById method that threw an error.
+  checkEmployeeCodeExists(employeeCode: any) {
+    throw new Error('Method not implemented.');
+  }
   private employeeList = new BehaviorSubject<Employee[]>([]);
   employeeList$ = this.employeeList.asObservable();
 
@@ -118,12 +123,26 @@ export class EmployeeService {
    return this.http.post(`${this.baseUrl}/add`, employeeData, { headers });
 
   }
-
-  // ✅ Update existing employee profile
-  updateEmployee(id: string, data: any): Observable<Employee> {
+  getAllEmployees(): Observable<any[]> {
   const headers = this.getAuthHeaders();
-  if (!headers) return of({} as Employee);
-  return this.http.put<Employee>(`${this.baseUrl}/update/${id}`, data, { headers });
+  if (!headers) return of([]);
+  return this.http.get<any[]>(`${this.baseUrl}/all`, { headers });
+}
+
+getEmployeeById(employeeId: string): Observable<any> {
+  const headers = this.getAuthHeaders();
+  if (!headers) return of(null);
+  return this.http.get(`${this.baseUrl}/employee/${employeeId}`, { headers });
+}
+
+getEmployeeByCode(employeeCode: string): Observable<any> {
+  return this.http.get<any>(`http://localhost:5000/api/employees/employee/code/${employeeCode}`);
+}
+
+
+
+  updateEmployee(id: string, data: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/update/${id}`, data);
 }
 
   getProfile() {

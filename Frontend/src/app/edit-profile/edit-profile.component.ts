@@ -1,66 +1,86 @@
-
-
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { EmployeeService } from '../services/employee.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports :[CommonModule , FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent {
-  isEditing = true;
-  submitted = false;
+export class EditProfileComponent implements OnInit {
+  profileData: any = {};
+  isLoading: boolean = true;
+  employeeCode: string = '';
 
-  profileData = {
-    name: 'John Doe',
-    employeeCode: 'EMP001',
-    location: 'Pune',
-    department: 'Development',
-    manager: 'Jane Smith',
-    joiningDate: '2022-01-01',
-    salary: '60000',
-    panNumber: 'ABCDE1234F',
-    aadharNumber: '123456789012',
-    previousMemberId: 'PRV001',
-    epsJoiningDate: '2022-01-01',
-    epsExitDate: '2023-01-01',
-    esicNo: 'ESIC12345',
-    epsNo: 'EPS98765',
-    branch: 'HQ',
-    grade: 'A',
-    designation: 'Software Engineer',
-    employeeCategory: 'Permanent',
-    projectType: 'Internal',
-    imageUrl: ''
-  };
+  constructor(
+    private employeeService: EmployeeService,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  constructor() {
-    this.loadProfileData();
+  ngOnInit(): void {
+    // ✅ No token check, optional now
+    this.employeeCode = this.route.snapshot.paramMap.get('id') || '';
+
+    if (this.employeeCode) {
+      this.fetchEmployee(this.employeeCode);
+    } else {
+      alert("❌ No employee code found in route.");
+      this.isLoading = false;
+    }
+  }
+
+  fetchEmployee(code: string): void {
+    this.employeeService.getEmployeeByCode(code).subscribe({
+      next: (data) => {
+        if (data) {
+          this.profileData = {
+            ...data,
+            joiningDate: this.formatDate(data.joiningDate),
+            epsJoiningDate: this.formatDate(data.epsJoiningDate),
+            epsExitDate: this.formatDate(data.epsExitDate),
+            dateOfBirth: this.formatDate(data.dateOfBirth)
+          };
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error("❌ Error fetching employee:", err);
+        alert("Failed to load employee data.");
+        this.isLoading = false;
+      }
+    });
   }
 
   submitprofile(form: NgForm) {
     if (form.valid) {
-      localStorage.setItem('employeeProfile', JSON.stringify(this.profileData));
-    alert('Data submitted successfully!'); // <-- ADD THIS LINE
-    form.resetForm(); // optional: reset form after success
+      this.employeeService.updateEmployee(this.profileData._id, this.profileData).subscribe({
+        next: () => {
+          alert('✅ Profile updated successfully!');
+          this.router.navigate(['/employee-profile']);
+        },
+        error: (err) => {
+          console.error("❌ Error updating employee:", err);
+          alert('❌ Error while updating profile.');
+        }
+      });
     }
   }
 
   canceledit(form: NgForm) {
-    form.resetForm(); // Clear the form
-    this.submitted = false;
-    localStorage.removeItem('employeeProfile'); // Optional: Clear saved data
+    form.resetForm();
   }
 
-  loadProfileData() {
-    const savedProfile = localStorage.getItem('employeeProfile');
-    if (savedProfile) {
-      this.profileData = JSON.parse(savedProfile);
-    }
+  private formatDate(date: any): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    return isNaN(d.getTime()) ? null : d.toISOString().split('T')[0];
   }
 }

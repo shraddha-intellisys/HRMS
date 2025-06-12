@@ -1,8 +1,7 @@
-
-
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-payslip',
@@ -13,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class PayslipComponent {
   searchQuery = '';
-
   months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -26,10 +24,11 @@ export class PayslipComponent {
   ];
 
   filteredEmployees = [...this.employees];
-
   selectedMonths: { [key: string]: string } = {};
   selectedFiles: { [key: string]: File | null } = {};
   fileInputs: { [key: string]: ElementRef<HTMLInputElement> } = {};
+
+  constructor(private http: HttpClient) {}
 
   onSearchChange() {
     const query = this.searchQuery.toLowerCase().trim();
@@ -60,33 +59,29 @@ export class PayslipComponent {
   }
 
   uploadPayslip(empId: string) {
-    const month = this.selectedMonths[empId];
-    const file = this.selectedFiles[empId];
+  const month = this.selectedMonths[empId];
+  const file = this.selectedFiles[empId];
 
-    // Validate both fields before proceeding
-    if (!month && !file) {
-      alert('Please select a month and upload a PDF file.');
-      return;
-    }
-    if (!month) {
-      alert('Please select a month.');
-      return;
-    }
-    if (!file) {
-      alert('Please upload a PDF file.');
-      return;
-    }
-
-    // Show success upload message
-    alert("Uploading payslip for Employee: ${empId}, Month: ${month}, File: ${file.name}");
-
-    // Reset values
-    this.selectedMonths[empId] = '';
-    this.selectedFiles[empId] = null;
-
-    // Reset file input visually
-    if (this.fileInputs[empId]) {
-      this.fileInputs[empId].nativeElement.value = '';
-    }
+  if (!month || !file) {
+    alert('Please select a month and upload a PDF file.');
+    return;
   }
-}
+
+  const formData = new FormData();
+  formData.append('empId', empId);
+  formData.append('month', month);
+  formData.append('payslip', file);
+
+  this.http.post('http://localhost:5000/api/payslips/upload', formData).subscribe({
+    next: () => {
+      alert("Payslip uploaded successfully");
+      this.selectedMonths[empId] = '';
+      this.selectedFiles[empId] = null;
+    },
+    error: (err) => {
+      console.error('Error uploading:', err);
+      alert('Upload failed');
+    }
+  });
+  }}
+

@@ -1,26 +1,53 @@
-
-
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // ✅ Import RouterModule
-import { ActivatedRoute } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { EmployeeService } from '../services/employee.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-employee-profile',
-  standalone: true, // ✅ Ensure this is marked if you're using standalone
-  imports: [FormsModule, CommonModule, RouterModule], // ✅ Add RouterModule
+  standalone: true,
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './employee-profile.component.html',
   styleUrls: ['./employee-profile.component.css']
 })
-export class EmployeeProfileComponent {
+export class EmployeeProfileComponent implements OnInit {
   searchQuery: string = '';
-  
-  employees = [
-    { sr: 1, name: 'John Doe', empId: 'EMP001', phone: '9876543210', joiningDate: '2022-01-01', role: 'Developer' },
-    { sr: 2, name: 'Jane Smith', empId: 'EMP002', phone: '9876543211', joiningDate: '2021-06-10', role: 'HR' },
-    { sr: 3, name: 'Sam Wilson', empId: 'EMP003', phone: '9876543212', joiningDate: '2020-03-15', role: 'Designer' }
-  ];
+  employees: any[] = [];
+
+  constructor(
+    private employeeService: EmployeeService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.loadEmployeesFromDatabase();
+  }
+
+  loadEmployeesFromDatabase() {
+    this.employeeService.getAllEmployees().subscribe({
+      next: (response) => {
+        this.employees = response.map((emp: any, index: number) => ({
+          sr: index + 1,
+          name: emp.name,
+          empId: emp.employeeCode,
+          phone: emp.phone || '-',
+          joiningDate: this.formatDate(emp.joiningDate),
+          role: emp.designation || '-'
+        }));
+      },
+      error: (err) => {
+        console.error("❌ Failed to fetch employees:", err);
+      }
+    });
+  }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toISOString().split('T')[0];
+  }
 
   get filteredEmployees() {
     const query = this.searchQuery.toLowerCase();

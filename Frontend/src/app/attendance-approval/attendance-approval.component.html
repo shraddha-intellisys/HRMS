@@ -21,6 +21,12 @@
         </select>
       </div>
 
+      <div class="time-section">
+  <label>From Time:</label>
+  <input type="time" [value]="request.startTime || ''" readonly />
+</div>
+
+
       <div class="date-section">
         <label>To:</label>
         <input type="date" [value]="request.toDate" readonly />
@@ -30,14 +36,20 @@
         </select>
       </div>
 
-      <label>Reason:</label>
-      <textarea rows="2" readonly>{{ request.reason || 'Enter reason' }}</textarea>
+      <div class="time-section">
+  <label>To Time:</label>
+  <input type="time" [value]="request.endTime || ''" readonly />
+</div>
 
-      <label>Remarks:</label>
-      <textarea rows="2" placeholder="Optional remarks"></textarea>
+<label>Reason:</label>
+<textarea rows="2" readonly>{{ request.reason || 'Enter reason' }}</textarea>
 
-      <label>CC To (Email ID):</label>
-      <input type="email" placeholder="example@mail.com" />
+<label>Remarks:</label>
+<textarea rows="2" readonly>{{ request.remarks || 'No remarks provided' }}</textarea>
+<label>CC To (Email ID):</label>
+<input type="email" [value]="request.ccTo || ''" readonly />
+
+
 
       <div class="action-buttons">
         <button (click)="accept(i)">✅ Accept</button>

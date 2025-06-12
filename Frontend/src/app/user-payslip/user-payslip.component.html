@@ -1,0 +1,13 @@
+<div class="container">
+    <h2>Download Payslip</h2>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Select Month</mat-label>
+    <mat-select [formControl]="monthControl">
+      <mat-option *ngFor="let month of months" [value]="month">{{ month }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button  class="download-btn" (click)="downloadPayslip()" >
+    Download
+  </button>
+</div>

@@ -16,7 +16,7 @@ import { TopNavComponent } from '../top-nav/top-nav.component';
 import { EmployeeComponent } from '../employee/employee.component';
 import { Holiday } from '../holiday/holiday.component';
 
-import { DashboardComponent } from '../dashboard/dashboard.component';
+// import { DashboardComponent } from '../dashboard/dashboard.component';
 import { AuthGuard } from '../guards/auth.guard';
 
 
@@ -38,14 +38,10 @@ const routes: Routes = [
     path: 'adminlogin',
     loadComponent: () => import('../adminlogin/adminlogin.component').then(m => m.AdminLoginComponent)
   },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard]
-  },
+ 
   { path: '', redirectTo: 'adminlogin', pathMatch: 'full' },
-  { path: 'admin-dashboard', component: DashboardComponent },
-{ path: 'user-dashboard', component: DashboardComponent },
+ 
+// { path: 'user-dashboard', component: DashboardComponent },
 
 ];
 

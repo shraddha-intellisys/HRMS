@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
+const path = require('path');
 
 
 // ✅ Import Routes
@@ -13,10 +14,12 @@ const profileRoutes = require('./routes/profileRoutes');
 const attendanceApplicationRoutes = require('./routes/attendanceApplicationRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
-const holidayRoutes = require('./routes/holidayRoutes');
 const resignationRoutes = require('./routes/resignationRoutes');
 const Resignation = require('./models/Resignation');
 const adminRoutes = require('./routes/adminRoutes');
+const payslipRoutes = require('./routes/payslip.routes');
+const adminDashboardRoutes = require('./routes/adminDashboard');
+const holidayRoutes = require('./routes/holidayRoutes');
 
 
 
@@ -37,18 +40,22 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
 app.use('/uploads', express.static('uploads'));
 
+
 // ✅ API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api', attendanceApplicationRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 app.use('/api', attendanceRoutes);
 app.use('/api/leave', leaveRoutes);
-app.use('/api/holidays', holidayRoutes);
 app.use('/api/resignation', resignationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/payslips', require('./routes/payslip.routes'));
+app.use('/api/admin-dashboard', adminDashboardRoutes);
+app.use('/api/holidays', holidayRoutes);
 
 
 

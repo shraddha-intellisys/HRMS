@@ -26,30 +26,34 @@ export const futureDateValidator: ValidatorFn = (control: AbstractControl): Vali
 })
 export class LeaveComponent implements OnInit {
   leaveForm!: FormGroup;
+  employeeName = 'Shraddha';
+  employeeCode = 'SM123';
+  static submitLeave: any;
 
   minDate: string = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.leaveForm = this.fb.group({
-      employeeName: ['', Validators.required],
-      employeeCode: ['', Validators.required],
-      applicationDate: ['', Validators.required],
-      applicationType: ['', Validators.required],
-      leaveType: ['', Validators.required],
-      fromDate: ['', [Validators.required, futureDateValidator]],
-      fromHalf: [false],
-      firstHalfFrom: [false],
-      secondHalfFrom: [false],
-      toDate: ['', [Validators.required, futureDateValidator]],
-      toHalf: [false],
-      firstHalfTo: [false],
-      reason: ['', Validators.required],
-      remarks: [''],
-      ccTo: ['', [Validators.email]]
-    });
-  }
+  this.leaveForm = this.fb.group({
+    employeeName: [this.employeeName, Validators.required],
+    employeeCode: [this.employeeCode, Validators.required],
+    applicationDate: ['', Validators.required],
+    applicationType: ['', Validators.required],
+    leaveType: ['', Validators.required],
+    fromDate: ['', [Validators.required, futureDateValidator]],
+    fromHalf: [false],
+    firstHalfFrom: [false],
+    secondHalfFrom: [false],
+    toDate: ['', [Validators.required, futureDateValidator]],
+    toHalf: [false],
+    firstHalfTo: [false],
+    reason: ['', Validators.required],
+    remarks: [''],
+    ccTo: ['', [Validators.email]]
+  });
+}
+
 
   submitLeave(): void {
     if (this.leaveForm.invalid) {

@@ -14,8 +14,7 @@ router.get('/all', controller.getAllAttendance);
 router.get('/attendance-application/pending', controller.getPendingApplications);
 
 router.get('/approved', controller.getAllAttendance);
-router.put('/attendance-application/approve', controller.approveApplication);
-
-router.put('/reject', controller.rejectApplication);
+router.put('/attendance-application/approve', controller.approveAttendanceApplication);
+router.put('/attendance-application/reject', controller.rejectAttendanceApplication);
 
 module.exports = router;

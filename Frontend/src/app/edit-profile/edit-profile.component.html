@@ -1,30 +1,27 @@
-
-
 <div class="navbar">
   <div class="logo">Intellisys IT Solution Pvt Ltd</div>
 </div>
 
 <div class="employee-container">
-  <!-- Employee header with name and photo -->
   <div class="employee-image">
     <img [src]="profileData.imageUrl || 'assets/employee (1).png'" alt="Employee Image" />
   </div>
-  
+
   <div class="employee-header">
-    <!-- Form Starts -->
     <form #editForm="ngForm" (ngSubmit)="submitprofile(editForm)">
 
-      <!-- Employee name as a headline -->
+      <!-- Employee Name -->
       <div class="headline">
-        <input type="text" name="name" [(ngModel)]="profileData.name" placeholder="Enter name" required />
+        <input type="text" name="name" [(ngModel)]="profileData.name" placeholder="Enter name" required #nameRef="ngModel" />
+        <div *ngIf="nameRef.invalid && nameRef.touched" class="error">Name is required.</div>
       </div>
 
-      <!-- Flex container for employee details -->
       <div class="flex-row">
         <div class="flex-item">
           <div class="detail">
             <label>Employee Code:</label>
-            <input type="text" name="employeeCode" [(ngModel)]="profileData.employeeCode" required />
+            <input type="text" name="employeeCode" [(ngModel)]="profileData.employeeCode" required #codeRef="ngModel" />
+            <div *ngIf="codeRef.invalid && codeRef.touched" class="error">Employee code is required.</div>
           </div>
           <div class="detail">
             <label>Location:</label>
@@ -55,15 +52,14 @@
         </div>
       </div>
 
-      <!-- Additional Info Cards -->
       <div class="card-container">
         <div class="card">
           <div class="card-header">PF Applicable</div>
           <div class="card-body">
             <label>PF No:</label>
-            <input type="text" name="panNumber" [(ngModel)]="profileData.panNumber" />
+            <input type="text" name="pfNumber" [(ngModel)]="profileData.pfNumber" />
             <label>UAN:</label>
-            <input type="text" name="aadharNumber" [(ngModel)]="profileData.aadharNumber" />
+            <input type="text" name="uan" [(ngModel)]="profileData.uan" />
             <label>Prv Member ID:</label>
             <input type="text" name="previousMemberId" [(ngModel)]="profileData.previousMemberId" />
           </div>
@@ -96,7 +92,6 @@
         </div>
       </div>
 
-      <!-- KYC Details -->
       <div class="container2">
         <p><strong>KYC Detail:</strong></p>
       </div>
@@ -105,26 +100,31 @@
         <div class="card">
           <div class="card-header">PAN Number:</div>
           <div class="card-body">
-            <input type="text" name="kycPan" [(ngModel)]="profileData.panNumber" />
+            <input type="text" name="kycPan" [(ngModel)]="profileData.panNumber" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" #panRef="ngModel" />
+            <div *ngIf="panRef.invalid && panRef.touched" class="error">
+              Enter valid PAN (e.g., ABCDE1234F).
+            </div>
           </div>
         </div>
 
         <div class="card">
           <div class="card-header">Aadhar Number:</div>
           <div class="card-body">
-            <input type="text" name="kycAadhar" [(ngModel)]="profileData.aadharNumber" />
+            <input type="text" name="kycAadhar" [(ngModel)]="profileData.aadharNumber" pattern="[0-9]{12}" #aadhaarRef="ngModel" />
+            <div *ngIf="aadhaarRef.invalid && aadhaarRef.touched" class="error">
+              Aadhar must be 12 digits.
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Employee Status -->
       <div class="container2">
         <p><strong>Employee Status:</strong></p>
       </div>
 
       <div class="card-container">
         <div class="card">
-          <div class="card-header">Branch:</div>
+          <div class="card-header">Level:</div>
           <div class="card-body">
             <input type="text" name="branch" [(ngModel)]="profileData.branch" />
           </div>
@@ -166,7 +166,6 @@
         </div>
       </div>
 
-      <!-- Buttons -->
       <div class="button-group">
         <button type="submit" [disabled]="editForm.invalid">Submit</button>
         <button type="button" (click)="canceledit(editForm)">Cancel</button>
