@@ -166,23 +166,56 @@ app.listen(PORT, () => {
 
 (async () => {
   try {
-    const existingAdmin = await UserModel.findOne({ username: 'admin' });
-    if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash('Admin@123', 10);
-      const newAdmin = new UserModel({
-        username: 'admin',
-        email: 'admin@hrms.com',
-        password: hashedPassword,
+    const admins = [
+      {
+        username: 'rutik',
+        email: 'rutik@gmail.com',
+        password: 'Rutik@123',
         empID: 'ADM001',
-        userID: 'U001',
+        userID: 'R001',
         role: 'admin'
-      });
-      await newAdmin.save();
-      console.log('✅ Default admin created: admin / Admin@123');
-    } else {
-      console.log('⚠️ Default admin already exists');
+      },
+      {
+        username: 'mahesh',
+        email: 'mahesh@gmail.com',
+        password: 'Mahesh@123',
+        empID: 'ADM002',
+        userID: 'M002',
+        role: 'admin'
+      },
+      {
+        username: 'swapnil',
+        email: 'swapnil@gmail.com',
+        password: 'Swapnil@123',
+        empID: 'ADM003',
+        userID: 'S003',
+        role: 'admin'
+      }
+    ];
+
+    for (const adminData of admins) {
+      const existingAdmin = await UserModel.findOne({ username: adminData.username });
+
+      if (!existingAdmin) {
+        const hashedPassword = await bcrypt.hash(adminData.password, 10);
+        const newAdmin = new UserModel({
+          username: adminData.username,
+          email: adminData.email,
+          password: hashedPassword,
+          empID: adminData.empID,
+          userID: adminData.userID,
+          role: adminData.role
+        });
+
+        await newAdmin.save();
+        console.log(`✅ Default admin created: ${adminData.username} / ${adminData.password}`);
+      } else {
+        console.log(`⚠️ Default admin already exists: ${adminData.username}`);
+      }
     }
   } catch (err) {
-    console.error('❌ Failed to seed default admin:', err.message);
+    console.error('❌ Failed to seed default admins:', err.message);
   }
 })();
+
+
