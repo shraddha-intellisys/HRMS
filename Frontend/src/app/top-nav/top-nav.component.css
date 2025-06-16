@@ -74,6 +74,7 @@
   .nav-menu ul {
     list-style: none;
     padding: 0;
+    
   }
   
   .nav-menu ul li {
@@ -126,6 +127,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+       background-color: rgb(237, 150, 9);
   }
   
   li {
@@ -199,7 +201,7 @@
     #menuList {
       left: -250px; /* Keep it hidden by default */
       max-height: 0;
-      overflow: hidden;
+         background-color: rgb(237, 150, 9);
      
     }
   
@@ -208,7 +210,8 @@
       max-height: 500px;
       width: 65%;
       left: 0; /* Slide in when open */
-      background-color: orange;
+   
+      display: block;
     }
   
   
@@ -216,3 +219,5 @@
       display: block; /* Always display the hamburger icon */
     }
   }
+
+  

@@ -11,6 +11,13 @@
     text-align: center;
     color: #2c3e50;
     margin-bottom: 1.5rem;
+    
+  }
+
+  h2{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
   }
   
   .month-name {
