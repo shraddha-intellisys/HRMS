@@ -26,6 +26,7 @@ export class RightComponent implements OnInit {
   dob: string = '';
   currentTime = '';
   currentDate = '';
+   gender: string = '';
   showProfile = false;
 
   // Local employee data storage
@@ -115,6 +116,7 @@ export class RightComponent implements OnInit {
         this.projectType = emp.projectType || 'N/A';
         this.joiningDate = this.formatDate(emp.joiningDate);
         this.dob = this.formatDate(emp.dateOfBirth);
+         this.gender = emp.gender || ''; // Add this line to get gender
         this.imageUrl = emp.image?.startsWith('http')
           ? emp.image
           : emp.image
@@ -129,6 +131,19 @@ export class RightComponent implements OnInit {
     this.updateTime();
     setInterval(() => this.updateTime(), 1000);
   }
+
+  getTitlePrefix(): string {
+    if (!this.gender) return '';
+
+    const genderLower = this.gender.toLowerCase();
+    if (genderLower === 'male') {
+      return 'Mr.';
+    } else if (genderLower === 'female') {
+      return 'Ms.';
+    }
+    return '';
+  }
+
 
   private updateTime(): void {
     const now = new Date();

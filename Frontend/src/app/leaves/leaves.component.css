@@ -12,6 +12,7 @@
 }
 
 
+
 .full-calendar-container {
   width: 100%;
   max-width: 1600px;   /* Wider than before */
@@ -51,7 +52,7 @@
   border: 1px solid #ddd;
   border-radius: 10px;
   background-color: var(--box-black);
-  box-shadow: 0 0 15px 4px rgb(250, 167, 2);
+  /* box-shadow: 0 0 15px 4px rgb(250, 167, 2); */
 }
 
 .divleft {
