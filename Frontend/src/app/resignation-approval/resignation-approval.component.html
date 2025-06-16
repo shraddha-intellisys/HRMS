@@ -4,6 +4,7 @@
   <div *ngFor="let request of resignationRequests; let i = index" class="notification-card">
     <div class="notification-header" (click)="toggleRequest(i)">
       <strong>{{ request.empName }}</strong> ({{ request.empCode }})
+
     </div>
 
     <div *ngIf="request.expanded" class="request-details">

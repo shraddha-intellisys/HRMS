@@ -3,28 +3,22 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-interface Employee {
-  id: string;
-  name: string;
-  leaveBalance: number;
-}
-
 interface LeaveRequest {
   _id?: string;
   empName: string;
   empId: string;
   expanded: boolean;
-  applicationDate: Date;
+  applicationDate: string;
   applicationType: string;
   leaveType: string;
-  leaveBalance: number;
+  leaveBalance?: number;
   fromDate: string;
   fromDateHalf: string;
   toDate: string;
   toDateHalf: string;
   reason: string;
   remarks: string;
-  ccEmail: string;
+  ccTo: string;
   approvedBy: string;
 }
 
@@ -62,6 +56,12 @@ interface RejectedLeave {
   styleUrls: ['./leaves-approval.component.css']
 })
 export class LeavesApprovalComponent {
+
+  leaveRequests: LeaveRequest[] = [];
+  approvedLeaves: ApprovedLeave[] = [];
+  rejectedLeaves: RejectedLeave[] = [];
+  activeTab: 'approved' | 'rejected' = 'approved';
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -70,27 +70,41 @@ export class LeavesApprovalComponent {
     this.fetchRejectedLeaves();
   }
 
-  leaveRequests: LeaveRequest[] = [];
-  approvedLeaves: ApprovedLeave[] = [];
-  rejectedLeaves: RejectedLeave[] = [];
-  activeTab: 'approved' | 'rejected' = 'approved';
-
   fetchLeaveRequests(): void {
-    this.http.get<LeaveRequest[]>('http://localhost:5000/api/leave/pending').subscribe(data => {
-      this.leaveRequests = data.map(req => ({ ...req, expanded: false }));
-    });
+    this.http.get<any[]>('http://localhost:5000/api/leave/pending')
+      .subscribe(data => {
+        this.leaveRequests = data.map(req => ({
+          _id: req._id,
+          empName: req.empName || req.employeeName,   // ✅ backend field mapping
+          empId: req.empId || req.employeeCode,       // ✅ backend field mapping
+          applicationDate: req.applicationDate,
+          applicationType: req.applicationType,
+          leaveType: req.leaveType,
+          fromDate: req.fromDate,
+          fromDateHalf: req.fromDateHalf,
+          toDate: req.toDate,
+          toDateHalf: req.toDateHalf,
+          reason: req.reason,
+          remarks: req.remarks,
+          ccTo: req.ccTo,
+          approvedBy: req.approvedBy || '',
+          expanded: false
+        }));
+      });
   }
 
   fetchApprovedLeaves(): void {
-    this.http.get<ApprovedLeave[]>('http://localhost:5000/api/leave/approved').subscribe(data => {
-      this.approvedLeaves = data;
-    });
+    this.http.get<ApprovedLeave[]>('http://localhost:5000/api/leave/approved')
+      .subscribe(data => {
+        this.approvedLeaves = data;
+      });
   }
 
   fetchRejectedLeaves(): void {
-    this.http.get<RejectedLeave[]>('http://localhost:5000/api/leave/rejected').subscribe(data => {
-      this.rejectedLeaves = data;
-    });
+    this.http.get<RejectedLeave[]>('http://localhost:5000/api/leave/rejected')
+      .subscribe(data => {
+        this.rejectedLeaves = data;
+      });
   }
 
   toggleRequest(index: number): void {

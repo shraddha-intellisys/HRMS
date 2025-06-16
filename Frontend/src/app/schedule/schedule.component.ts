@@ -69,6 +69,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   attendanceByDate: {
     [date: string]: {
+      approved: any;
       pbm: string; pbmTime?: string; markIn?: string; markOut?: string; lws?: string; phy?: string;
     }
   } = {};
@@ -91,29 +92,56 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updateTime();
     this.timerInterval = setInterval(() => this.updateTime(), 1000);
-    this.fetchPBMEvents();
+    // this.fetchPBMEvents();
     this.loadHolidayEvents();
-    this.loadAttendanceRecords();
+    // this.loadAttendanceRecords();
     this.loadApprovedAttendanceApplications();
+    this.loadHolidayEventsFromBackend();
   }
 
-loadApprovedAttendanceApplications(): void {
+  loadHolidayEventsFromBackend(): void {
+    this.http.get<any[]>('http://localhost:5000/api/holidays/all').subscribe({
+      next: (data) => {
+        const holidayEvents = data.map(h => ({
+          title: JSON.stringify({ holiday: h.name }),
+          date: new Date(h.date),
+          textColor: '#ff4d4d',
+          display: 'block'
+        }));
+
+        this.calendarOptions = {
+          ...this.calendarOptions,
+          events: [...(this.calendarOptions.events as any[]), ...holidayEvents]
+        };
+
+        console.log('✅ Holidays loaded from DB:', holidayEvents);
+      },
+      error: (err) => {
+        console.error('❌ Failed to fetch holidays:', err);
+      }
+    });
+  }
+
+  loadApprovedAttendanceApplications(): void {
   this.http.get<any[]>('http://localhost:5000/api/attendance-application/approved')
     .subscribe({
       next: (data) => {
         data.forEach(item => {
+          const date = moment(item.applicationDate, ['DD/MM/YYYY', 'YYYY-MM-DD']).format('YYYY-MM-DD');
 
-          // ✅ correctly parse date string
-          const date = moment(item.applicationDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+          // ✅ Convert startTime and endTime to 12 hour format
+          const startTime12 = moment(item.startTime, 'HH:mm').format('hh:mm A');
+          const endTime12 = moment(item.endTime, 'HH:mm').format('hh:mm A');
 
-          // ✅ Store into attendanceByDate
+          const combinedTime = `${startTime12} - ${endTime12}`;
+
           this.attendanceByDate[date] = {
             ...(this.attendanceByDate[date] || {}),
-            markIn: item.startTime,
-            markOut: item.endTime
+            markIn: startTime12,
+            markOut: endTime12,
+            approved: true // ✅ This flag tells us this was approved application
           };
 
-          // ✅ Update calendar event for that date
           this.updateCalendarEvent(date);
         });
 
@@ -128,57 +156,61 @@ loadApprovedAttendanceApplications(): void {
 
 
 
-  loadAttendanceRecords(): void {
-  this.http.get<any[]>(`http://localhost:5000/api/attendance/all/${this.employeeCode}`)
-    .subscribe({
-      next: (records) => {
-        records.forEach((rec: any) => {
-          const date = moment(rec.date).format('YYYY-MM-DD');
-          this.attendanceByDate[date] = {
-            ...(this.attendanceByDate[date] || {}),
-            markIn: rec.markIn,
-            markOut: rec.markOut,
-            ...(rec.lateMark ? { lateMark: 'Late Mark' } : {})
-          };
-          this.updateCalendarEvent(date);
-        });
-      },
-      error: (err) => {
-        console.error('❌ Attendance fetch error:', err);
-      }
-    });
-}
 
 
-  fetchPBMEvents(): void {
-    this.http.get<any[]>('http://localhost:5000/api/pbm')
-      .subscribe({
-        next: (events) => {
-          const pbmMap = events.reduce((acc, e) => {
-            acc[e.applicationDate] = {
-              ...acc[e.applicationDate],
-              pbmTime: `${e.startTime} - ${e.endTime}`,
-              phy: 'PHY'
-            };
-            return acc;
-          }, {} as { [date: string]: any });
 
-          for (const date in pbmMap) {
-            this.attendanceByDate[date] = {
-              ...(this.attendanceByDate[date] || {}),
-              pbmTime: pbmMap[date].pbmTime,
-               phy: pbmMap[date].phy
-            };
-            this.updateCalendarEvent(date);
-          }
-        },
-        error: (err) => {
-          console.error('❌ PBM Fetch Error:', err);
-        }
-      });
-  }
 
-holidays: { date: Date, name: string }[] = [
+  //   loadAttendanceRecords(): void {
+  //   this.http.get<any[]>(`http://localhost:5000/api/attendance/all/${this.employeeCode}`)
+  //     .subscribe({
+  //       next: (records) => {
+  //         records.forEach((rec: any) => {
+  //           const date = moment(rec.date).format('YYYY-MM-DD');
+  //           this.attendanceByDate[date] = {
+  //             ...(this.attendanceByDate[date] || {}),
+  //             markIn: rec.markIn,
+  //             markOut: rec.markOut,
+  //             ...(rec.lateMark ? { lateMark: 'Late Mark' } : {})
+  //           };
+  //           this.updateCalendarEvent(date);
+  //         });
+  //       },
+  //       error: (err) => {
+  //         console.error('❌ Attendance fetch error:', err);
+  //       }
+  //     });
+  // }
+
+
+  // fetchPBMEvents(): void {
+  //   this.http.get<any[]>('http://localhost:5000/api/pbm')
+  //     .subscribe({
+  //       next: (events) => {
+  //         const pbmMap = events.reduce((acc, e) => {
+  //           acc[e.applicationDate] = {
+  //             ...acc[e.applicationDate],
+  //             pbmTime: `${e.startTime} - ${e.endTime}`,
+  //             phy: 'PHY'
+  //           };
+  //           return acc;
+  //         }, {} as { [date: string]: any });
+
+  //         for (const date in pbmMap) {
+  //           this.attendanceByDate[date] = {
+  //             ...(this.attendanceByDate[date] || {}),
+  //             pbmTime: pbmMap[date].pbmTime,
+  //              phy: pbmMap[date].phy
+  //           };
+  //           this.updateCalendarEvent(date);
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('❌ PBM Fetch Error:', err);
+  //       }
+  //     });
+  // }
+
+  holidays: { date: Date, name: string }[] = [
     { date: new Date('2025-03-08'), name: 'International Women\'s Day' },
     { date: new Date('2025-03-29'), name: 'Good Friday' },
     { date: new Date('2025-04-14'), name: 'Tamil New Year' },
@@ -188,24 +220,24 @@ holidays: { date: Date, name: string }[] = [
     { date: new Date('2025-10-02'), name: 'Gandhi Jayanti' },
     { date: new Date('2025-11-01'), name: 'Diwali' },
     { date: new Date('2025-12-25'), name: 'Christmas' },
-    { date: new Date('2025-04-09'), name: 'Shraddha bday'}
+    { date: new Date('2025-04-09'), name: 'Shraddha bday' }
   ];
 
-loadHolidayEvents(): void {
-  const holidayEvents = this.holidays.map(holiday => ({
-    title: JSON.stringify({ holiday: holiday.name }),
-    date: holiday.date,
-    textColor: '#ff4d4d',
-    display: 'block'
-  }));
+  loadHolidayEvents(): void {
+    const holidayEvents = this.holidays.map(holiday => ({
+      title: JSON.stringify({ holiday: holiday.name }),
+      date: holiday.date,
+      textColor: '#ff4d4d',
+      display: 'block'
+    }));
 
-  this.calendarOptions = {
-    ...this.calendarOptions,
-    events: [...(this.calendarOptions.events as any[]), ...holidayEvents]
-  };
+    this.calendarOptions = {
+      ...this.calendarOptions,
+      events: [...(this.calendarOptions.events as any[]), ...holidayEvents]
+    };
 
-  console.log('✅ Holidays pushed to calendar:', holidayEvents);
-}
+    console.log('✅ Holidays pushed to calendar:', holidayEvents);
+  }
 
 
 
@@ -240,34 +272,34 @@ loadHolidayEvents(): void {
   }
 
   onMarkInTime(): void {
-  const today = moment().format('YYYY-MM-DD');
-  const time = moment().format('hh:mm:ss A');
+    const today = moment().format('YYYY-MM-DD');
+    const time = moment().format('hh:mm:ss A');
 
-  const markInMoment = moment(time, 'hh:mm:ss A');
-  const lateThreshold = moment('09:30:00 AM', 'hh:mm:ss A');
+    const markInMoment = moment(time, 'hh:mm:ss A');
+    const lateThreshold = moment('09:30:00 AM', 'hh:mm:ss A');
 
-  const isLate = markInMoment.isAfter(lateThreshold);
+    const isLate = markInMoment.isAfter(lateThreshold);
 
-  this.http.post('http://localhost:5000/api/attendance/mark-in', {
-    employeeCode: this.employeeCode
-  }).subscribe({
-    next: (res: any) => {
-      this.markInTime = time;
-      this.attendanceByDate[today] = {
-        ...(this.attendanceByDate[today] || {}),
-        markIn: time,
-        ...(isLate ? { lateMark: 'Late Mark' } : {})
-      };
-      localStorage.setItem('attendanceByDate', JSON.stringify(this.attendanceByDate));
+    this.http.post('http://localhost:5000/api/attendance/mark-in', {
+      employeeCode: this.employeeCode
+    }).subscribe({
+      next: (res: any) => {
+        this.markInTime = time;
+        this.attendanceByDate[today] = {
+          ...(this.attendanceByDate[today] || {}),
+          markIn: time,
+          ...(isLate ? { lateMark: 'Late Mark' } : {})
+        };
+        localStorage.setItem('attendanceByDate', JSON.stringify(this.attendanceByDate));
 
-      this.updateCalendarEvent(today);
-      console.log('✅ Mark In Success:', res);
-    },
-    error: err => {
-      console.error('❌ Mark In API Error:', err);
-    }
-  });
-}
+        this.updateCalendarEvent(today);
+        console.log('✅ Mark In Success:', res);
+      },
+      error: err => {
+        console.error('❌ Mark In API Error:', err);
+      }
+    });
+  }
 
 
   onMarkOutTime(): void {
@@ -285,9 +317,9 @@ loadHolidayEvents(): void {
       next: (res: any) => {
         this.markOutTime = time;
 
-this.durationTime = moment.utc(
-        moment(time, 'hh:mm:ss A').diff(moment(this.markInTime, 'hh:mm:ss A'))
-      ).format('HH:mm:ss');
+        this.durationTime = moment.utc(
+          moment(time, 'hh:mm:ss A').diff(moment(this.markInTime, 'hh:mm:ss A'))
+        ).format('HH:mm:ss');
 
         this.attendanceByDate[today] = {
           ...(this.attendanceByDate[today] || {}),
@@ -304,38 +336,49 @@ this.durationTime = moment.utc(
     });
   }
 
-  updateCalendarEvent(date: string): void {
-    const attendance = this.attendanceByDate[date];
-    const existingEvents = [...(this.calendarOptions.events as any[])];
-    const filteredEvents = existingEvents.filter(e => e.date !== date);
+updateCalendarEvent(date: string): void {
+  const attendance = this.attendanceByDate[date];
+  const existingEvents = [...(this.calendarOptions.events as any[])];
+  const filteredEvents = existingEvents.filter(e => e.date !== date);
 
-    let textColor = 'red';
+  let textColor = 'red';
 
-    if (attendance.markIn && attendance.markOut) {
-      const markInMoment = moment(attendance.markIn, 'hh:mm:ss A');
-      const markOutMoment = moment(attendance.markOut, 'hh:mm:ss A');
-      const diffInSeconds = markOutMoment.diff(markInMoment, 'seconds');
-      textColor = diffInSeconds >= 3 ? 'green' : 'red';
-    } else if (attendance.lws) {
-      textColor = 'blue';
-    }
-
-    const title = JSON.stringify(attendance);
-
-    filteredEvents.push({
-      title,
-      date,
-      textColor,
-      display: 'block'  // ✅ required for visible rendering
-    });
-
-    this.calendarOptions = {
-      ...this.calendarOptions,
-      events: filteredEvents
-    };
-
-    console.log('✅ Event pushed for:', date, title);
+  // ✅ Case 1: If it's approved attendance
+  if (attendance.approved) {
+    textColor = 'blue';  // Blue for approved attendance
   }
+  // ✅ Case 2: Normal markIn / markOut attendance from UI
+  else if (attendance.markIn && attendance.markOut) {
+    const markInMoment = moment(attendance.markIn, 'hh:mm:ss A');
+    const markOutMoment = moment(attendance.markOut, 'hh:mm:ss A');
+    const diffInSeconds = markOutMoment.diff(markInMoment, 'seconds');
+    textColor = diffInSeconds >= 3 ? 'green' : 'red';
+  }
+  
+  else {
+    textColor = 'red';
+  }
+
+  const title = JSON.stringify(attendance);
+
+  filteredEvents.push({
+    title,
+    date,
+    textColor,
+    display: 'block'
+  });
+
+  this.calendarOptions = {
+    ...this.calendarOptions,
+    events: filteredEvents
+  };
+
+  console.log('✅ Event pushed for:', date, title);
+}
+
+
+
+
 
 
 
@@ -348,11 +391,14 @@ this.durationTime = moment.utc(
       const data = JSON.parse(arg.event.title);
       return {
         html: `
-        <div style="line-height: 1.2; font-size: 0.75rem;">
+        <div style="line-height: 1.2; font-size: 0.65rem;">
           ${data.markIn ? `<div>${data.markIn}</div>` : ''}
           ${data.markOut ? `<div>${data.markOut}</div>` : ''}
-          ${data.pbmTime ? `<div style="color: orange;">${data.pbmTime}</div>` : ''}
-          ${data.phy ? `<div style="color: gray; font-weight: bold;">${data.phy}</div>` : ''}
+          
+
+
+          
+         
            ${data.holiday ? `<div style="color:rgb(238, 15, 171); font-weight: bold;">${data.holiday}</div>` : ''}
            ${data.lateMark ? `<div style="color: red; font-weight: bold;">${data.lateMark}</div>` : ''}
 

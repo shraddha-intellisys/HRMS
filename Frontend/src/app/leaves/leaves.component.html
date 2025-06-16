@@ -24,13 +24,13 @@
             <mat-date-range-picker #picker></mat-date-range-picker>
           </mat-form-field>
           <!-- Corrected Submit and Refresh buttons -->
-<button mat-raised-button color="primary" (click)="submitLeaveApplication()">
+<!-- <button mat-raised-button color="primary" (click)="submitLeaveApplication()">
   Submit Leave
-</button>
+</button> -->
 
-<button mat-raised-button color="accent" (click)="refresh()">
+<!-- <button mat-raised-button color="accent" (click)="refresh()">
   <mat-icon>refresh</mat-icon> Refresh
-</button>
+</button> -->
 
         </div>
       
@@ -119,54 +119,19 @@
   
             <!-- Third Row: Leave Submit & Attendance Submit -->
             <div class="attendance-row">
-              <div class="attendance-box leave-submit">
-                <div class="attendance-details">
-                  <p class="status-count">Leave (Submit) {{ attendanceSummary.leaveSubmit }}</p>
-                </div>
-              </div>
-              <div class="attendance-box attendance-submit">
-                <div class="attendance-details">
-                  <p class="status-count">Attendance (Submit) {{ attendanceSummary.attendanceSubmit }}</p>
-                </div>
-              </div>
+             
             </div>
   
-            <!-- Fourth Row: PHY & WEO -->
-            <div class="attendance-row">
-              <div class="attendance-box phy">
-                <div class="attendance-details">
-                  <p class="status-count">PHY {{ attendanceSummary.phy }}</p>
-                </div>
-  
-              </div>
-              <div class="attendance-box weo">
-                <div class="attendance-details">
-                  <p class="status-count">WEO {{ attendanceSummary.weo }}</p>
-                </div>
-              </div>
-            </div>
+           
   
             <!-- Fifth Row: Reminders & Half Day -->
             <div class="attendance-row">
-              <div class="attendance-box reminders">
-                <div class="attendance-details">
-                  <p class="status-count">Reminders {{ attendanceSummary.reminders }}</p>
-                </div>
-              </div>
-              <div class="attendance-box half-day">
-                <div class="attendance-details">
-                  <p class="status-count">Half Day {{ attendanceSummary.halfDay }}</p>
-                </div>
-              </div>
+             
             </div>
   
             <!-- Sixth Row: Blocked -->
             <div class="attendance-row">
-              <div class="attendance-box blocked">
-                <div class="attendance-details">
-                  <p class="status-count">Blocked (DOJ/DOE) {{ attendanceSummary.blocked }}</p>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>

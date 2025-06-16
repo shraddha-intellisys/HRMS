@@ -1,20 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {
-  submitAttendance
-} = require('../controllers/attendanceApplicationController');
-const attendanceController = require('../controllers/attendanceApplicationController');
 const controller = require('../controllers/attendanceApplicationController');
 
-
-router.post('/attendance-application', controller.submitAttendance);        
-router.post('/cancel', attendanceController.cancelApplication);            
-router.get('/pbm', controller.getPBMAttendance);
-router.get('/all', controller.getAllAttendance);
+router.post('/attendance-application', controller.submitAttendance);
 router.get('/attendance-application/pending', controller.getPendingApplications);
-
-router.get('/approved', controller.getAllAttendance);
-router.put('/attendance-application/approve', controller.approveAttendanceApplication);
-router.put('/attendance-application/reject', controller.rejectAttendanceApplication);
+router.get('/attendance-application/approved', controller.getApprovedAttendanceApplications);
+router.put('/attendance-application/approve', controller.approveApplication);
+router.put('/attendance-application/reject', controller.rejectApplication);
 
 module.exports = router;

@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 interface AttendanceRequest {
-  empName: string;
-  empId: string;
+  _id: any;
+  empId: any;
+  employeeName: string;
+  employeeCode: string;
   expanded: boolean;
   applicationDate?: string;
   applicationType?: string;
-  type?: string;  // ✅ Add this line
+  type?: string;
   leaveType?: string;
   reason?: string;
   remarks?: string;
@@ -19,8 +21,6 @@ interface AttendanceRequest {
   toDate?: string;
   fromHalf?: string;
   toHalf?: string;
-  fromTime?: string;
-  toTime?: string;
   startTime?: string;
   endTime?: string;
 }
@@ -50,6 +50,7 @@ interface Holiday {
 })
 export class AttendanceApprovalComponent implements OnInit {
   requests: AttendanceRequest[] = [];
+  holidays: Holiday[] = [];
 
   dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   currentDate = new Date();
@@ -60,80 +61,80 @@ export class AttendanceApprovalComponent implements OnInit {
   editingHoliday = false;
   editingHolidayName = '';
   editingHolidayReason = '';
-
-  holidays: Holiday[] = [];
+  
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.fetchAttendanceRequests();
     this.generateCalendar();
+    this.fetchHolidays();
+  }
+
+  fetchHolidays() {
+    this.http.get<Holiday[]>('http://localhost:5000/api/holidays/all').subscribe({
+      next: (data) => {
+        this.holidays = data.map(h => ({ ...h, date: new Date(h.date) }));
+        this.generateCalendar();
+      },
+      error: (err) => console.error('❌ Error fetching holidays:', err)
+    });
   }
 
   fetchAttendanceRequests(): void {
-    this.http.get<AttendanceRequest[]>('http://localhost:5000/api/attendance-application/pending')
-      .subscribe({
-        next: (data) => {
-          this.requests = data.map(r => ({ ...r, expanded: false }));
-        },
-        error: (err) => {
-          console.error('❌ Error fetching attendance:', err);
-        }
-      });
+    this.http.get<AttendanceRequest[]>('http://localhost:5000/api/attendance-application/pending').subscribe({
+      next: (data) => {
+        this.requests = data.map(r => ({ ...r, expanded: false }));
+      },
+      error: (err) => {
+        console.error('❌ Error fetching attendance:', err);
+      }
+    });
   }
 
   toggleRequest(index: number) {
     this.requests[index].expanded = !this.requests[index].expanded;
   }
 
-  accept(index: number) {
-    const request = this.requests[index];
-    this.http.put('http://localhost:5000/api/attendance-application/approve', {
-  empId: request.empId,
-  applicationDate: request.applicationDate,
-  startTime: request.fromTime,
-  endTime: request.toTime,
-  employeeName: request.empName
-}).subscribe({
-  next: () => {
-    console.log('✅ Approved');
-    this.requests.splice(index, 1); // remove from pending UI
-  },
-  error: (err) => {
-    console.error('❌ Error approving request:', err);
-  }
-});
-  }
+ accept(index: number) {
+  const request = this.requests[index];
+  this.http.put('http://localhost:5000/api/attendance-application/approve', {
+    id: request._id
+  }).subscribe({
+    next: () => {
+      console.log('✅ Approved');
+      this.requests.splice(index, 1);
+    },
+    error: (err) => console.error('❌ Error approving request:', err)
+  });
+}
 
-  reject(index: number) {
-    const request = this.requests[index];
-    this.http.put('http://localhost:5000/api/attendance-application/reject', {
-      empId: request.empId,
-      applicationDate: request.applicationDate
-    }).subscribe({
-      next: () => {
-        console.log('❌ Rejected request:', request);
-        this.requests.splice(index, 1);
-      },
-      error: (err) => {
-        console.error('❌ Error rejecting request:', err);
-      }
-    });
-  }
+
+
+reject(index: number): void {
+  const request = this.requests[index];
+  this.http.put('http://localhost:5000/api/attendance-application/reject', {
+    id: request._id
+  }).subscribe({
+    next: () => {
+      console.log('❌ Rejected');
+      this.requests.splice(index, 1);
+    },
+    error: (err) => console.error('❌ Error rejecting:', err)
+  });
+}
+
+
+
 
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
-
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     this.calendarDays = [];
-
-    for (let i = 0; i < firstDay; i++) {
-      this.calendarDays.push({});
-    }
-
+    for (let i = 0; i < firstDay; i++) this.calendarDays.push({});
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = new Date(year, month, i);
       const holiday = this.holidays.find(h =>
@@ -141,7 +142,6 @@ export class AttendanceApprovalComponent implements OnInit {
         h.date.getMonth() === currentDate.getMonth() &&
         h.date.getFullYear() === currentDate.getFullYear()
       );
-
       this.calendarDays.push({
         date: i,
         fullDate: currentDate,
@@ -171,9 +171,7 @@ export class AttendanceApprovalComponent implements OnInit {
   }
 
   selectDate(day: CalendarDay) {
-    if (day.date) {
-      this.selectedDate = day;
-    }
+    if (day.date) this.selectedDate = day;
   }
 
   startEditing() {
@@ -184,31 +182,19 @@ export class AttendanceApprovalComponent implements OnInit {
 
   saveHoliday() {
     if (this.editingHolidayName.trim() && this.selectedDate) {
-      const holidayIndex = this.holidays.findIndex(h =>
-        h.date.getDate() === this.selectedDate?.fullDate?.getDate() &&
-        h.date.getMonth() === this.selectedDate?.fullDate?.getMonth() &&
-        h.date.getFullYear() === this.selectedDate?.fullDate?.getFullYear()
-      );
-
-      const newHoliday: Holiday = {
-        date: new Date(this.selectedDate.fullDate!),
+      const newHoliday = {
+        date: this.selectedDate.fullDate,
         name: this.editingHolidayName,
-        reason: this.editingHolidayReason,
-        approved: holidayIndex >= 0 ? this.holidays[holidayIndex].approved : false
+        reason: this.editingHolidayReason
       };
-
-      if (holidayIndex >= 0) {
-        this.holidays[holidayIndex] = newHoliday;
-      } else {
-        this.holidays.push(newHoliday);
-      }
-
-      this.generateCalendar();
+      this.http.post('http://localhost:5000/api/holidays/add', newHoliday).subscribe({
+        next: () => {
+          console.log('✅ Holiday Saved');
+          this.fetchHolidays();
+        },
+        error: (err) => console.error('❌ Failed to save holiday:', err)
+      });
       this.editingHoliday = false;
-      this.selectDate(this.calendarDays.find(d =>
-        d.date === this.selectedDate?.date &&
-        d.fullDate?.getMonth() === this.selectedDate?.fullDate?.getMonth()
-      )!);
     }
   }
 
@@ -218,37 +204,12 @@ export class AttendanceApprovalComponent implements OnInit {
 
   approveHoliday() {
     if (!this.selectedDate) return;
-
     const holidayIndex = this.holidays.findIndex(h =>
       h.date.getDate() === this.selectedDate?.fullDate?.getDate() &&
       h.date.getMonth() === this.selectedDate?.fullDate?.getMonth() &&
       h.date.getFullYear() === this.selectedDate?.fullDate?.getFullYear()
     );
-
-    if (holidayIndex >= 0) {
-      this.holidays[holidayIndex].approved = true;
-    }
-
+    if (holidayIndex >= 0) this.holidays[holidayIndex].approved = true;
     this.generateCalendar();
-    console.log('Holiday approved:', this.selectedDate);
-  }
-
-  addHoliday() {
-    if (!this.selectedDate) return;
-
-    const holidayName = prompt('Enter holiday name:');
-    if (holidayName) {
-      const holidayReason = prompt('Enter holiday reason:');
-      const newHoliday: Holiday = {
-        date: new Date(this.selectedDate.fullDate!),
-        name: holidayName,
-        reason: holidayReason || '',
-        approved: false
-      };
-
-      this.holidays.push(newHoliday);
-      this.generateCalendar();
-      console.log('Holiday added:', newHoliday);
-    }
   }
 }

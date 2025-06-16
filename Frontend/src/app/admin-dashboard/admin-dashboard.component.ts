@@ -151,7 +151,8 @@ export class AdminDashboardComponent implements OnInit {
     { name: 'Akshay Kumar', dept: 'Sales', title: 'Sales Representative', status: 'Active' }
   ];
 
-  private readonly API_URL = 'http://localhost:5000/api/admin-dashboard';
+  private readonly API_URL = 'http://localhost:5000/api/employees';
+
 
   constructor(
     private http: HttpClient,
@@ -171,36 +172,59 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   
+
+  
   private loadDashboardData(): void {
-    const savedData = localStorage.getItem('adminDashboardData');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      this.newsItems = data.newsItems || this.newsItems;
-      this.documents = data.documents || this.documents;
-      this.reminders = data.reminders || this.reminders;
-      this.feedItems = data.feedItems || this.feedItems;
-      this.empDocuments = data.empDocuments || this.empDocuments;
-      this.todoItems = data.todoItems || this.todoItems;
-      this.newJoinees = data.newJoinees || this.newJoinees;
+  this.http.get<any>('http://localhost:5000/api/admin-dashboard/public').subscribe({
+    next: (data) => {
+      this.welcomeMessage = data?.welcomeMessage || '';
+      this.newsItems = data?.newsItems || [];
+      this.reminders = data?.reminders || [];
+      this.feedItems = data?.feedItems || [];
+      this.empDocuments = data?.empDocuments || [];
+      this.todoItems = data?.todoItems || [];
+      this.newJoinees = data?.newJoinees || [];
+    },
+    error: (err) => {
+      console.error('Error fetching dashboard data from backend:', err);
     }
-  }
+  });
+}
 
-  saveDashboardData(): void {
-    const data = {
-      welcomeMessage: this.welcomeMessage,
-      newsItems: this.newsItems,
-      reminders: this.reminders,
-      feedItems: this.feedItems,
-      empDocuments: this.empDocuments,
-      todoItems: this.todoItems,
-      newJoinees: this.newJoinees
-    };
+ saveDashboardData(): void {
+  const data = {
+    welcomeMessage: this.welcomeMessage || '',
+    newsItems: this.newsItems || [],
+    reminders: this.reminders?.map(r => ({
+      title: r?.title || '',
+      date: r?.date || '',
+      type: r?.type || '',
+      notes: r?.notes || ''
+    })) || [],
+    feedItems: this.feedItems || [],
+    empDocuments: this.empDocuments?.map(doc => ({ name: doc?.name || '' })) || [],
+    todoItems: this.todoItems?.map(todo => ({
+      task: todo?.task || '',
+      completed: todo?.completed || false
+    })) || [],
+    newJoinees: this.newJoinees?.map(j => ({
+      name: j?.name || '',
+      joinDate: j?.joinDate || '',
+      imageUrl: j?.imageUrl || ''
+    })) || []
+  };
 
-    this.http.put<any>(this.API_URL, data).subscribe({
-      next: () => console.log('✅ Dashboard data updated.'),
-      error: (err) => console.error('❌ Failed to update dashboard:', err)
-    });
-  }
+  this.http.put<any>('http://localhost:5000/api/admin-dashboard', data).subscribe({
+    next: () => console.log('✅ Dashboard data updated successfully.'),
+    error: (err) => console.error('❌ Failed to update dashboard:', err)
+  });
+}
+
+
+
+
+
+
 
   // Employee management
   get filteredEmployeeList() {
@@ -262,7 +286,7 @@ export class AdminDashboardComponent implements OnInit {
 
   private getEmployeeDetails(): void {
     const headers = this.createAuthHeaders();
-    this.http.get<any>(`${this.API_URL}/employees/profile`, { headers }).subscribe({
+    this.http.get<any>(`${this.API_URL}/profile`, { headers }).subscribe({
       next: (res) => {
         const emp = res?.employee;
         if (!emp) {
@@ -327,7 +351,7 @@ export class AdminDashboardComponent implements OnInit {
 
   getUpcomingBirthdays() {
     const headers = this.createAuthHeaders();
-    this.http.get(`${this.API_URL}/employees/upcoming-birthdays`, { headers }).subscribe({
+    this.http.get<any>(`${this.API_URL}/upcoming-birthdays`, { headers }).subscribe({
       next: (response: any) => {
         if (response?.success) {
           this.upcomingBirthdays = this.filterUpcomingBirthdays(response.upcomingBirthdays || []);
@@ -351,7 +375,8 @@ export class AdminDashboardComponent implements OnInit {
 
   private fetchEmployees(): void {
     const headers = this.createAuthHeaders();
-    this.http.get<any>(`${this.API_URL}/employees`, { headers }).subscribe({
+    this.http.get<any>(`${this.API_URL}`, { headers })
+.subscribe({
       next: (res) => {
         const employees: any[] = res?.employees || [];
         const loggedInEmpID = this.authService.getEmployeeId();

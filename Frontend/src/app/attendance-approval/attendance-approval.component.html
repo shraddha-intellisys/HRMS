@@ -1,76 +1,48 @@
 <div class="approval-container">
-  <!-- Employee Requests Section -->
+  <!-- Attendance Approval Section -->
   <h2 class="heading">Request for Manual Attendance Approval</h2>
+
+  <div *ngIf="requests.length === 0">
+    <p>No pending requests</p>
+  </div>
 
   <div *ngFor="let request of requests; let i = index" class="notification-card">
     <div class="notification-header" (click)="toggleRequest(i)">
-      <strong>{{ request.empName }}</strong> ({{ request.empId }})
+      <strong>{{ request.employeeName }}</strong> ({{ request.employeeCode }})
     </div>
 
     <div *ngIf="request.expanded" class="request-details">
-      <p><strong>Application Date:</strong> {{ request.applicationDate || '04/06/2025' }}</p>
-      <p><strong>Application Type:</strong> {{ request.applicationType || 'Manual Attendance' }}</p>
-      <p><strong>Type:</strong> {{ request.type || 'Full Day' }}</p>
-     
-      <div class="date-section">
-        <label>From:</label>
-        <input type="date" [value]="request.fromDate" readonly />
-        <select disabled>
-          <option [selected]="request.fromHalf === 'First Half'">First Half</option>
-          <option [selected]="request.fromHalf === 'Second Half'">Second Half</option>
-        </select>
-      </div>
-
-      <div class="time-section">
-  <label>From Time:</label>
-  <input type="time" [value]="request.startTime || ''" readonly />
-</div>
-
-
-      <div class="date-section">
-        <label>To:</label>
-        <input type="date" [value]="request.toDate" readonly />
-        <select disabled>
-          <option [selected]="request.toHalf === 'First Half'">First Half</option>
-          <option [selected]="request.toHalf === 'Second Half'">Second Half</option>
-        </select>
-      </div>
-
-      <div class="time-section">
-  <label>To Time:</label>
-  <input type="time" [value]="request.endTime || ''" readonly />
-</div>
-
-<label>Reason:</label>
-<textarea rows="2" readonly>{{ request.reason || 'Enter reason' }}</textarea>
-
-<label>Remarks:</label>
-<textarea rows="2" readonly>{{ request.remarks || 'No remarks provided' }}</textarea>
-<label>CC To (Email ID):</label>
-<input type="email" [value]="request.ccTo || ''" readonly />
-
-
+      <p><strong>Application Date:</strong> {{ request.applicationDate || '-' }}</p>
+      <p><strong>Application Type:</strong> {{ request.applicationType || '-' }}</p>
+      <p><strong>Attendance Basis:</strong> {{ request.attendanceBasis || '-' }}</p>
+      <p><strong>Reason:</strong> {{ request.reason || '-' }}</p>
+      <p><strong>Remarks:</strong> {{ request.remarks || '-' }}</p>
+      <p><strong>From Date:</strong> {{ request.fromDate || '-' }} {{ request.fromHalf ? '(' + request.fromHalf + ')' : '' }}</p>
+      <p><strong>To Date:</strong> {{ request.toDate || '-' }} {{ request.toHalf ? '(' + request.toHalf + ')' : '' }}</p>
+      <p><strong>Start Time:</strong> {{ request.startTime || '-' }}</p>
+      <p><strong>End Time:</strong> {{ request.endTime || '-' }}</p>
+      <p><strong>CC To:</strong> {{ request.ccTo || '-' }}</p>
 
       <div class="action-buttons">
-        <button (click)="accept(i)">✅ Accept</button>
-        <button (click)="reject(i)">❌ Reject</button>
+        <button class="accept-btn" (click)="accept(i)">✅ Accept</button>
+        <button class="reject-btn" (click)="reject(i)">❌ Reject</button>
       </div>
     </div>
   </div>
 
-  <!-- Holiday Access Section -->
+  <!-- Calendar Section -->
   <div class="holiday-access-container">
-    <h2 class="heading">Holiday Access</h2>
-    
+    <h2 class="heading">Holiday Calendar</h2>
+
     <div class="calendar-controls">
       <button (click)="prevMonth()">❮ Previous</button>
       <h3>{{ currentMonth }} {{ currentYear }}</h3>
       <button (click)="nextMonth()">Next ❯</button>
     </div>
-    
+
     <div class="calendar-grid">
       <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
-      <div *ngFor="let day of calendarDays" 
+      <div *ngFor="let day of calendarDays"
            class="calendar-day"
            [class.empty-day]="!day.date"
            [class.holiday]="day.isHoliday"
@@ -83,9 +55,10 @@
       </div>
     </div>
 
+    <!-- Selected Holiday Details -->
     <div *ngIf="selectedDate" class="date-details">
       <h4>{{ selectedDate.fullDate | date:'fullDate' }}</h4>
-      
+
       <div *ngIf="editingHoliday || selectedDate.isHoliday; else noHoliday">
         <div class="holiday-form">
           <div class="form-group">
@@ -93,35 +66,30 @@
             <input *ngIf="editingHoliday" [(ngModel)]="editingHolidayName" placeholder="Enter holiday name">
             <p *ngIf="!editingHoliday"><strong>Holiday:</strong> {{ selectedDate.holidayName }}</p>
           </div>
-          
+
           <div class="form-group">
             <label>Reason:</label>
             <textarea *ngIf="editingHoliday" [(ngModel)]="editingHolidayReason" rows="2" placeholder="Enter reason"></textarea>
             <p *ngIf="!editingHoliday"><strong>Reason:</strong> {{ selectedDate.holidayReason }}</p>
           </div>
-          
+
           <div *ngIf="selectedDate.isHoliday && !editingHoliday">
             <p><strong>Status:</strong> {{ selectedDate.approved ? 'Approved' : 'Pending Approval' }}</p>
           </div>
         </div>
-        
+
         <div class="holiday-actions">
-          <button *ngIf="!editingHoliday && selectedDate.isHoliday && !selectedDate.approved" 
-                  (click)="approveHoliday()">
-            Approve Holiday
-          </button>
-          
+          <button *ngIf="!editingHoliday && selectedDate.isHoliday && !selectedDate.approved" (click)="approveHoliday()">Approve Holiday</button>
           <button *ngIf="!editingHoliday" (click)="startEditing()">
             {{ selectedDate.isHoliday ? 'Edit Holiday' : 'Add Holiday' }}
           </button>
-          
           <div *ngIf="editingHoliday" class="edit-actions">
             <button (click)="saveHoliday()">Save</button>
             <button (click)="cancelEditing()">Cancel</button>
           </div>
         </div>
       </div>
-      
+
       <ng-template #noHoliday>
         <p>No holiday on this date</p>
         <button (click)="startEditing()">Add Holiday</button>

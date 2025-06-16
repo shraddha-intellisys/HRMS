@@ -37,3 +37,4 @@ exports.getAttendanceByEmployee = async (req, res) => {
   const records = await Attendance.find({ employeeCode });
   res.status(200).json(records);
 };
+

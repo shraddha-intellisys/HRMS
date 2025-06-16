@@ -48,7 +48,7 @@ export class LeavesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.generateYearRange();
     this.updateMonthOptions();
-    this.viewHolidays();
+   // this.viewHolidays();
     this.fetchLeaveApplications();
   }
 
@@ -282,14 +282,14 @@ approveLeave(id: string): void {
 }
 
 
-  viewHolidays(): void {
-    this.leavesService.getHolidays().subscribe({
-      next: (holidays: any) => {
-        this.holidays = holidays;
-      },
-      error: (err: any) => {
-        console.error('Error fetching holidays:', err);
-      }
-    });
-  }
+  // viewHolidays(): void {
+  //   this.leavesService.getHolidays().subscribe({
+  //     next: (holidays: any) => {
+  //       this.holidays = holidays;
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Error fetching holidays:', err);
+  //     }
+  //   });
+  // }
 }

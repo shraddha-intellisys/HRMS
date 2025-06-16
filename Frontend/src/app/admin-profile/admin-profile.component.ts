@@ -1,33 +1,33 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-profile',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-profile.component.html',
-  styleUrls: ['./admin-profile.component.css'],
+  styleUrls: ['./admin-profile.component.css']
 })
 export class AdminProfileComponent implements OnInit {
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  
   profileFormArray!: FormArray;
   editMode: boolean[] = [];
   showPassword: boolean[] = [];
   profilePhotos: (string | null)[] = [];
   defaultPhoto = 'assets/default-profile.png';
-  adminNames: string[] = ['Rutik Sir', 'Mahesh Sir', 'Swapnil Sir', 'Faiaz Sir'];
+  adminNames: string[] = ['Rutik Bhosale', 'Mahesh Jadhav', 'Swapnil Deshmukh'];
+
+  // Zoom functionality
+  zoomedPhoto: string | null = null;
+  zoomLevel = 1;
+  maxZoom = 3;
+  minZoom = 0.5;
+  zoomStep = 0.1;
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initializeForm();
     this.initializeEditModes();
     this.initializePhotos();
@@ -38,7 +38,6 @@ export class AdminProfileComponent implements OnInit {
       this.createProfileForm('rutik@example.com', 'admin123'),
       this.createProfileForm('mahesh@example.com', 'admin456'),
       this.createProfileForm('swapnil@example.com', 'admin789'),
-      this.createProfileForm('faiaz@example.com', 'admin000'),
     ]);
     this.profileFormArray.controls.forEach(control => control.disable());
   }
@@ -87,11 +86,13 @@ export class AdminProfileComponent implements OnInit {
   onPhotoChange(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.profilePhotos[index] = reader.result as string;
-      };
-      reader.readAsDataURL(input.files[0]);
+      const file = input.files[0];
+      if (file.type.match('image.*')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.profilePhotos[index] = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
     }
-  }
-}
+  } }

@@ -1,4 +1,3 @@
-<!-- leaves-approval.component.html -->
 <div class="approval-container">
   <h2 class="heading">Request for Leave Approval</h2>
 
@@ -11,7 +10,7 @@
       <p><strong>Application Date:</strong> {{ request.applicationDate | date:'dd/MM/yyyy' }}</p>
       <p><strong>Application Type:</strong> {{ request.applicationType }}</p>
       <p><strong>Type:</strong> {{ request.leaveType }}</p>
-      <p><strong>Available Leave Balance:</strong> {{ request.leaveBalance }}</p>
+      <p><strong>Available Leave Balance:</strong> {{ request.leaveBalance || '-' }}</p>
 
       <div class="date-section">
         <label>From:</label>
@@ -46,11 +45,10 @@
       </div>
 
       <div class="form-group">
-  <label>CC To (Email ID):</label>
-  <input type="text" [value]="request.ccEmail || 'No email specified'" readonly />
-</div>
+        <label>CC To (Email ID):</label>
+        <input type="text" [value]="request.ccTo || 'No email specified'" readonly />
+      </div>
 
-      <!-- Approver Dropdown Section -->
       <div class="approver-section">
         <label>Approved By:</label>
         <select [(ngModel)]="request.approvedBy" class="approver-dropdown">
@@ -70,21 +68,14 @@
   </div>
 </div>
 
-<!-- Add this below the existing leaves-approval component -->
 <div class="history-section">
   <h2 class="heading">Leave History</h2>
-  
+
   <div class="history-tabs">
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 'approved'"
-      (click)="activeTab = 'approved'">
+    <button class="tab-button" [class.active]="activeTab === 'approved'" (click)="activeTab = 'approved'">
       Approved Leaves
     </button>
-    <button 
-      class="tab-button" 
-      [class.active]="activeTab === 'rejected'"
-      (click)="activeTab = 'rejected'">
+    <button class="tab-button" [class.active]="activeTab === 'rejected'" (click)="activeTab = 'rejected'">
       Rejected Leaves
     </button>
   </div>

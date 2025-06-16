@@ -1,25 +1,35 @@
 const mongoose = require('mongoose');
 
+const ReminderSchema = new mongoose.Schema({
+  title: String,
+  date: String,
+  type: String,
+  notes: String
+});
+
+const EmpDocumentSchema = new mongoose.Schema({
+  name: String
+});
+
+const TodoItemSchema = new mongoose.Schema({
+  task: String,
+  completed: Boolean
+});
+
+const NewJoineeSchema = new mongoose.Schema({
+  name: String,
+  joinDate: String,
+  imageUrl: String
+});
+
 const AdminDashboardSchema = new mongoose.Schema({
-  welcomeMessage: { type: String, default: '' },
+  welcomeMessage: String,
   newsItems: [String],
-  reminders: [{
-    title: String,
-    date: String,
-    type: String,
-    notes: String
-  }],
+  reminders: [ReminderSchema],
   feedItems: [String],
-  empDocuments: [{ name: String }],
-  todoItems: [{
-    task: String,
-    completed: Boolean
-  }],
-  newJoinees: [{
-    name: String,
-    joinDate: String,
-    imageUrl: String
-  }]
+  empDocuments: [EmpDocumentSchema],
+  todoItems: [TodoItemSchema],
+  newJoinees: [NewJoineeSchema]
 });
 
 module.exports = mongoose.model('AdminDashboard', AdminDashboardSchema);

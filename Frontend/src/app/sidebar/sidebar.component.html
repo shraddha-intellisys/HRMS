@@ -17,7 +17,7 @@
        
 
       <!-- Home Section -->
-      <li *ngIf="role === 'admin'">
+      <li *ngIf="role === 'user'">
         <a href="javascript:void(0);" (click)="toggleDropdown('home')">
           <span>🏠</span> Home
           <span class="arrow" [ngClass]="{ open: isDropdownOpen.home }">&#9662;</span>

@@ -110,3 +110,25 @@ exports.getEmployeeByCode = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.getProfile = async (req, res) => {
+  try {
+    // 👉 For now, return the first employee for testing:
+    const employee = await Employee.findOne();
+    if (!employee) return res.status(404).json({ message: 'Employee not found' });
+    res.json({ employee });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// ✅ Upcoming Birthdays
+exports.getUpcomingBirthdays = async (req, res) => {
+  try {
+    const today = new Date();
+    const upcomingBirthdays = await Employee.find({ dateOfBirth: { $exists: true } });
+    res.json({ success: true, upcomingBirthdays });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

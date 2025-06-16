@@ -28,7 +28,13 @@ export class ResignationApprovalComponent implements OnInit {
     this.http.get<any[]>('http://localhost:5000/api/resignation/pending')
       .subscribe({
         next: (data) => {
-          this.resignationRequests = data.map(r => ({ ...r, expanded: false }));
+          this.resignationRequests = data.map(r => ({
+            ...r,
+            empName: r.empName || r.employeeName,   // ✅ mapping added
+            empCode: r.empCode || r.employeeCode,   // ✅ mapping added
+            lastWorkingDay: r.lastWorkingDay || r.lastWorkingDate, 
+            expanded: false
+          }));
         },
         error: (err) => {
           console.error('❌ Error fetching resignations:', err);

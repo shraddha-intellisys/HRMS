@@ -1,158 +1,9 @@
+.page-wrapper {
+  width: 80%;
+  margin: 0 auto;
+}
+
 /* Container for the three panels */
-.commondiv {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 10px;
-  flex-wrap: nowrap;
-}
-
-/* Left Panel */
-.divleft {
-  flex: 0 0 25%;
-  max-width: 25%;
-}
-
-/* Center Panel (Calendar) */
-.divcenter {
-  flex: 0 0 50%;
-  max-width: 50%;
-  margin-right: 30px; /* Adds spacing to the right of the calendar */
-}
-
-/* Right Panel */
-.divright {
-  flex: 0 0 25%;
-  max-width: 25%;
-}
-
-/* Calendar Container */
-.calendar-container {
-  background-color: #f4f6f8;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: darkorange;
-}
-
-/* Calendar Box */
-.calendar-box {
-  background-color: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: darkorange;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .commondiv {
-    flex-direction: column;
-  }
-
-  .divleft,
-  .divcenter,
-  .divright {
-    max-width: 100%;
-    flex: 0 0 100%;
-    margin-right: 0;
-  }
-}
-
-.attendance-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: var(--background-black);
-  padding: 20px;
-  border-radius: 10px;
-  }
-  
-  .attendance-row {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  }
-  
-  .attendance-box {
-  flex: 1 1 45%;
-  background-color: var(--box-black);
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 6px 12px var(--shadow-orange);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  cursor: pointer;
-  }
-  
-  .attendance-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px var(--accent-orange);
-  }
-  
-  .attendance-details {
-  color: var(--text-light);
-  font-size: 16px;
-  font-weight: 500;
-  }
-  
-  .status-count {
-  color: var(--primary-orange);
-  font-weight: bold;
-  font-size: 18px;
-  margin: 0;
-  }
-  
-  .attendance-box.present {
-  border-left: 4px solid #28a745;
-  }
-  .attendance-box.absent {
-  border-left: 4px solid #dc3545;
-  }
-  .attendance-box.leave {
-  border-left: 4px solid #ffc107;
-  }
-  .attendance-box.lwp {
-  border-left: 4px solid #17a2b8;
-  }
-  .attendance-box.leave-submit {
-  border-left: 4px solid #fd7e14;
-  }
-  .attendance-box.attendance-submit {
-  border-left: 4px solid #20c997;
-  }
-  .attendance-box.phy {
-  border-left: 4px solid #6c757d;
-  }
-  .attendance-box.weo {
-  border-left: 4px solid #6f42c1;
-  }
-  .attendance-box.reminders {
-  border-left: 4px solid #007bff;
-  }
-  .attendance-box.half-day {
-  border-left: 4px solid #6610f2;
-  }
-  .attendance-box.blocked {
-  border-left: 4px solid #343a40;
-  }
-
-  :root {
-  --primary-orange: #FF8C00;
-  --accent-orange: #FFA500;
-  --background-black: #121212;
-  --box-black: #1f1f1f;
-  --text-light: #ffffff;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-black);
-  color: var(--text-light);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Container Layout */
 .commondiv {
   display: flex;
   justify-content: space-between;
@@ -162,19 +13,57 @@ body {
 
 /* Left, Center, Right Panels */
 .divleft, .divcenter, .divright {
+  flex: 0 0 23%;
+  max-width: 25%;
   padding: 20px;
   border-radius: 10px;
   background-color: var(--box-black);
   border: 2px solid rgb(106, 100, 100);
-  /* box-shadow: 2px 2px 15px rgb(250, 167, 2); */
+  min-height: 480px; /* Consistent height */
+  box-sizing: border-box;
 }
 
-.divleft { flex: 0 0 25%; max-width: 25%; }
-.divcenter { flex: 0 0 50%; max-width: 50%; margin-right: 30px; }
-.divright { flex: 0 0 25%; max-width: 25%; }
 
-/* Header and Time */
-h3, h4, h2, p {
+.navbar
+{
+  text-align: center;
+align-items: center;
+font-family: Arial, Helvetica, sans-serif;
+
+}
+.divcenter {
+  flex: 0 0 50%;
+  max-width: 50%;
+  margin-right: 0px;
+}
+
+/* Variables */
+:root {
+  --primary-orange: #FF8C00;
+  --accent-orange: #FFA500;
+  --background-black: #121212;
+  --box-black: #1f1f1f;
+  --text-light: #ffffff;
+  --shadow-orange: rgba(255, 140, 0, 0.3);
+}
+
+/* General Body */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-black);
+  color: var(--text-light);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Calendar */
+.calendar-container, .calendar-box {
+  background-color: var(--box-black);
+  border-radius: 10px;
+}
+
+/* Headers */
+h2, h3, h4, p {
   color: var(--primary-orange);
 }
 
@@ -190,78 +79,89 @@ button {
   font-weight: bold;
   transition: 0.3s ease;
 }
-
 button:hover {
   background-color: var(--accent-orange);
 }
 
-/* Calendar Box */
-.calendar-container, .calendar-box {
-  background-color: var(--box-black);
-  border-radius: 10px;
-  /* box-shadow: 0 0 15px 4px rgb(250, 167, 2); */
-}
-
-/* Attendance Summary */
+/* Attendance Boxes */
 .attendance-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  background-color: var(--background-black);
+  padding: 20px;
+  border-radius: 10px;
+  align-items: center;
 }
 
 .attendance-row {
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .attendance-box {
-  flex: 1;
+  flex: 1 1 45%;
+  background-color: var(--box-black);
   padding: 15px;
   border-radius: 10px;
-  background-color: var(--background-black);
-  box-shadow: 0 4px 8px rgba(228, 129, 8, 0.3);
-  color: var(--text-light);
-  transition: transform 0.3s ease;
+  box-shadow: 0 6px 12px var(--shadow-orange);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .attendance-box:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 15px 4px rgb(250, 167, 2);
+  box-shadow: 0 8px 16px var(--accent-orange);
+}
+
+.attendance-details {
+  color: var(--text-light);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .status-count {
   color: var(--primary-orange);
-  font-size: 16px;
   font-weight: bold;
-}
-/* Panel Styling */
-.divleft {
-  /* background-color: #1a1a1a; */
-  padding: 20px;
-  border-radius: 12px;
-  /* box-shadow: 0 0 15px 4px rgb(250, 167, 2); */
-  color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
+  font-size: 18px;
+  margin: 0;
 }
 
+.attendance-box.present {
+  border-left: 4px solid #28a745;
+}
+.attendance-box.absent {
+  border-left: 4px solid #dc3545;
+}
+.attendance-box.leave {
+  border-left: 4px solid #ffc107;
+}
+.attendance-box.lwp {
+  border-left: 4px solid #17a2b8;
+}
+.attendance-box.leave-submit {
+  border-left: 4px solid #fd7e14;
+}
+
+/* Left Panel Specifics */
 .header h3,
 .roster-section h4 {
   color: #ff8c00;
   margin-bottom: 10px;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-.time-display p {
+.time-display p,
+.marked-times p {
   font-size: 14px;
-  margin: 2px 0;
+  margin: 12px 0;
   color: black;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-/* Button Styling */
 .buttons {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
-
 .buttons button {
   background-color: #ff8c00;
   color: #fff;
@@ -274,32 +174,20 @@ button:hover {
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 2px 6px rgba(248, 143, 15, 0.4);
 }
-
 .buttons button:hover {
   background-color: #ffa500;
   transform: translateY(-2px);
 }
 
-.marked-times p {
-  font-size: 13px;
-  margin-top: 5px;
-  color:black;
-}
-
-.roster-section {
-  margin-top: 20px;
-}
-
+/* Input Fields */
 .mat-form-field {
   width: 100%;
   background-color: #2b2b2b;
   border-radius: 6px;
 }
-
 .mat-form-field .mat-label {
   color: #ffa500;
 }
-
 input[matInput] {
   color: #ffffff;
 }
@@ -311,10 +199,11 @@ input[matInput] {
   margin: 20px 0;
   font-size: 22px;
   text-shadow: 1px 1px 4px rgba(255, 140, 0, 0.5);
+  font-family: Arial, Helvetica, sans-serif;
+
 }
 
-
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 1200px) {
   .divleft, .divright {
     flex: 0 0 30%;
@@ -376,9 +265,7 @@ input[matInput] {
     font-size: 1.2rem;
     margin: 10px 0;
   }
-  .status-count {
-    font-size: 14px;
-  }
+  .status-count,
   .attendance-details {
     font-size: 14px;
   }
@@ -393,7 +280,6 @@ input[matInput] {
     flex: 1 1 calc(50% - 10px);
   }
 }
-
 @media (max-width: 576px) {
   .attendance-box {
     flex: 1 1 100%;

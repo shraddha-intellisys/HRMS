@@ -25,7 +25,7 @@
             <p>{{ currentTime }}</p>
           </div>
           <div class="buttons">
-            <button (click)="onMarkInTime()">Mark In Time</button> -->
+            <button (click)="onMarkInTime()">Mark In Time</button> 
             <button (click)="onMarkOutTime()">Mark Out Time</button>
           </div>
           <div class="marked-times">
@@ -36,20 +36,7 @@
           </div>
         </div>
 
-        <!-- Roster Section -->
-        <div class="roster-section">
-          <h4>Roster</h4>
-          <div class="date-controls">
-            <mat-form-field appearance="fill">
-              <mat-label>Select Date</mat-label>
-              <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateChange($event)" />
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-          </div>
-          <p><strong>Shift Name:</strong> {{ roster.shiftName }}</p>
-          <p><strong>Shift Timing:</strong> {{ roster.shiftTiming }}</p>
-        </div>
+       
       </div>
     </div>
   </div>
@@ -94,66 +81,21 @@
           <div class="attendance-row">
             <div class="attendance-box leave">
               <div class="attendance-details">
-                <p class="status-count">Leave {{ attendanceSummary.leave }}</p>
-              </div>
-            </div>
-            <div class="attendance-box lwp">
-              <div class="attendance-details">
-                <p class="status-count">LWP {{ attendanceSummary.lwp }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Leave Submit & Attendance Submit -->
-          <div class="attendance-row">
-            <div class="attendance-box leave-submit">
-              <div class="attendance-details">
-                <p class="status-count">Leave (Submit) {{ attendanceSummary.leaveSubmit }}</p>
-              </div>
-            </div>
-            <div class="attendance-box attendance-submit">
-              <div class="attendance-details">
                 <p class="status-count">Attendance (Submit) {{ attendanceSummary.attendanceSubmit }}</p>
               </div>
             </div>
-          </div>
-
-          <!-- PHY & WEO -->
-          <div class="attendance-row">
-            <div class="attendance-box phy">
-              <div class="attendance-details">
-                <p class="status-count">PHY {{ attendanceSummary.phy }}</p>
-              </div>
-            </div>
-            <div class="attendance-box weo">
-              <div class="attendance-details">
-                <p class="status-count">WEO {{ attendanceSummary.weo }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Reminders & Half Day -->
-          <div class="attendance-row">
-            <div class="attendance-box reminders">
-              <div class="attendance-details">
-                <p class="status-count">Reminders {{ attendanceSummary.reminders }}</p>
-              </div>
-            </div>
-            <div class="attendance-box half-day">
+            <div class="attendance-box lwp">
               <div class="attendance-details">
                 <p class="status-count">Half Day {{ attendanceSummary.halfDay }}</p>
               </div>
             </div>
           </div>
 
-          <!-- Blocked -->
-          <div class="attendance-row">
-            <div class="attendance-box blocked">
-              <div class="attendance-details">
-                <p class="status-count">Blocked (DOJ/DOE) {{ attendanceSummary.blocked }}</p>
-              </div>
-            </div>
+          
+           
           </div>
+
+         
         </div>
       </div>
 
@@ -169,7 +111,7 @@
       
     </div>
   </div>
-</div>
+
 
 
 <!-- Attendance Summary and Application Section -->

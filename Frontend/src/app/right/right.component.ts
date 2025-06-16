@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./right.component.css'],
 })
 export class RightComponent implements OnInit {
+
+  // Employee basic fields
   username = '';
   employeeCode = '';
   employeeName = '';
@@ -26,11 +28,20 @@ export class RightComponent implements OnInit {
   currentDate = '';
   showProfile = false;
 
+  // Local employee data storage
   emp: any = {};
   upcomingBirthdays: any[] = [];
-  birthdaysThisMonth: any[] = [];
   allEmployees: any[] = [];
   filteredEmployees: any[] = [];
+
+  // Admin dashboard data
+  welcomeMessage = '';
+  newsItems: string[] = [];
+  feedItems: string[] = [];
+  empDocuments: any[] = [];
+  reminders: any[] = [];
+  todoItems: any[] = [];
+  newJoinees: any[] = [];
 
   private readonly API_URL = 'http://localhost:5000/api';
 
@@ -47,6 +58,7 @@ export class RightComponent implements OnInit {
     this.setCurrentDate();
     this.fetchEmployees();
     this.getUpcomingBirthdays();
+    this.getAdminDashboardData();
   }
 
   private loadUserInfo(): void {
@@ -60,7 +72,8 @@ export class RightComponent implements OnInit {
 
   private fetchEmployees(): void {
     const headers = this.createAuthHeaders();
-    this.http.get<any>(`${this.API_URL}/employees`, { headers }).subscribe({
+    // ✅ Corrected endpoint (IMPORTANT)
+    this.http.get<any>(`${this.API_URL}/employees/all`, { headers }).subscribe({
       next: (res) => {
         const employees: any[] = res?.employees || [];
         const loggedInEmpID = this.authService.getEmployeeId();
@@ -94,7 +107,6 @@ export class RightComponent implements OnInit {
         }
 
         this.emp = emp;
-
         this.employeeName = emp.name || 'Employee';
         this.employeeCode = emp.employeeCode || 'N/A';
         this.branch = emp.branch || 'N/A';
@@ -103,7 +115,6 @@ export class RightComponent implements OnInit {
         this.projectType = emp.projectType || 'N/A';
         this.joiningDate = this.formatDate(emp.joiningDate);
         this.dob = this.formatDate(emp.dateOfBirth);
-
         this.imageUrl = emp.image?.startsWith('http')
           ? emp.image
           : emp.image
@@ -128,10 +139,10 @@ export class RightComponent implements OnInit {
     });
   }
 
-   logout(): void {
-  this.authService.logout();
-  this.router.navigate(['/login']);
-}
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 
   private setCurrentDate(): void {
     const today = new Date();
@@ -154,7 +165,6 @@ export class RightComponent implements OnInit {
     return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 
-  // ✅ Updated method to fetch upcoming birthdays with proper headers and URL
   getUpcomingBirthdays() {
     const headers = this.createAuthHeaders();
     this.http.get(`${this.API_URL}/employees/upcoming-birthdays`, { headers }).subscribe({
@@ -178,4 +188,43 @@ export class RightComponent implements OnInit {
     }).slice(0, 5);
     return upcoming;
   }
+
+  private getAdminDashboardData(): void {
+  this.http.get<any>(`${this.API_URL}/admin-dashboard/public`).subscribe({
+    next: (data) => {
+      this.welcomeMessage = data?.welcomeMessage ?? '';
+      this.newsItems = data?.newsItems ?? [];
+      this.feedItems = data?.feedItems ?? [];
+
+      // Clean reminders before assigning
+      this.reminders = (data?.reminders ?? []).map((r: any) => ({
+        title: r.title,
+        date: r.date,
+        type: r.type,
+        notes: r.notes
+      }));
+
+      // Clean todoItems before assigning
+      this.todoItems = (data?.todoItems ?? []).map((t: any) => ({
+        task: t.task,
+        completed: t.completed
+      }));
+
+      // Clean empDocuments
+      this.empDocuments = (data?.empDocuments ?? []).map((d: any) => ({
+        name: d.name
+      }));
+
+      // Clean newJoinees
+      this.newJoinees = (data?.newJoinees ?? []).map((j: any) => ({
+        name: j.name,
+        joinDate: j.joinDate,
+        imageUrl: j.imageUrl
+      }));
+    },
+    error: (err) => {
+      console.error('Error fetching admin dashboard data:', err);
+    }
+  });
+}
 }

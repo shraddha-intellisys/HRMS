@@ -5,4 +5,6 @@ const adminDashboardController = require('../controllers/adminDashboardControlle
 router.get('/', adminDashboardController.getDashboard);
 router.put('/', adminDashboardController.updateDashboard);
 
+router.get('/public', adminDashboardController.getDashboardPublic);
+
 module.exports = router;
