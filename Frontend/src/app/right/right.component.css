@@ -1,7 +1,7 @@
-*
-{
-  font-family: Arial, sans-serif;
-  
+/* Base Styles */
+* {
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Main Container */
@@ -9,85 +9,75 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px 20px;
-  background-color: #f0f0f0; /* Light gray background */
-  border: 1px solid #ccc; /* Optional border */
-  border-radius: 4px; /* Optional rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow */
-  height: 49px; /* Adjust height as needed */
- background-color: black;
+  padding: 0 20px;
+  background-color: #000000; /* Orange background */
+  height: 60px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* Centered Company Name */
+/* Company Name */
 .company-name {
-
-  font-size: 19px;
-  font-weight: bold;
-  color: #e3d4d4;
-  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 auto; /* Center the company name */
 }
 
-/* Right Content Container */
+/* Right Content */
 .right-content {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between employee details, photo, and notification */
-  margin-left: auto;
-  background-color: white;
-  
+  gap: 20px;
+  background-color: transparent;
 }
 
-/* Employee Details Flex */
 .employee-details {
   display: flex;
   flex-direction: column;
   text-align: right;
 }
 
-/* Employee Name and ID Styling */
 .employee-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #100f0f;
-  
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
-.employee-id {
-  font-size: 14px;
-  color: #666;
+.employee-info span {
+  font-size: 13px;
+  color: #f5f5f5;
 }
 
-/* Employee Photo */
-.employee-photo {
-  height: 40px; /* Adjust size as needed */
+.employee-image {
   width: 40px;
-  border-radius: 50%; /* Makes it circular */
-  object-fit: cover; /* Ensures the image fits within the circle */
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
 }
 
-/* Notification Icon */
 .notification-icon {
-  height: 29px;
-  width: 29px;
-  cursor: pointer; /* Changes to pointer on hover */
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 }
 
-
-/* Reset body styles */
-.body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-
-.right-side {
+.logout-btn {
+  background-color: #d35400; /* Darker orange */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-left: 6px;
-  width: 99%;
-  text-align: center;
-  justify-content: center;
+  gap: 8px;
+}
 
+.logout-btn:hover {
+  background-color: #a04000;
 }
 
 /* Welcome Section */
@@ -96,599 +86,267 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 100%;
-  padding: 20px; /* Add internal spacing */
-  margin: 20px 0; /* Add top and bottom gap */
-  background: #fffcfc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  box-sizing: border-box;
+  padding: 25px;
+  margin: 20px 0;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 10px;
 }
-
-
-.welcome-text {
-  text-align: left; /* Aligns all text to the left */
-}
-
-.employee-info h2 {
-  margin: 0;
-  font-size: 1.8rem; /* Adjust as needed */
-  color: #333;
-}
-
-.welcome-message {
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  font-size: 16px; /* Slightly smaller font size than heading */
-  color: #666;
-}
-.welcome-message p{
-      margin-top: -3%;
-}
-
-.makeflex
-{
-  display: flex;
-  flex-direction: column;
-}
-
-
 
 .employee-info {
   display: flex;
   align-items: center;
   gap: 20px;
-  text-align: center;
-  justify-content: center;
 }
 
 .employee-img {
-  width: 75px;
-  height: 75px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #ddd;
+  border: 3px solid #f1f1f1;
 }
 
-.welcome-text h2 {
+.welcome-text h1 {
   margin: 0;
-  font-size: 38px;
-  color: #333;
+  font-size: 28px;
+  color: #2c3e50;
+  font-weight: 600;
 }
 
-.welcome-text p {
-  margin-left: 104px;
-  margin-top: -12px; 
-  font-size: 15px;
-  color: #666;
-  gap: 6px;
-}
-
-.officelogo {
-  flex-shrink: 0;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  
+.welcome-message p {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin-top: 5px;
 }
 
 .officelogo img {
- 
-    width: 315px; /* Adjust the logo size here */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 4px; /* Optional: Add rounded corners if needed */
-    align-items: center;
+  width: 250px;
+  height: auto;
 }
-
-/* Adjust spacing for below containers */
-.container-below {
-  margin-top: 20px; /* Sufficient space between sections */
-}
-
-
-
-.content-time
-{
-  height: 108px;
-  background-image: url('/assets/blue (2).jpg');
-  border: 1px solid #dee2e6;
-  padding: 60px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.content-time h4{
-  color: white;
-  font-size: 25px;
-  margin:0;
-}
-
-.content-time p{
-   font-size: 20px;
-   color: white;
-}
-
-
 
 /* Content Section */
 .content-section {
-  margin-left: 5px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 25px;
+  margin: 0 5px;
+}
+
+/* Common Card Styles */
+.content-box, 
+.content-feed, 
+.content-doc, 
+.content-joinee,
+.content-remind,
+.content1-box {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -25px -25px 25px;
+  padding: 15px 25px;
+  background: #e67e22; /* Orange header */
+  border-radius: 10px 10px 0 0;
+  color: white;
+}
+
+.section-header h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 /* Current Time Box */
 .content1-box {
-  height: 45%;
-  background-image: url("/assets/named.jpg");
-  border: 1px solid #dee2e6;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
   text-align: center;
 }
 
-
-/* Content Boxes */
-.content-box {
-  background-color: white;
-  border: 1px solid #dee2e6;
-  padding: 60px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
+.content1-box h4 {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 15px;
 }
 
-
-.content-feed {
-  background-color: white;
-  border: 1px solid #dee2e6;
-  padding: 60px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-
-
-.content-box h4 {
-  border-radius: 8px;
-  margin: -46px -50px 50px;
+.content1-box p {
   font-size: 18px;
-  font-family: Arial, sans-serif;
-  color: #fffbfb;
-  padding: 7px;
-  background-color: darkorange;
+  margin: 10px 0;
 }
 
-.content-remind h4
-{
-  border-radius: 8px;
-  margin: 2px -7px 50px;
-  font-size: 18px;
-  font-family: Arial, sans-serif;
-  color: #fffbfb;
-  padding: 7px;
-  background-color: darkorange;
-
-}
-
-.content-box p,
-.content-box ul {
-  font-size: 14px;
-  color: #495057;
-  margin: 0;
-}
-
+/* News Center */
 .content-box ul {
   list-style: none;
   padding: 0;
-  margin-top: 10px;
+  margin: 0;
 }
 
 .content-box ul li {
-  margin: 5px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #ecf0f1;
 }
 
-/* All Reminders Section */
+/* Reminders Section */
 .content-remind {
-  border: 1px solid #dee2e6;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  background-color: #ffffff;
 }
 
-.content-feed
-{
-background-color: white;
-border: 1px solid #dee2e6;
-padding: 60px;
-border-radius: 8px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-text-align: center;
-}
-
-.content-feed h4 {
-  border-radius: 8px;
-  margin: -46px -50px 50px;
-  font-size: 18px;
-  font-family: Arial, sans-serif;
-  color: #fffbfb;
-  padding: 7px;
-  background-color: darkorange;
-}
-
-/* Reminder Row Styling */
 .reminder-row {
-  gap: 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  padding: 15px;
   margin-bottom: 15px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-/* Employee Details */
-.employee-details {
-  flex: 1;
-  text-align: left;
+.reminder-row:hover {
+  background-color: #ecf0f1;
 }
 
-.employee-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin: 0;
+.reminder-details h5 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
 }
 
-.employee-id {
-  font-size: 14px;
+.reminder-details p {
+  margin: 3px 0;
   color: #666;
-  margin: 0;
+  font-size: 14px;
 }
 
-/* Employee Image */
-.employee-image {
+/* Documents Section */
+.document-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+/* Todo List */
+.todo-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #95a5a6;
+}
+
+/* New Joinee Section */
+.joinee-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.joinee-image {
   width: 50px;
   height: 50px;
+  border-radius: 50%;
   object-fit: cover;
-  
-   text-align: center;
-  justify-content: center;
+  margin-right: 15px;
+  border: 2px solid #ecf0f1;
 }
-
-
-.content-remind {
-  
-  border: 1px solid #dee2e6;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.officelogo {
-  text-align: right;
-}
-
-.content-doc
-{
-  height: 282px;
-  background-color: white;
-  border: 1px solid #dee2e6;
-  padding: 60px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-.content-doc h4
-{
- 
-    border-radius: 8px;
-    margin: -46px -50px 50px;
-    font-size: 18px;
-    font-family: Arial, sans-serif;
-    color: #fffbfb;
-    padding: 7px;
-    background-color: darkorange; 
-}
-
-.search-container {
-  display: flex;
- align-items: center;
- text-align: center;
- justify-content: center;
-}
-
-.search-bar {
-  flex: 1; /* Allow the input to take available space */
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow */
-}
-
-.search-bar:focus {
-  outline: none;
-  border-color: #007bff; /* Highlight border on focus */
-}
-
-.search-button {
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  color: #fff;
-  background-color: black;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-  background-color: skyblue; /* Darker blue on hover */
-}
-
-.content-joinee
-{
- 
-  background-color: white;
-  border: 1px solid #dee2e6;
-  padding: 60px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.content-joinee h4
-{
-  border-radius: 8px;
-  margin: -46px -50px 50px;
-  font-size: 18px;
-  font-family: Arial, sans-serif;
-  color: #fffbfb;
-  padding: 7px;
-  background-color: darkorange;
-}
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .welcome-section {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
+    text-align: center;
   }
-
-  .content-section
-  {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .officelogo {
-    margin-top: 10px;
-    align-self: center;
-  }
-
+  
   .employee-info {
     flex-direction: column;
-
   }
 
-  .welcome-text h2 {
-    font-size: 18px;
+  
+  .company-name {
+    display: none;
   }
-
-  .welcome-text p {
-    font-size: 12px;
+  
+  .right-content {
+    width: 100%;
+    justify-content: flex-end;
   }
-
- 
+  .company-bar
+  {
+    display: none;
+  }
   
 }
 
 @media (max-width: 480px) {
+  .content-section {
+    grid-template-columns: 1fr;
+  }
+  
   .employee-img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
   }
-
-  .welcome-text h2 {
-    font-size: 16px;
+  
+  .welcome-text h1 {
+    font-size: 20px;
   }
-
-  .welcome-text p {
-    font-size: 10px;
+  
+  .officelogo img {
+    width: 200px;
   }
-}
-
-
-@media (max-width: 1270px) 
-{
-  .content-box
+  .main-content
   {
-    height: 70%;
+    margin-top: 20%;
   }
-  .search-container 
+  .employee-info h1
   {
-    margin-left: -28%;
+    font-size: 27px;
   }
-
-  .content-remind 
+  .welcome-message p 
   {
-       margin-top: -60%;
-  }
-
-  .content-joinee 
-  {
-    margin-top: -25%;
-
+    font-size: 15px;
   }
   
 }
 
-@media (max-width: 1235px)
-{
-  .search-container
-  {
-    margin-left: 0px;
-  }
-
-.content-remind
-{
-  margin-top: 14%;
-}
- .content1-box{
-  height: 75%;
- }
- .content-joinee
- {
-  margin-top: 15%;
- }
-
-
-} 
-
-
-@media (max-width: 1206px) 
-
-{
-  .search-container
-  {
-    margin-left: 0px;
-  }
-
-  .content-remind
-  {
-    margin-top: 60px;
-  }
-
-  
-  .content-joinee
-  {
-    margin-top: 65px;
-  }
- 
-  
-
-
-
-}
-
-
-
-
-
-
-
-@media(max-width:975px)
-{
-
-  .welcome-section 
-  {
-    padding: 0px;
-  }
-
-
-
-  .search-container
-  {
-    margin-left: -15%;
-  }
-
-  .welcome-message 
-  {
-    margin-top: -15px;
-  }
-
-}
-
-
-@media(max-width:925px)
-{
-   .welcome-section
-   {
-    flex-direction: column;
-   }
-   .company-name
-   {
-    left: 46%;
-   }
-  
-   
-  
-}
-
-@media(max-width:913px)
-{
-  .search-container{
-    margin-left: -25px;
-  }
-
-  .content1-box{
-    height: 78%;
-  }
-  .content-box{
-    height: 38%;
-  }
-  
-}
-
-@media(max-width:880px)
-{
-   .company-name
-   {
-    left: 50%;
-    font-size: 17px;
-   }
-}
-
-
-@media(max-width:780px)
-{
-  .welcome-section
-  {
-    align-items: center;
-    margin-top: -5px;
-  }
-  .employee-img{
-    margin-left: 80px;
-    width: 77px;
-    height: 77px;
-  }
-  .welcome-message p
-  {
-        margin-top: 2%;
-  }
-
- 
-}
-
-/* Add to admin-dashboard.component.css */
-.logout-btn {
-  background-color: #f44336;
+/* Add orange background to all section headings */
+.content-box h4,
+.content-feed h4,
+.content-doc h4,
+.content-joinee h4,
+.content-remind h4,
+.content1-box h4 {
+  background-color: #e67e22; /* Orange color */
   color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  padding: 10px 15px;
+  margin: -25px -25px 20px -25px; /* Align with card padding */
+  border-radius: 8px 8px 0 0;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.logout-btn:hover {
-  background-color: #d32f2f;
+/* Specific adjustment for time/date box */
+.content1-box h4 {
+  background-color: rgba(0,0,0,0.2); /* Slightly darker overlay */
+  margin-bottom: 25px;
 }
 
-.logout-btn i {
-  font-size: 16px;
+/* Make sure content doesn't get hidden behind headings */
+.content-box,
+.content-feed, 
+.content-doc,
+.content-joinee,
+.content-remind {
+  position: relative;
+  overflow: hidden;
+  padding-top: 15px; /* Extra space for heading */
 }

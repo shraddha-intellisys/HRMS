@@ -31,6 +31,7 @@ export class AdminDashboardComponent implements OnInit {
   dob = '1990-07-15';
   currentTime = '';
   currentDate = '';
+  gender: string = '';
   showProfile = false;
   
   // Employee data
@@ -120,6 +121,20 @@ export class AdminDashboardComponent implements OnInit {
       ]
     }]
   };
+
+  
+  getTitlePrefix(): string {
+    if (!this.gender) return '';
+
+    const genderLower = this.gender.toLowerCase();
+    if (genderLower === 'male') {
+      return 'Mr.';
+    } else if (genderLower === 'female') {
+      return 'Ms.';
+    }
+    return '';
+  }
+
 
   attendanceOverview: ChartConfiguration<'line'>['data'] = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

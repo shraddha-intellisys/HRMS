@@ -26,22 +26,28 @@
   </div>
 </div>
 
-<!-- ✅ Use *ngIf here -->
+<!-- Sidebar Menu (10 Options for User) -->
 <div id="menuList" *ngIf="isMenuOpen">
-  <ul>
-    <!-- Home Section -->
-    <li *ngIf="role === 'user'">
+  <ul *ngIf="role === 'user'">
+
+    <!-- 1. Dashboard -->
+    <li>
+      <a [routerLink]="['/dashboard']"><span>🕵️‍♂️</span> Admin Dashboard</a>
+    </li>
+
+    <!-- 2. Home -->
+    <li>
       <a (click)="toggleDropdown('home')">
         <span>🏠</span> Home
         <span class="arrow" [ngClass]="{ open: isDropdownOpen.home }">&#9662;</span>
       </a>
       <ul *ngIf="isDropdownOpen.home" class="dropdown">
-        <li><a [routerLink]="['/right']" routerLinkActive="active">Home</a></li>
+        <li><a [routerLink]="['/right']">Home</a></li>
       </ul>
     </li>
 
-    <!-- Profile Section -->
-    <li *ngIf="role === 'user'">
+    <!-- 3. Profile -->
+    <li>
       <a (click)="toggleDropdown('profile')">
         <span>👤</span> Profile
         <span class="arrow" [ngClass]="{ open: isDropdownOpen.profile }">&#9662;</span>
@@ -51,33 +57,59 @@
       </ul>
     </li>
 
-    <!-- Time & Attendance -->
-    <li *ngIf="role === 'user'">
+    <!-- 4. Time & Attendance -->
+    <li>
       <a [routerLink]="['/shedule']"><span>🗓️</span> Time & Attendance</a>
     </li>
 
-    <!-- Leave -->
-    <li *ngIf="role === 'user'">
+    <!-- 5. Leave -->
+    <li>
       <a [routerLink]="['/leave']"><span>✅</span> Leave</a>
     </li>
 
-    <!-- Payroll Section -->
-    <li *ngIf="role === 'user'">
-      <a (click)="toggleDropdown('payroll')">
-        <span>💰</span> Payroll
-        <span class="arrow" [ngClass]="{'open': isDropdownOpen.payroll}">&#9662;</span>
-      </a>
-      <ul *ngIf="isDropdownOpen.payroll" class="dropdown">
-        <li><a href="/userpay">Payslip</a></li>
-        
-      </ul>
+    <!-- 6. Payroll -->
+  
+     <li>
+      <a [routerLink]="['/leave']"><span>  💰</span> Payslip</a>
     </li>
 
-    <!-- Apply Exit -->
-    <li *ngIf="role === 'user'">
-      <a href="#"><span>🚪</span> Apply Exit</a>
+    <!-- 7. Apply Exit -->
+    <li>
+      <a [routerLink]="['/apply-exit']"><span>🚪</span> Apply Exit</a>
     </li>
 
-    
+
+          <li>
+         <a [routerLink]="['/admin-dashboard']"><span>🕵️‍♂️</span> Admin Dashboard</a>
+        </li>
+
+        <li>
+            <a [routerLink]="['/employee-profile']"><span>👤</span> Employee</a></li>
+        <li>
+      <a [routerLink]="['/training']"><span>✅</span> Leave Approval</a>
+    </li>
+
+     <li>
+      <a [routerLink]="['/training']"><span>📊</span>Attendance Approval</a>
+    </li>
+
+     
+
+    <li>
+      <a [routerLink]="['/training']"><span>✅</span> Leave Approval</a>
+    </li>
+
+    <li>
+      <a [routerLink]="['/announcements']"><span>🚪</span>  Resignation Approval</a>
+    </li>
+
+    <li>
+      <a [routerLink]="['/support']"><span>👤</span> Admin Profile</a>
+    </li>
+   
+    <li>
+      <a [routerLink]="['/support']"><span>📊</span>Logout</a>
+    </li>
+
   </ul>
 </div>

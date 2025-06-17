@@ -28,6 +28,9 @@ export class TopNavComponent {
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
+  navigateAndClose(): void {
+  this.isMenuOpen = false;
+}
 
   // Toggle dropdown menus
   toggleDropdown(section: keyof typeof this.isDropdownOpen): void {

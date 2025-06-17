@@ -39,7 +39,8 @@
           class="employee-image"
         />
         <h1>
-          <span *ngIf="!editingWelcome">Welcome, Ms. {{ username || 'Shraddha' }}</span>
+           
+          <span *ngIf="!editingWelcome">Welcome, {{ getTitlePrefix() }} {{ username || 'Shraddha' }}</span>
           <input *ngIf="editingWelcome" [(ngModel)]="username" class="edit-input">
         </h1>
       </div>
@@ -296,6 +297,4 @@
       </canvas>
     </div>
   </div>
-
- 
 </div>
