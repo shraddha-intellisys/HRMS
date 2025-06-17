@@ -10,9 +10,9 @@
   
     <!-- Holiday List Display -->
     <div class="holiday-wrapper">
-      <div *ngFor="let month of groupedHolidays | keyvalue">
-        <h4 class="month-name">{{ month.key }}</h4>
-        <div *ngFor="let holiday of month.value" class="holiday-row">
+      <div *ngFor="let month of orderedMonths">
+        <h4 class="month-name">{{ month }}</h4>
+        <div *ngFor="let holiday of groupedHolidays[month]" class="holiday-row">
           <div class="date-box">
             <span class="date">{{ holiday.date | date: 'MMM dd' }}</span>
           </div>
@@ -20,12 +20,4 @@
         </div>
       </div>
     </div>
-
-    
-    
-  
-    
-  
-    
-    
-  
+</div>

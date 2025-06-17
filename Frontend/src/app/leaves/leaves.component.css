@@ -11,6 +11,14 @@
   height: auto;
 }
 
+.navbar
+{
+  text-align: center;
+align-items: center;
+font-family: Arial, Helvetica, sans-serif;
+
+}
+
 
 
 .full-calendar-container {
@@ -70,15 +78,7 @@
   min-width: 300px;
 }
 
-/* Navbar and Heading */
-.navbar {
-  text-align: left;
-  padding: 0rem;
-  /* background: #fc7420; */
-  color: rgb(8, 8, 8);
-  margin-bottom: 0rem;
-  border-radius: 8px;
-}
+
 
 .heading {
   text-align: center;

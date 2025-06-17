@@ -24,7 +24,6 @@ export class AttendanceApplicationComponent implements OnInit {
   isTimeBasisSelected: boolean = false;
   isDayBasisSelected: boolean = true;
 
-  
   attendanceData = [
     {
       date: new Date(),
@@ -40,12 +39,141 @@ export class AttendanceApplicationComponent implements OnInit {
       departureHours: '0'
     }
   ];
-  attendanceApplicationService: any;
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private attendanceService: AttendanceService
+  ) {
+    this.attendanceForm = this.createForm();
+  }
+
+  ngOnInit(): void {
+    this.onBasisChange(this.attendanceForm.get('attendanceBasis')?.value);
+  }
+
+  createForm(): FormGroup {
+    return this.fb.group({
+      applicationDate: [new Date().toISOString().substring(0, 10), Validators.required],
+      applicationType: ['casual', Validators.required],
+      leaveType: ['full', Validators.required],
+      reason: ['', Validators.required],
+      remarks: [''],
+      ccTo: ['', [Validators.email]],
+      attendanceBasis: ['day', Validators.required],
+      startTime: [''],
+      endTime: [''],
+      fromDate: [new Date().toISOString().substring(0, 10)],
+      toDate: [new Date().toISOString().substring(0, 10)],
+      fromHalf: [false],
+      firstHalf: [false],
+      secondHalf: [false],
+    });
+  }
+
+  onBasisChange(basis: string): void {
+    this.isTimeBasisSelected = basis === 'time';
+    this.isDayBasisSelected = basis === 'day';
+
+    if (this.isTimeBasisSelected) {
+      this.attendanceForm.get('startTime')?.setValidators([Validators.required]);
+      this.attendanceForm.get('endTime')?.setValidators([Validators.required]);
+      this.attendanceForm.get('fromDate')?.clearValidators();
+      this.attendanceForm.get('toDate')?.clearValidators();
+    } else {
+      this.attendanceForm.get('startTime')?.clearValidators();
+      this.attendanceForm.get('endTime')?.clearValidators();
+      this.attendanceForm.get('fromDate')?.setValidators([Validators.required]);
+      this.attendanceForm.get('toDate')?.setValidators([Validators.required]);
+    }
+
+    this.updateValidations();
+  }
+
+  private updateValidations(): void {
+    const fields = ['startTime', 'endTime', 'fromDate', 'toDate'];
+    fields.forEach(field => this.attendanceForm.get(field)?.updateValueAndValidity());
+  }
+
+  onSubmit() {
+    if (this.attendanceForm.invalid || this.isSubmitting) {
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const applicationData = {
+      employeeName: this.employeeName,
+      employeeCode: this.employeeCode,
+      ...this.attendanceForm.value
+    };
+
+    this.http.post('http://localhost:5000/api/attendance-application', applicationData)
+      .subscribe({
+        next: (res) => {
+          console.log('Application submitted successfully:', res);
+          alert('Application submitted successfully');
+          this.resetForm();
+        },
+        error: (err) => {
+          console.error('Error submitting application:', err);
+          alert('Error submitting application');
+        },
+        complete: () => {
+          this.isSubmitting = false;
+        }
+      });
+  }
+
+  resetForm(): void {
+    // Reset form while preserving employee info and default values
+    this.attendanceForm.reset({
+      applicationDate: new Date().toISOString().substring(0, 10),
+      applicationType: 'casual',
+      leaveType: 'full',
+      attendanceBasis: 'day',
+      fromDate: new Date().toISOString().substring(0, 10),
+      toDate: new Date().toISOString().substring(0, 10),
+      fromHalf: false,
+      firstHalf: false,
+      secondHalf: false,
+      remarks: '',
+      ccTo: ''
+    });
+    
+    // Clear validation errors
+    Object.keys(this.attendanceForm.controls).forEach(key => {
+      this.attendanceForm.get(key)?.setErrors(null);
+    });
+    
+    // Reset basis selection
+    this.onBasisChange('day');
+  }
+
+  onCancel(): void {
+    this.resetForm();
+  }
+
+  // Calendar related methods remain the same
+  calendarOptions: CalendarOptions = {
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,today,prevYear',
+      center: 'title',
+      right: 'nextYear,dayGridMonth,timeGridWeek,next',
+    },
+    height: 500,
+    contentHeight: 'auto',
+    aspectRatio: 1.5,
+    events: [],  
+    dateClick: this.onDateClick.bind(this), 
+  };
+  
   onDateClick(event: any): void {
     const selectedDate = event.dateStr; 
-    console.log('📅 Date clicked:', selectedDate);
+    console.log('Date clicked:', selectedDate);
     this.submitAttendance(selectedDate);
-  
   
     const newEvent = {
       applicationDate: selectedDate,
@@ -68,171 +196,30 @@ export class AttendanceApplicationComponent implements OnInit {
     );
   }
 
-  constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private attendanceService: AttendanceService
-  ) {
-    this.attendanceForm = this.fb.group({
-      applicationDate: [new Date().toISOString().substring(0, 10), Validators.required], // Today's date
-      applicationType: ['casual', Validators.required],
-      leaveType: ['full', Validators.required],
-      reason: ['Test Reason', Validators.required],
-      remarks: ['Testing...'],
-      ccTo: ['', [Validators.email]],
-      attendanceBasis: ['day', Validators.required],
-      startTime: [''],
-      endTime: [''],
-      fromDate: [new Date().toISOString().substring(0, 10)],
-      toDate: [new Date().toISOString().substring(0, 10)],
-      fromHalf: [true],
-      firstHalf: [true],
-      secondHalf: [true],
-    });
-  }
-
-  ngOnInit(): void {
-    this.onBasisChange(this.attendanceForm.get('attendanceBasis')?.value);
-  }
-
-  onBasisChange(basis: string): void {
-    this.isTimeBasisSelected = basis === 'time';
-    this.isDayBasisSelected = basis === 'day';
-
-    if (this.isTimeBasisSelected) {
-      this.attendanceForm.get('startTime')?.setValidators([Validators.required]);
-    this.attendanceForm.get('endTime')?.setValidators([Validators.required]);
-    this.attendanceForm.get('fromDate')?.clearValidators();
-    this.attendanceForm.get('toDate')?.clearValidators();
-      this.attendanceForm.get('fromHalf')?.setValidators([Validators.requiredTrue]);
-      this.attendanceForm.get('firstHalf')?.setValidators([Validators.requiredTrue]);
-      this.attendanceForm.get('secondHalf')?.setValidators([Validators.requiredTrue]);
-    } else {
-      this.attendanceForm.get('startTime')?.clearValidators();
-    this.attendanceForm.get('endTime')?.clearValidators();
-    this.attendanceForm.get('fromDate')?.setValidators([Validators.required]);
-    this.attendanceForm.get('toDate')?.setValidators([Validators.required]);
-      this.attendanceForm.get('fromDate')?.setValidators([Validators.required]);
-      this.attendanceForm.get('toDate')?.setValidators([Validators.required]);
-      this.attendanceForm.get('fromHalf')?.setValidators([Validators.requiredTrue]);
-      this.attendanceForm.get('firstHalf')?.setValidators([Validators.requiredTrue]);
-      this.attendanceForm.get('secondHalf')?.setValidators([Validators.requiredTrue]);
-    }
-
-    this.updateValidations();
-  }
-
-  private updateValidations(): void {
-    const fields = ['startTime', 'endTime', 'fromDate', 'toDate', 'fromHalf', 'firstHalf', 'secondHalf'];
-    fields.forEach(field => this.attendanceForm.get(field)?.updateValueAndValidity());
-  }
-
-  onSubmit() {
-    if (this.attendanceForm.invalid) {
-      alert('Please fill all required fields correctly.');
-      return;
-    }
-  
-    const applicationData = {
-      employeeName: this.employeeName,
-      employeeCode: this.employeeCode,
-      ...this.attendanceForm.value
-    };
-  
-    this.http.post('http://localhost:5000/api/attendance-application', applicationData)
-      .subscribe({
-        next: (res) => {
-          console.log('Application submitted successfully:', res);
-          alert('Application submitted successfully');
-        },
-        error: (err) => {
-          console.error('Error submitting application:', err);
-          alert('Error submitting application');
-        }
-      });
-  }
-  
-  
-
-
-  onCancel(): void {
-    if (this.attendanceForm.invalid) {
-      alert('❌ Cannot cancel: form is invalid.');
-      return;
-    }
-  
-    const payload = {
-      employeeName: this.employeeName,
-      employeeCode: this.employeeCode,
-      ...this.attendanceForm.value
-    };
-  
-    this.http.post('http://localhost:5000/api/attendance-application/cancel', payload)
-      .subscribe({
-        next: (res) => {
-          console.log('✅ Application Canceled Successfully:', res);
-          alert('✅ Attendance Application Canceled Successfully!');
-          this.attendanceForm.reset({
-            applicationType: 'casual',
-            leaveType: 'full',
-            attendanceBasis: 'day'
-          });
-          this.onBasisChange('day');
-        },
-        error: (err) => {
-          console.error('❌ Error cancelling application:', err);
-          alert('❌ Failed to cancel attendance application.');
-        }
-      });
-  }
-  
-
-
-  calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,today,prevYear',
-      center: 'title',
-      right: 'nextYear,dayGridMonth,timeGridWeek,next',
-    },
-    height: 500,
-    contentHeight: 'auto',
-    aspectRatio: 1.5,
-    events: [],  
-    dateClick: this.onDateClick.bind(this), 
-  };
-  
   fetchUpdatedEvents(): void {
     this.http.get<any[]>('http://localhost:5000/api/attendance-events')  
       .subscribe({
         next: (events: any[]) => {
-          console.log('✅ Fetched Updated Events:', events);
+          console.log('Fetched Updated Events:', events);
           this.updateCalendar(events);  
         },
         error: (err: any) => {
-          console.error('❌ Error fetching events:', err);
+          console.error('Error fetching events:', err);
         }
       });
   }
   
-  
   updateCalendar(events: any[]): void {
-  const updatedEvents = events.map(event => ({
-    title: event.status || 'Manually Updated',  
-    start: event.applicationDate,  
-    backgroundColor: '#FF5722',  
-    display: 'auto',  
-  }));
+    const updatedEvents = events.map(event => ({
+      title: event.status || 'Manually Updated',
+      start: event.applicationDate,
+      backgroundColor: '#FF5722',
+      display: 'auto',
+    }));
 
-  // Update the calendar's events
-  this.calendarOptions = {
-    ...this.calendarOptions,  
-    events: updatedEvents,    
-  };
+    this.calendarOptions = {
+      ...this.calendarOptions,
+      events: updatedEvents,
+    };
+  }
 }
-
-
-}  
-
-  
