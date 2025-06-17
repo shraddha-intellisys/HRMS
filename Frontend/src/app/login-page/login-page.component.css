@@ -126,6 +126,7 @@
   color: darkorange;
   text-decoration: none;
   text-align: right;
+  margin-bottom: 2%;
 }
 
 .forgot-password:hover {
@@ -243,6 +244,7 @@ button:hover {
 
   .forgot-password {
     font-size: 12px; /* Smaller font for the link */
+    margin-bottom: 3%;
   }
 
   button {

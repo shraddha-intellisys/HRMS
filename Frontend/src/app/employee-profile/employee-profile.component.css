@@ -31,6 +31,7 @@
   padding: 6px 12px;
   border-radius: 25px;
   border: 1px solid #ccc;
+ 
 }
 
 .search-bar {
@@ -40,11 +41,13 @@
   flex: 1;
   padding: 6px 0;
   font-size: 14px;
+
 }
 
 .search-icon {
   color: #FFD700;
   font-size: 18px;
+  cursor: pointer;
 }
 
 /* Table wrapper for responsiveness */

@@ -24,7 +24,7 @@ export class PayslipComponent {
   ];
 
   filteredEmployees = [...this.employees];
-  selectedMonths: { [key: string]: string } = {};
+  selectedMonths: { [key: string]: string | null |undefined } = {};
   selectedFiles: { [key: string]: File | null } = {};
   fileInputs: { [key: string]: ElementRef<HTMLInputElement> } = {};
 
@@ -59,29 +59,38 @@ export class PayslipComponent {
   }
 
   uploadPayslip(empId: string) {
-  const month = this.selectedMonths[empId];
-  const file = this.selectedFiles[empId];
+    const month = this.selectedMonths[empId];
+    const file = this.selectedFiles[empId];
 
-  if (!month || !file) {
-    alert('Please select a month and upload a PDF file.');
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('empId', empId);
-  formData.append('month', month);
-  formData.append('payslip', file);
-
-  this.http.post('http://localhost:5000/api/payslips/upload', formData).subscribe({
-    next: () => {
-      alert("Payslip uploaded successfully");
-      this.selectedMonths[empId] = '';
-      this.selectedFiles[empId] = null;
-    },
-    error: (err) => {
-      console.error('Error uploading:', err);
-      alert('Upload failed');
+    if (!month || !file) {
+      alert('Please select a month and upload a PDF file.');
+      return;
     }
-  });
-  }}
 
+    const formData = new FormData();
+    formData.append('empId', empId);
+    formData.append('month', month);
+    formData.append('payslip', file);
+
+    this.http.post('http://localhost:5000/api/payslips/upload', formData).subscribe({
+      next: () => {
+        alert("Payslip uploaded successfully");
+
+        // ✅ Reset month dropdown (preserve placeholder)
+        this.selectedMonths[empId] = undefined;
+
+        // ✅ Reset file selection
+        this.selectedFiles[empId] = null;
+
+        // ✅ Clear file input from DOM
+        if (this.fileInputs[empId]) {
+          this.fileInputs[empId].nativeElement.value = '';
+        }
+      },
+      error: (err) => {
+        console.error('Error uploading:', err);
+        alert('Upload failed');
+      }
+    });
+  }
+}

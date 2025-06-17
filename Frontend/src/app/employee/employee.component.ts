@@ -18,7 +18,7 @@ export class EmployeeComponent implements OnInit {
   employeeForm: FormGroup;
   profileData: any = null;
   isSubmitting = false;
-  upcomingBirthdays: any[] = []; // New property to hold upcoming birthdays
+  upcomingBirthdays: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -27,41 +27,37 @@ export class EmployeeComponent implements OnInit {
     private authService: AuthService,
     private employeeService: EmployeeService
   ) {
-
-// Assuming you are using ReactiveFormsModule
-this.employeeForm = this.fb.group({
-  name: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
-    employeeCode: ['', [Validators.required]],
-    gender: ['', [Validators.required]],
-    location: [''],
-    department: ['', [Validators.required]],
-    manager: [''],
-    joiningDate: ['', [Validators.required]],
-    salary: ['', [Validators.required, Validators.min(1000)]],
-    panNumber: ['', [Validators.required,Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
-    aadharNumber: ['', [Validators.required,Validators.pattern(/^[2-9]{1}[0-9]{11}$/)]],
-    branch: [''],
-    grade: [''],
-    designation: ['', [Validators.required]],
-    projectType: [''],
-    dateOfBirth: ['', [Validators.required]],
-    epsJoiningDate: [''],
-    epsExitDate: [''],
-    esicNo: ['', [Validators.required,Validators.pattern(/^[0-9]{10}$/)]],
-    previousMemberId: ['', Validators.required],
-    epsNo: ['', Validators.required]             
-});
-
-
+    this.employeeForm = this.fb.group({
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],  // ✅ Added this
+      employeeCode: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      location: [''],
+      department: ['', [Validators.required]],
+      manager: [''],
+      joiningDate: ['', [Validators.required]],
+      salary: ['', [Validators.required, Validators.min(1000)]],
+      panNumber: ['', [Validators.required, Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
+      aadharNumber: ['', [Validators.required, Validators.pattern(/^[2-9]{1}[0-9]{11}$/)]],
+      branch: [''],
+      grade: [''],
+      designation: ['', [Validators.required]],
+      projectType: [''],
+      dateOfBirth: ['', [Validators.required]],
+      epsJoiningDate: [''],
+      epsExitDate: [''],
+      esicNo: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      previousMemberId: ['', Validators.required],
+      epsNo: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
     this.loadEmployeeProfile();
-    this.getUpcomingBirthdays();  // Fetch the upcoming birthdays
+    this.getUpcomingBirthdays();
   }
 
-  // ✅ Load profile for logged-in user
   private loadEmployeeProfile(): void {
     this.employeeService.getEmployeeProfile();
 
@@ -90,11 +86,10 @@ this.employeeForm = this.fb.group({
     });
   }
 
-  // ✅ Fetch upcoming birthdays
   getUpcomingBirthdays(): void {
     this.employeeService.getUpcomingBirthdays().subscribe(
       (data) => {
-        this.upcomingBirthdays = data;  // Assign the data to upcomingBirthdays
+        this.upcomingBirthdays = data;
       },
       (error) => {
         console.error('Error fetching upcoming birthdays:', error);
@@ -102,60 +97,55 @@ this.employeeForm = this.fb.group({
     );
   }
 
-  // ✅ Submit form (create or update employee)
   submitEmployeeForm(): void {
-  if (this.employeeForm.invalid) {
-    alert('⚠️ Please fill in all required fields correctly.');
-    return;
+    if (this.employeeForm.invalid) {
+      alert('⚠️ Please fill in all required fields correctly.');
+      return;
+    }
+
+    this.isSubmitting = true;
+    const formData = this.prepareFormData();
+
+    this.http.post('http://localhost:5000/api/employees/add', this.employeeForm.value)
+      .subscribe({
+        next: () => {
+          alert('✅ Employee created:');
+          this.employeeForm.reset();
+          this.isSubmitting = false;
+        },
+        error: (err: any) => {
+          console.error('❌ Error:', err);
+          alert(err.error?.message || 'An error occurred while saving employee data.');
+          this.isSubmitting = false;
+        }
+      });
   }
 
-  this.isSubmitting = true;
-  const formData = this.prepareFormData();
-
-  this.http.post('http://localhost:5000/api/employees/add', this.employeeForm.value)
-    .subscribe({
-      next: () => {
-        alert('✅ Employee created:');
-        this.employeeForm.reset();
-        this.isSubmitting = false;
+  loadProfileAfterAdd(id: string) {
+    this.employeeService.getEmployeeById(id).subscribe({
+      next: (data) => {
+        console.log("✅ Loaded newly added profile:", data);
+        this.profileData = data;
       },
-      error: (err: any) => {
-        console.error('❌ Error:', err);
-        alert(err.error?.message || 'An error occurred while saving employee data.');
-        this.isSubmitting = false;
+      error: (err) => {
+        console.error("❌ Error fetching new profile:", err);
       }
     });
-}
+  }
 
-loadProfileAfterAdd(id: string) {
-  this.employeeService.getEmployeeById(id).subscribe({
-    next: (data) => {
-      console.log("✅ Loaded newly added profile:", data);
-      this.profileData = data;
-    },
-    error: (err) => {
-      console.error("❌ Error fetching new profile:", err);
-    }
-  });
-}
+  private prepareFormData(): any {
+    const raw = { ...this.employeeForm.value };
 
-// 🔧 Prepare form data with date format correction
-private prepareFormData(): any {
-  const raw = { ...this.employeeForm.value };
+    const dateFields = ['joiningDate', 'dateOfBirth', 'epsJoiningDate', 'epsExitDate'];
+    dateFields.forEach(field => {
+      if (raw[field]) {
+        raw[field] = new Date(raw[field]).toISOString();
+      }
+    });
 
-  const dateFields = ['joiningDate', 'dateOfBirth', 'epsJoiningDate', 'epsExitDate'];
-  dateFields.forEach(field => {
-    if (raw[field]) {
-      raw[field] = new Date(raw[field]).toISOString();
-    }
-  });
+    return raw;
+  }
 
-  return raw;
-}
-
-
-
-  // ✅ Handle image upload
   onImageUpload(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input?.files?.[0];
@@ -173,7 +163,6 @@ private prepareFormData(): any {
     reader.readAsDataURL(file);
   }
 
-  // ✅ Format dates for form inputs
   private formatDate(date: any): string | null {
     if (!date) return null;
     const d = new Date(date);

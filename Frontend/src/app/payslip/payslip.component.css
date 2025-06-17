@@ -42,7 +42,9 @@
   flex: 1;
   padding: 6px 0;
   font-size: 14px;
+  cursor: pointer;
 }
+
 
 .search-icon {
   color: #FFD700;
@@ -79,7 +81,7 @@
   background-color: #f9f9f9;
 }
 
-.edit-btn {
+.edit-btn ,.delete-btn {
   background-color: black;
   color: white;
   border: none;
