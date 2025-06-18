@@ -28,12 +28,16 @@ export class RightComponent implements OnInit {
   currentDate = '';
    gender: string = '';
   showProfile = false;
+   showNotifications = false;
+  
+  unreadNotificationsCount = 0;
 
   // Local employee data storage
   emp: any = {};
   upcomingBirthdays: any[] = [];
   allEmployees: any[] = [];
   filteredEmployees: any[] = [];
+    notifications: any[] = [];
 
   // Admin dashboard data
   welcomeMessage = '';
@@ -60,8 +64,39 @@ export class RightComponent implements OnInit {
     this.fetchEmployees();
     this.getUpcomingBirthdays();
     this.getAdminDashboardData();
+    this.loadNotifications();
+  }
+ toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.markNotificationsAsRead();
+    }
   }
 
+  loadNotifications(): void {
+    const headers = this.createAuthHeaders();
+    this.http.get<any>(`${this.API_URL}/notifications`, { headers }).subscribe({
+      next: (res) => {
+        this.notifications = res?.notifications || [];
+        this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
+      },
+      error: (err) => console.error('Error loading notifications:', err),
+    });
+  }
+
+  markNotificationsAsRead(): void {
+    const headers = this.createAuthHeaders();
+    this.http.post(`${this.API_URL}/notifications/mark-as-read`, {}, { headers }).subscribe({
+      next: () => {
+        this.notifications = this.notifications.map(notification => ({
+          ...notification,
+          isRead: true
+        }));
+        this.unreadNotificationsCount = 0;
+      },
+      error: (err) => console.error('Error marking notifications as read:', err),
+    });
+  }
   private loadUserInfo(): void {
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {

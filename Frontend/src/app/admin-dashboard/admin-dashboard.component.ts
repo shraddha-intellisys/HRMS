@@ -33,7 +33,10 @@ export class AdminDashboardComponent implements OnInit {
   currentDate = '';
   gender: string = '';
   showProfile = false;
+  showNotifications = false;
   
+  unreadNotificationsCount = 0;
+
   // Employee data
   emp: any = {
     name: 'Shraddha Meshram',
@@ -50,6 +53,8 @@ export class AdminDashboardComponent implements OnInit {
   birthdaysThisMonth: any[] = [];
   allEmployees: any[] = [];
   filteredEmployees: any[] = [];
+    notifications: any[] = [];
+
   
   // Edit states
   editingWelcome = false;
@@ -135,6 +140,38 @@ export class AdminDashboardComponent implements OnInit {
     return '';
   }
 
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.markNotificationsAsRead();
+    }
+  }
+
+  loadNotifications(): void {
+    const headers = this.createAuthHeaders();
+    this.http.get<any>(`${this.API_URL}/notifications`, { headers }).subscribe({
+      next: (res) => {
+        this.notifications = res?.notifications || [];
+        this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
+      },
+      error: (err) => console.error('Error loading notifications:', err),
+    });
+  }
+
+  markNotificationsAsRead(): void {
+    const headers = this.createAuthHeaders();
+    this.http.post(`${this.API_URL}/notifications/mark-as-read`, {}, { headers }).subscribe({
+      next: () => {
+        this.notifications = this.notifications.map(notification => ({
+          ...notification,
+          isRead: true
+        }));
+        this.unreadNotificationsCount = 0;
+      },
+      error: (err) => console.error('Error marking notifications as read:', err),
+    });
+  }
 
   attendanceOverview: ChartConfiguration<'line'>['data'] = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

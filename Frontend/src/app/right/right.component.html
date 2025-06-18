@@ -8,21 +8,43 @@
         <span><strong>Employee </strong><strong>Code:</strong> {{ employeeCode || 'N/A' }}</span>
       </div>
     </div>
-    <img
-    [src]="emp.imageUrl ? emp.imageUrl : 'assets/employee (1).png'"
-    (error)="emp.imageUrl = null"
-    alt="{{ employeeName || 'Employee' }}'s photo"
-    class="employee-image"
+   <div class="notification-container">
+  <img
+    src="assets/notification (1).avif"
+    alt="Notification"
+    class="notification-icon"
+    (click)="toggleNotifications()"
   />
+  <span *ngIf="unreadNotificationsCount > 0" class="notification-badge">
+    {{ unreadNotificationsCount }}
+  </span>
   
-    <img
-      src="assets/notification (1).avif"
-      alt="Notification"
-      class="notification-icon"
-    />
-     <button class="logout-btn" (click)="logout()">
-    <i class="fas fa-sign-out-alt"></i> Logout
-  </button>
+  <!-- Notification popup -->
+  <div *ngIf="showNotifications" class="notification-popup">
+    <div class="notification-header">
+      <h3>Notifications</h3>
+      <button class="close-btn" (click)="showNotifications = false">&times;</button>
+    </div>
+    <div class="notification-list">
+      <div *ngFor="let notification of notifications" 
+           class="notification-item" 
+           [class.unread]="!notification.isRead">
+        <div class="notification-content">
+          <strong>{{ notification.title }}</strong>
+          <p>{{ notification.message }}</p>
+          <small>{{ notification.createdAt | date:'shortTime' }} • {{ notification.createdAt | date:'mediumDate' }}</small>
+        </div>
+      </div>
+      <div *ngIf="notifications.length === 0" class="empty-notifications">
+        No new notifications
+      </div>
+    </div>
+  </div>
+</div>
+  
+    <button class="logout-btn" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
   </div>
 </div>
 
@@ -36,12 +58,12 @@
           alt="{{ emp.name || 'Employee' }}'s photo"
           class="employee-image"
         />
-     <h1>Welcome, {{ getTitlePrefix() }} {{ username || 'Shraddha' }}</h1>
+        <h1>Welcome, {{ getTitlePrefix() }} {{ username || 'Shraddha' }}</h1>
       </div>
     
       <div class="welcome-message">
-  <p>{{ welcomeMessage || 'Hope you have a great day at work!' }}</p>
-</div>
+        <p>{{ welcomeMessage || 'Hope you have a great day at work!' }}</p>
+      </div>
     </div>
     <div class="officelogo">
       <img src="assets/logo (2).png" alt="Office Logo" />
@@ -51,7 +73,6 @@
 
 <!-- Main Content Area -->
 <div class="content-section">
-
   <!-- Current Time & Date -->
   <div class="content1-box">
     <h4>Current Time & Date</h4>
@@ -61,76 +82,62 @@
 
   <!-- News Center -->
   <div class="content-box">
-  <h4>News Center</h4>
-  <p *ngIf="newsItems.length === 0">No records to display</p>
-  <ul *ngIf="newsItems.length > 0">
-    <li *ngFor="let news of newsItems">{{ news }}</li>
-  </ul>
-</div>
+    <h4>News Center</h4>
+    <p *ngIf="newsItems.length === 0">No records to display</p>
+    <ul *ngIf="newsItems.length > 0">
+      <li *ngFor="let news of newsItems">{{ news }}</li>
+    </ul>
+  </div>
 
-  
-
-<!-- Upcoming Birthdays Section -->
-<div class="content-remind">
-  <h4>Upcoming Reminders</h4>
-
-  <p *ngIf="reminders.length === 0">No reminders</p>
-
-  <div *ngFor="let reminder of reminders" class="reminder-row">
-    <div class="reminder-details">
-      <h5>{{ reminder.title }}</h5>
-      <p><strong>Date:</strong> {{ reminder.date | date:'mediumDate' }}</p>
-      <p><strong>Type:</strong> {{ reminder.type }}</p>
-      <p *ngIf="reminder.notes"><strong>Notes:</strong> {{ reminder.notes }}</p>
+  <!-- Upcoming Birthdays Section -->
+  <div class="content-remind">
+    <h4>Upcoming Reminders</h4>
+    <p *ngIf="reminders.length === 0">No reminders</p>
+    <div *ngFor="let reminder of reminders" class="reminder-row">
+      <div class="reminder-details">
+        <h5>{{ reminder.title }}</h5>
+        <p><strong>Date:</strong> {{ reminder.date | date:'mediumDate' }}</p>
+        <p><strong>Type:</strong> {{ reminder.type }}</p>
+        <p *ngIf="reminder.notes"><strong>Notes:</strong> {{ reminder.notes }}</p>
+      </div>
     </div>
   </div>
-</div>
 
   <!-- Feed -->
   <div class="content-feed">
-  <h4>Feed</h4>
-  <p *ngIf="feedItems.length === 0">No new updates</p>
-  <ul *ngIf="feedItems.length > 0">
-    <li *ngFor="let feed of feedItems">{{ feed }}</li>
-  </ul>
-</div>
-
+    <h4>Feed</h4>
+    <p *ngIf="feedItems.length === 0">No new updates</p>
+    <ul *ngIf="feedItems.length > 0">
+      <li *ngFor="let feed of feedItems">{{ feed }}</li>
+    </ul>
+  </div>
 
   <!-- Employee Documents -->
   <div class="content-doc">
-  <h4>Employee Documents</h4>
-
-  <p *ngIf="empDocuments.length === 0">No documents found</p>
-
-  <ul *ngIf="empDocuments.length > 0">
-    <li *ngFor="let doc of empDocuments">{{ doc.name }}</li>
-  </ul>
-</div>
-
-
+    <h4>Employee Documents</h4>
+    <p *ngIf="empDocuments.length === 0">No documents found</p>
+    <ul *ngIf="empDocuments.length > 0">
+      <li *ngFor="let doc of empDocuments">{{ doc.name }}</li>
+    </ul>
+  </div>
 
   <!-- To Do List -->
   <div class="content-box">
-  <h4>To Do List</h4>
-  <p *ngIf="todoItems.length === 0">No tasks</p>
-  <ul *ngIf="todoItems.length > 0">
-    <li *ngFor="let task of todoItems">
-      <span [class.completed]="task.completed">{{ task.task }}</span>
-    </li>
-  </ul>
-</div>
-
+    <h4>To Do List</h4>
+    <p *ngIf="todoItems.length === 0">No tasks</p>
+    <ul *ngIf="todoItems.length > 0">
+      <li *ngFor="let task of todoItems">
+        <span [class.completed]="task.completed">{{ task.task }}</span>
+      </li>
+    </ul>
+  </div>
 
   <!-- New Joinee -->
   <div class="content-joinee">
-  <h4>New Joinee</h4>
-
-  <p *ngIf="newJoinees.length === 0">No new joinees</p>
-
-  <ul *ngIf="newJoinees.length > 0">
-    <li *ngFor="let joinee of newJoinees">{{ joinee.name }}</li>
-  </ul>
+    <h4>New Joinee</h4>
+    <p *ngIf="newJoinees.length === 0">No new joinees</p>
+    <ul *ngIf="newJoinees.length > 0">
+      <li *ngFor="let joinee of newJoinees">{{ joinee.name }}</li>
+    </ul>
+  </div>
 </div>
-
-
-

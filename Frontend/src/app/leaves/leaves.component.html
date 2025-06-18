@@ -23,19 +23,7 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
           </mat-form-field>
-          <!-- Corrected Submit and Refresh buttons -->
-<!-- <button mat-raised-button color="primary" (click)="submitLeaveApplication()">
-  Submit Leave
-</button> -->
-
-<!-- <button mat-raised-button color="accent" (click)="refresh()">
-  <mat-icon>refresh</mat-icon> Refresh
-</button> -->
-
         </div>
-      
-      
-    
   
         <!-- Leave Data -->
         <div class="leave-type" *ngFor="let leave of leaves">
@@ -176,8 +164,6 @@
         </div>
       </div>
      
-      
-  
       <!-- No Records Section -->
       <div class="no-records">
         <p>No Records to Display</p>
