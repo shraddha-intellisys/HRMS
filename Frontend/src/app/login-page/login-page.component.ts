@@ -54,7 +54,12 @@ export class LoginPageComponent {
   
       alert(`✅ Login successful! Welcome Employee: ${data.employeeId}`);
   
-      this.router.navigate(['/right']);
+      if (data.role === 'admin') {
+  this.router.navigate(['/admin-dashboard']);
+} else {
+  this.router.navigate(['/right']); // or your actual employee dashboard route
+}
+
     } catch (error: unknown) {
       alert(error instanceof Error ? error.message : '❌ An unexpected error occurred.');
     }

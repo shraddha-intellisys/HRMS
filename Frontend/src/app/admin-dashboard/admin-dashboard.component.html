@@ -40,7 +40,7 @@
         />
         <h1>
            
-          <span *ngIf="!editingWelcome">Welcome, {{ getTitlePrefix() }} {{ username || 'Shraddha' }}</span>
+          <span style="color: black;" *ngIf="!editingWelcome">Welcome, {{ getTitlePrefix() }} {{ username || 'Shraddha' }}</span>
           <input *ngIf="editingWelcome" [(ngModel)]="username" class="edit-input">
         </h1>
       </div>

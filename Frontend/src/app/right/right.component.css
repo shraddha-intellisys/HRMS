@@ -117,7 +117,8 @@
 .welcome-message p {
   font-size: 16px;
   color: #7f8c8d;
-  margin-top: 5px;
+  margin-top: -5px;
+  margin-left: 13%;
 }
 
 .officelogo img {
@@ -314,6 +315,8 @@
   .welcome-message p 
   {
     font-size: 15px;
+
+  margin-left: 0%;
   }
   
 }

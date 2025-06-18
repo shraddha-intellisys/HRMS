@@ -133,7 +133,7 @@ export class LeavesComponent implements OnInit, OnDestroy {
       const data = JSON.parse(arg.event.title);
       return {
         html: `
-          <div style="line-height: 1.2; font-size: 0.75rem;">
+          <div style="line-height: 1.2; font-size: 0.65rem;">
             ${data.lws ? `<div style="color: blue;">leave Submit</div>` : ''}
           </div>
         `

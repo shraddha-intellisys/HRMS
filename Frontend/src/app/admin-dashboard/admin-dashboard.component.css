@@ -238,7 +238,7 @@
 
 /* Current Time Box */
 .content1-box {
-  /* background: linear-gradient(135deg, #e67e22, #d35400); */
+  background-color: rgb(251, 208, 127);
   color: rgb(9, 9, 9);
   text-align: center;
 }

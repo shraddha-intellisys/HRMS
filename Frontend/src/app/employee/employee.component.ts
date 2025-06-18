@@ -57,7 +57,7 @@ this.employeeForm = this.fb.group({
   }
 
   ngOnInit(): void {
-    this.loadEmployeeProfile();
+    
     this.getUpcomingBirthdays();  // Fetch the upcoming birthdays
   }
 
@@ -127,17 +127,7 @@ this.employeeForm = this.fb.group({
     });
 }
 
-loadProfileAfterAdd(id: string) {
-  this.employeeService.getEmployeeById(id).subscribe({
-    next: (data) => {
-      console.log("✅ Loaded newly added profile:", data);
-      this.profileData = data;
-    },
-    error: (err) => {
-      console.error("❌ Error fetching new profile:", err);
-    }
-  });
-}
+
 
 // 🔧 Prepare form data with date format correction
 private prepareFormData(): any {
