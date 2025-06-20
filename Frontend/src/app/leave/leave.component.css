@@ -29,8 +29,8 @@
   .left-section,
   .right-section {
     width:50%; /* Ensures both sections are side by side */
-        gap: 15px; 
-        display: flex;
+    gap: 15px; 
+    display: flex;
     flex-direction: column;
 
   }
@@ -46,8 +46,6 @@
     margin-top: -36px;
     color: #171515;
   }
-  
-  
   
   .date-range-inline {
     display: flex;

@@ -278,7 +278,7 @@
     <div *ngIf="!editingJoinee">
       <div *ngFor="let joinee of newJoinees" class="joinee-item">
         <img [src]="joinee.imageUrl || 'assets/employee (1).png'" class="joinee-image">
-        <div class="joinee-details">
+        <div class="joinee-details">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
           <p>{{ joinee.name }}</p>
           <p>Joined: {{ joinee.joinDate | date }}</p>
         </div>
@@ -291,6 +291,7 @@
         <input type="file" (change)="onJoineeImageChange($event, i)">
         <button class="delete-btn" (click)="removeJoinee(i)">Remove</button>
       </div>
+      
       <button class="add-btn" (click)="addJoinee()">Add New Joinee</button>
     </div>
   </div>

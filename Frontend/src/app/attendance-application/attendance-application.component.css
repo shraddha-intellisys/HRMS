@@ -4,6 +4,21 @@ body {
   padding: 0;
  
 }
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: black;
+    color: white;
+    height: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+    font-size: 18px;
+    font-weight: bold;
+}
 
 .attendance-container {
   display: flex;
