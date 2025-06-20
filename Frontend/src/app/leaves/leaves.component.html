@@ -65,7 +65,7 @@
           </ul>
         </div>
   
-        <button class="details-btn">Show Leave Details</button>
+     
       </div>
     </div>
   
@@ -143,7 +143,7 @@
           </h4>
           <div class="holiday-list">
             <br>
-            <p *ngIf="!holidays.length">No Records to Display</p>
+           
             <ul *ngIf="holidays.length">
               <li *ngFor="let holiday of holidays">{{ holiday.name }} - {{ holiday.date }}</li>
             </ul>
@@ -157,12 +157,7 @@
   <!-- Attendance Summary -->
   <div class="attendance-sum">
     <div class="attendance-container">
-      <h3>Leave Application</h3>
-      <div class="date-filter">
-        <label for="attendance-date">Showing Attendance From</label>
-        <input type="date" id="attendance-date" [(ngModel)]="attendanceDate" />
-        <button (click)="refresh()">🔄</button>
-      </div>
+     
   
       <!-- Attendance Summary Cards -->
       <div class="summary-cards">
@@ -178,10 +173,7 @@
      
       
   
-      <!-- No Records Section -->
-      <div class="no-records">
-        <p>No Records to Display</p>
-      </div>
+      
     </div>
   </div>
 

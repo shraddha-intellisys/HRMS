@@ -43,7 +43,7 @@
 }
 
 .search-icon {
-  color: #FFD700;
+  color: #e98935;
   font-size: 18px;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .employee-table thead tr {
-  background-color: orange;
+  background-color:#e98935;
   color: white;
 }
 

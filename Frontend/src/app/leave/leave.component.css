@@ -1,323 +1,171 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
 .leave-container {
   width: 100%;
-    display: flex;
-    flex-direction: column; 
-    /* align-items: flex-start; */
-    padding: 5px;
-    color: #000000;
-    font-family: Arial, sans-serif;
-    
-  }
-  
-  
-  .add-leave-header {
-    background-color: rgb(246, 130, 42);
-    padding: 5px;
-    border-radius: 3px;
-    
-    margin-bottom: 15px; /* Adds space between header and main section */
-  }
-  
-  .main-section {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    width: 100%; 
-    /* margin: auto; */
-  }
-  
-  .left-section,
-  .right-section {
-    width:50%; /* Ensures both sections are side by side */
-        gap: 15px; 
-        display: flex;
-    flex-direction: column;
+  max-width: 850px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  margin-top: 40px;
+}
 
-  }
-  
-  .left-section {
-    /* height: 00px; */
-    
-   
-    margin-left: 2%;
-  }
-  
-  .leave-container h2 {
-    margin-top: -36px;
-    color: #171515;
-  }
-  
-  
-  
-  .date-range-inline {
-    display: flex;
-    align-items: center; /* Vertically align all items */
-    gap: 10px; /* Add space between elements */
-  }
-  
-  .form-group-inline {
-    width: 40%;
-    display: flex;
-    align-items: center; 
-    gap: 5px; 
-  }
-  
-  
-  .icon-buttons {
-    padding-right: 10px;
-    display: flex;
-    gap: 5px; /* Space between icons */
-  }
-  
-  .icon-button {
-    border: none;
-    background-color:black;
-    cursor: pointer;
-    font-size: 20px; 
-    color: white; 
-  }
-  .p{
-    color: white;
-  }
-  
-  .icon-button:hover {
-    color: #fbfdff;
-  }
-  
-  .form-group {
-    border: 1px;
-    margin-bottom: 15px;
-    width: 60%;
-  }
-  
-  .form-group1 {
-    border:1px;
-    margin-bottom: 15px;
-    width: 80%;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-  }
-  
-  .form-control {
-    border: none;
-    width: 27%;
-    padding: 8px;
-    box-sizing: border-box;   
-  }
-  
-  .custom-date-input {  
-    border: none;               /* Remove the border */
-    border-bottom: 1px solid #000;  /* Add a line below the input */
-    padding: 5px;               /* Adjust padding */
-    font-size: 15px; 
-    width: 50%;           /* Adjust font size */
-  }
-  
-  .custom-date-input:focus {
-     outline: none; 
-    border-bottom: 1px solid #007bff; 
-  }
-  
-  .checkbox-group {
-    display: flex;
-    flex-direction: row; 
-    gap: 5px; 
-    margin-top: 5px; 
-  }
-  .checkbox-group label {
-    display: inline-block;
-    padding-top: 20px;
-    margin-right: 10px;
-  }
-  
-  .details-table {
-    width: 90%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  
-  .details-table th,
-  .details-table td {
-    border: 1px solid #ddd;
-    text-align: left;
-    font-size: 12px; 
-    padding: 6px; 
-  }
-  
-  
-  .details-table th {
-    background-color:darkorange;
-  }
-  
-  .date-range {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .line-input {
-    border: none;               /* Remove the border */
-    border-bottom: 1px solid #000;  /* Add a line below the input */
-    width: 60%;                 /* Adjust the width */
-    padding: 5px;               /* Add padding for comfort */
-    font-size: 15px;            /* Adjust font size */
-  }
-  
-  .line-input:focus {
-    outline: none;              
-    border-bottom: 1px solid #414243; 
-  }
-  
-  .select-no-box {
-    border: none;
-    border-bottom: 1px solid #000;
-    padding: 5px;
-    font-size: 15px;
-    width: 200px;
-  }
-  
-  .select-no-box:focus {
-    outline: none;
-    border-bottom: 2px solid #007bff;
-  }
-  
-  .buttons-container {
-    display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    gap: 15px; /* Adds space between buttons */
-    margin-top: 5px; /* Adds space above buttons */
-  }
-  .buttons-container2
-  {
-     
-    display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    gap: 15px; /* Adds space between buttons */
-    margin-top: 5px; /* Adds space above buttons */
-    display:none
-  }
-  
-  
-  button {
-    padding: 10px 20px;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .submit-button {
-  background-color: #28a745; 
-  }
-  
-  .submit-button:hover {
+.add-leave-header {
+  background-color: rgb(246, 130, 42);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: white;
+}
+
+.add-leave-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.add-leave-header p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
+.main-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.left-section,
+.right-section {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group,
+.form-group1 {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-control,
+.custom-date-input,
+.line-input,
+.select-no-box {
+  border: none;
+  border-bottom: 1px solid #000;
+  padding: 6px;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control:focus,
+.custom-date-input:focus,
+.line-input:focus,
+.select-no-box:focus {
+  outline: none;
+  border-bottom: 2px solid #007bff;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.checkbox-group label {
+  font-weight: normal;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.submit-button {
+  background-color: #28a745;
+}
+
+.submit-button:hover {
   background-color: #218838;
-  }
-  
-  .cancel-button {
-  background-color: #dc3545; 
-  }
-  
-  .cancel-button:hover {
+}
+
+.cancel-button {
+  background-color: #dc3545;
+}
+
+.cancel-button:hover {
   background-color: #c82333;
-  }
-  
-  button i {
-  font-size: 16px; 
-  }
-
-
-@media screen and (min-width: 600px) and (max-width: 1024px) {
-  .leave-container
-  {
-  margin-top: 10%;
-}
 }
 
-@media screen  and (max-width: 600px) {
-  .leave-container
-  {
-  margin-top: 10%;
-}
-   .buttons-container
-   {
-    margin-top: 50%;
-   }
+button i {
+  font-size: 16px;
 }
 
-@media screen and (max-width: 600px) {
-  .leave-container {
-    margin-top: 15%;
-    padding: 10px;
-  }
-
+/* Responsive */
+@media (max-width: 768px) {
   .main-section {
     flex-direction: column;
-    align-items: center;
-  }
-
-  .left-section,
-  .right-section {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .form-group,
-  .form-group1 {
-    width: 100%;
-  }
-
-  .form-control,
-  .custom-date-input,
-  .line-input,
-  .select-no-box {
-    width: 100%;
-    font-size: 14px;
-  }
-
-  .checkbox-group {
-    flex-direction: column;
-    gap: 3px;
+    gap: 20px;
   }
 
   .buttons-container {
-    justify-content: center;
     flex-direction: column;
+    align-items: stretch;
     gap: 10px;
-    margin-top: 20px;
   }
 
   button {
-    width: 100%;
     justify-content: center;
+    width: 100%;
   }
 
   .add-leave-header h2 {
     font-size: 20px;
-    margin-top: 0;
-    text-align: center;
   }
 
-  .add-leave-header p.name {
+  .add-leave-header p {
     font-size: 14px;
-    text-align: center;
-  }
-}
-
-/* Hide mobile buttons on desktop */
-@media screen and (max-width: 601px) {
-  .buttons-container
-  {
-    display: none;
-  }
-  .buttons-container2
-  {
-    display: flex;
   }
 }

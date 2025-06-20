@@ -14,7 +14,8 @@ import { filter } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'My Angular App'; 
-  shouldShowComponents: boolean = true;
+ shouldShowComponents = true;
+
 
   constructor(private router: Router) {}
 
@@ -22,10 +23,13 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        // Determine if the current route is 'login' or 'signup'
         const currentRoute = this.router.url;
-        this.shouldShowComponents =
-          !currentRoute.includes('/login') && !currentRoute.includes('/signup');
+
+        // Hide TopNav/Sidebar on these routes
+        const hideRoutes = ['/login', '/signup', '/reset-password'];
+
+        // Check if current route matches any of the above
+        this.shouldShowComponents = !hideRoutes.includes(currentRoute);
       });
   }
 }

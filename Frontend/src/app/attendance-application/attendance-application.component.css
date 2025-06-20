@@ -1,222 +1,135 @@
-body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
- 
-}
-
-.attendance-container {
+/* Outer wrapper to center everything */
+.center-wrapper {
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
-  width: 100%;
- 
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+  padding: 20px;
 }
 
+/* Attendance Form Container */
+.attendance-container {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 850px;
+  box-sizing: border-box;
+}
+
+/* Header */
 .add-attendance-header {
   background-color: rgb(253, 165, 43);
-  padding: 10px;
-  border-radius: 3px;
+  padding: 15px;
+  border-radius: 6px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .header h2 {
   margin: 0;
+  font-size: 22px;
+  color: white;
 }
 
-.buttons-container {
+.header p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: white;
+}
+
+/* Main Section */
+.main-section {
   display: flex;
-  gap: 10px;
-  
+  justify-content: center;
 }
 
-.submit-button, .cancel-button {
-  padding: 10px 20px;
-  border: none;
-  color: #ffffff;
-  font-size: 16px;
+.left-section {
+  width: 100%;
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
   border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Radio Buttons */
+.radio-group {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+.buttons-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.submit-button,
+.cancel-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
   cursor: pointer;
+  color: white;
 }
 
 .submit-button {
   background-color: #28a745;
 }
 
-.submit-button:hover {
-  background-color: #218838;
-}
-
 .cancel-button {
   background-color: #dc3545;
+}
+
+.submit-button:hover {
+  background-color: #218838;
 }
 
 .cancel-button:hover {
   background-color: #c82333;
 }
 
-.main-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  justify-content: center;
-}
-
-.left-section, .right-section {
-  flex: 1;
-  min-width: 280px; /* Allow for smaller screens */
-  max-width: 100%;
-  padding: 0px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-.form-group1{
-  padding-top: 10px;
-}
-
-.form-control {
-  width: 40%; /* Reduced width for smaller size */
-  padding: 6px; /* Less padding for a compact appearance */
-  font-size: 14px; /* Slightly smaller font size */
-  border: none;
-  border-bottom: 1px solid #000;
-}
-
-.form-control:focus {
-  outline: none;
-  border-bottom: 2px solid #007bff;
-}
-
-.date-range-inline {
-  display: flex;
-  justify-content: space-between;
-  gap: -5px;
-}
-
-.icon-buttons {
-  display: flex;
-  gap: 10px;
-  
-}
-
-.details-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  table-layout: fixed; /* Ensure table is fixed and content doesn't overflow */
-}
-
-.details-table th, .details-table td {
-  border: 1px solid #ddd;
-  text-align: left;
-  padding: 6px 8px;
-  font-size: 10px;
-  word-wrap: break-word; /* Ensure text doesn't overflow */
-}
-
-.details-table th {
-  background-color: #f69031;
-}
-
-@media (max-width: 1500px) {
-  .main-section {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .details-table th, .details-table td {
-    font-size: 12px;
-    padding: 5px;
-  }
-
-  /* Making the table compact for smaller screens */
-  .details-table {
-    width: 100%;
-  }
-
-  .details-table th, .details-table td {
-    min-width: 70px;
-  }
-
-  /* Buttons container adjustment */
-  .buttons-container {
-    flex-direction: column;
-    align-items: flex-start;
-
-  }
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
-  /* Adjust for smaller mobile screens */
-  .details-table th, .details-table td {
-    font-size: 8px;
-    padding: 4px;
+  .center-wrapper {
+    align-items: flex-start; /* allows scroll on mobile */
   }
 
-  .details-table {
-    font-size: 11px;
-  }
-
-  
-
-  /* Further reduce padding for mobile screens */
-  .form-group {
-    margin-bottom: 10px;
-  }
-
-  .form-control {
-    font-size: 14px;
-    padding: 6px;
+  .attendance-container {
+    padding: 20px;
   }
 
   .buttons-container {
-    gap: 8px;
-  }
-
-  
-}
-
-@media (max-width: 400px) {
-  .attendance-container {
-    padding: 5px;
-  }
-
-  /* Header section */
-  .add-attendance-header {
-    padding: 15px;
-    margin-bottom: 29px; 
-    margin-top: 66px;
-  }
-
-  /* Main section */
-  .main-section {
     flex-direction: column;
     gap: 10px;
   }
-
-  .left-section, .right-section {
-    
-    min-width: 100%;
-    padding: 10px;
-  }
-
-  /* Table adjustments for mobile */
-  .details-table th, .details-table td {
-    font-size: 10px;
-    padding: 0px;
-  }
-
-  .form-control {
-    font-size: 12px;
-    padding: 6px;
-  }
-
-  .buttons-container {
-    flex-direction: row;
-    gap: 8px;
-    
-  }
 }
-

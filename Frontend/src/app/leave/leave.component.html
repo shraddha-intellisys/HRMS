@@ -1,40 +1,22 @@
-<!-- Updated HTML with classes as per Supriya's input -->
 <div class="leave-container">
   <form [formGroup]="leaveForm">
     <div class="add-leave-header">
-      <div class="buttons-container">
-        <button type="button" class="submit-button" (click)="submitLeave()" >
-          <i class="fa fa-paper-plane"></i> Submit
-        </button>
-        <button type="button" class="cancel-button" (click)="cancelLeave()">
-          <i class="fa fa-times"></i> Cancel
-        </button>
-      </div>
-      <div class="seconddiv">
       <h2>Add Leaves</h2>
       <p class="name">
         Employee Name: {{ employeeName }} | Employee Code: {{ employeeCode }}
       </p>
-    </div>
     </div>
 
     <div class="main-section">
       <div class="left-section">
         <div class="form-group">
           <label>Application Date:</label>
-          <input
-            type="date"
-            formControlName="applicationDate"
-            class="form-control custom-date-input"
-          />
+          <input type="date" formControlName="applicationDate" class="form-control" />
         </div>
 
         <div class="form-group">
           <label>Application Type:</label>
-          <select
-            formControlName="applicationType"
-            class="form-control select-no-box"
-          >
+          <select formControlName="applicationType" class="form-control">
             <option value="casual">Leave Application</option>
             <option value="sick">Sick Leave</option>
             <option value="earned">Earned Leave</option>
@@ -43,10 +25,7 @@
 
         <div class="form-group">
           <label>Type:</label>
-          <select
-            formControlName="leaveType"
-            class="form-control select-no-box"
-          >
+          <select formControlName="leaveType" class="form-control">
             <option value="full">Privileged Leave</option>
             <option value="half">Half Day</option>
           </select>
@@ -55,12 +34,7 @@
 
         <div class="form-group">
           <label>From:</label>
-          <input
-            type="date"
-            formControlName="fromDate"
-            class="form-control custom-date-input"
-            [attr.min]="minDate"
-          />
+          <input type="date" formControlName="fromDate" class="form-control" [attr.min]="minDate" />
           <div class="checkbox-group">
             <label><input type="checkbox" formControlName="fromHalf" /> From Date Half</label>
             <label><input type="checkbox" formControlName="firstHalfFrom" /> First Half</label>
@@ -72,12 +46,7 @@
       <div class="right-section">
         <div class="form-group">
           <label>To:</label>
-          <input
-            type="date"
-            formControlName="toDate"
-            class="form-control custom-date-input"
-            [attr.min]="minDate"
-          />
+          <input type="date" formControlName="toDate" class="form-control" [attr.min]="minDate" />
           <div class="checkbox-group">
             <label><input type="checkbox" formControlName="toHalf" /> To Date Half</label>
             <label><input type="checkbox" formControlName="firstHalfTo" /> First Half</label>
@@ -87,41 +56,31 @@
           </div>
         </div>
 
-        <div class="form-group1">
-          <label>Reason:</label><br />
-          <input
-            type="text"
-            formControlName="reason"
-            class="form-control line-input"
-          />
+        <div class="form-group">
+          <label>Reason:</label>
+          <input type="text" formControlName="reason" class="form-control" />
         </div>
 
-        <div class="form-group1">
-          <label>Remarks:</label><br />
-          <input
-            type="text"
-            formControlName="remarks"
-            class="form-control line-input"
-          />
+        <div class="form-group">
+          <label>Remarks:</label>
+          <input type="text" formControlName="remarks" class="form-control" />
         </div>
 
-        <div class="form-group1">
-          <label>CC To (Email ID):</label><br />
-          <input
-            type="email"
-            formControlName="ccTo"
-            class="form-control line-input"
-          />
+        <div class="form-group">
+          <label>CC To (Email ID):</label>
+          <input type="email" formControlName="ccTo" class="form-control" />
         </div>
-          <div class="buttons-container2">
-        <button type="button" class="submit-button" (click)="submitLeave()" >
-          <i class="fa fa-paper-plane"></i> Submit
-        </button>
-        <button type="button" class="cancel-button" (click)="cancelLeave()">
-          <i class="fa fa-times"></i> Cancel
-        </button>
       </div>
-      </div>
+    </div>
+
+    <!-- Buttons aligned at bottom center -->
+    <div class="buttons-container">
+      <button type="button" class="submit-button" (click)="submitLeave()">
+        <i class="fa fa-paper-plane"></i> Submit
+      </button>
+      <button type="button" class="cancel-button" (click)="cancelLeave()">
+        <i class="fa fa-times"></i> Cancel
+      </button>
     </div>
   </form>
 </div>

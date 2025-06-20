@@ -8,6 +8,40 @@
         <span><strong>Employee </strong><strong>Code:</strong> {{ employeeCode || 'N/A' }}</span>
       </div>
     </div>
+
+    <div class="notification-container">
+  <img
+    src="assets/notification (1).avif"
+    alt="Notification"
+    class="notification-icon"
+    (click)="toggleNotifications()"
+  />
+  <span *ngIf="unreadNotificationsCount > 0" class="notification-badge">
+    {{ unreadNotificationsCount }}
+  </span>
+  
+  <!-- Notification popup -->
+  <div *ngIf="showNotifications" class="notification-popup">
+    <div class="notification-header">
+      <h3>Notifications</h3>
+      <button class="close-btn" (click)="showNotifications = false">&times;</button>
+    </div>
+    <div class="notification-list">
+      <div *ngFor="let notification of notifications" 
+           class="notification-item" 
+           [class.unread]="!notification.isRead">
+        <div class="notification-content">
+          <strong>{{ notification.title }}</strong>
+          <p>{{ notification.message }}</p>
+          <small>{{ notification.createdAt | date:'shortTime' }} • {{ notification.createdAt | date:'mediumDate' }}</small>
+        </div>
+      </div>
+      <div *ngIf="notifications.length === 0" class="empty-notifications">
+        No new notifications
+      </div>
+    </div>
+  </div>
+</div>
     <img
     [src]="emp.imageUrl ? emp.imageUrl : 'assets/employee (1).png'"
     (error)="emp.imageUrl = null"
@@ -15,11 +49,7 @@
     class="employee-image"
   />
   
-    <img
-      src="assets/notification (1).avif"
-      alt="Notification"
-      class="notification-icon"
-    />
+   
      <button class="logout-btn" (click)="logout()">
     <i class="fas fa-sign-out-alt"></i> Logout
   </button>

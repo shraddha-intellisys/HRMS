@@ -112,38 +112,3 @@
     </div>
   </div>
 
-
-
-<!-- Attendance Summary and Application Section -->
-<div class="attendance-sum">
-  <div class="attendance-container">
-    <h3>Attendance Application</h3>
-    <div class="date-filter">
-      <label for="attendance-date">Showing Attendance From</label>
-
-      <!-- Date Picker for Showing Attendance -->
-      <mat-form-field appearance="fill">
-        <mat-label>Select Date</mat-label>
-        <input matInput [matDatepicker]="picker1" [(ngModel)]="selectedDate" (dateChange)="onDateChange($event)" />
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
-
-      <!-- Date Picker for Attendance -->
-      <mat-form-field appearance="fill">
-        <mat-label>Choose a date</mat-label>
-        <input matInput [matDatepicker]="picker2" [(ngModel)]="attendanceDate" id="attendance-date" />
-        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
-
-      <!-- Refresh Button -->
-      <button mat-raised-button color="primary" (click)="refresh()">Refresh</button>
-    </div>
-
-    <!-- No Records Section -->
-    <div class="no-records">
-      <p>No Records to Display</p>
-    </div>
-  </div>
-</div>

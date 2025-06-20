@@ -73,9 +73,12 @@ body {
 .employee-details {
     flex: 1;
 }
-
+.headline
+{
+    align-items: center;
+    text-align: center;
+}
 .headline span {
-    margin-left: 45%;
     font-size: 24px;
     font-weight: bold;
 }

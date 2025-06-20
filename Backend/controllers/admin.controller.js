@@ -55,3 +55,18 @@ export async function createAdmin(req, res) {
 export const getAdminDashboard = (req, res) => {
   res.status(200).json({ message: '✅ Welcome to Admin Dashboard!' });
 };
+
+exports.addJoinee = async (req, res) => {
+  try {
+    const { name, joinDate } = req.body;
+
+    // Save joinee logic (to DB)...
+
+    // Create a notification
+    await createNotification('New Joinee', `${name} joined on ${joinDate}`);
+
+    res.status(201).json({ message: 'Joinee added and notification sent' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error adding joinee', error: err.message });
+  }
+};

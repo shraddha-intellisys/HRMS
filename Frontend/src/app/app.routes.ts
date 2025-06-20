@@ -23,7 +23,7 @@ import { PayslipComponent} from './payslip/payslip.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
  import { UserPayslipComponentComponent } from './user-payslip/user-payslip.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
- 
+  import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 export const routes: Routes = [
@@ -51,6 +51,8 @@ export const routes: Routes = [
  {path:'admin-profile', component: AdminProfileComponent},
  { path: 'userpay', component: UserPayslipComponentComponent},
  { path: 'admin-dashboard', component: AdminDashboardComponent},
- 
+  {path:'reset-password',component:ResetPasswordComponent},
+
+
     ]
  

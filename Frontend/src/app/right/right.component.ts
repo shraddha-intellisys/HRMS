@@ -28,12 +28,17 @@ export class RightComponent implements OnInit {
   currentDate = '';
    gender: string = '';
   showProfile = false;
+  showNotifications = false;
+  
+  unreadNotificationsCount = 0;
 
   // Local employee data storage
   emp: any = {};
   upcomingBirthdays: any[] = [];
   allEmployees: any[] = [];
   filteredEmployees: any[] = [];
+  notifications: any[] = [];
+
 
   // Admin dashboard data
   welcomeMessage = '';
@@ -53,6 +58,7 @@ export class RightComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
     this.loadUserInfo();
     this.getEmployeeDetails();
     this.initClock();
@@ -60,8 +66,51 @@ export class RightComponent implements OnInit {
     this.fetchEmployees();
     this.getUpcomingBirthdays();
     this.getAdminDashboardData();
+    
   }
 
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.markNotificationsAsRead();
+    }
+  }
+
+  loadNotifications() {
+  const userId = this.employeeCode; // or use this.userId
+
+  if (!userId) {
+    console.warn('❌ No userId found. Cannot fetch notifications.');
+    return;
+  }
+
+  this.http.get<any>(`http://localhost:5000/api/notifications?userId=${userId}`)
+    .subscribe({
+      next: (res) => {
+        this.notifications = res.notifications || [];
+        this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
+      },
+      error: (err) => {
+        console.error('Error loading notifications:', err);
+      }
+    });
+}
+
+
+markNotificationsAsRead() {
+  const userId = this.employeeCode;
+
+  this.http.post('http://localhost:5000/api/notifications/mark-as-read', { userId })
+    .subscribe({
+      next: () => {
+        this.notifications.forEach(n => n.isRead = true);
+        this.unreadNotificationsCount = 0;
+      },
+      error: (err) => {
+        console.error('Error marking notifications as read:', err);
+      }
+    });
+}
   private loadUserInfo(): void {
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
@@ -98,34 +147,38 @@ export class RightComponent implements OnInit {
   }
 
   private getEmployeeDetails(): void {
-    const headers = this.createAuthHeaders();
-    this.http.get<any>(`${this.API_URL}/employees/profile`, { headers }).subscribe({
-      next: (res) => {
-        const emp = res?.employee;
-        if (!emp) {
-          console.warn('⚠️ No employee data found.');
-          return;
-        }
+  const headers = this.createAuthHeaders();
+  this.http.get<any>(`${this.API_URL}/employees/profile`, { headers }).subscribe({
+    next: (res) => {
+      const emp = res?.employee;
+      if (!emp) {
+        console.warn('⚠️ No employee data found.');
+        return;
+      }
 
-        this.emp = emp;
-        this.employeeName = emp.name || 'Employee';
-        this.employeeCode = emp.employeeCode || 'N/A';
-        this.branch = emp.branch || 'N/A';
-        this.department = emp.department || 'N/A';
-        this.email = emp.email || 'N/A';
-        this.projectType = emp.projectType || 'N/A';
-        this.joiningDate = this.formatDate(emp.joiningDate);
-        this.dob = this.formatDate(emp.dateOfBirth);
-         this.gender = emp.gender || ''; // Add this line to get gender
-        this.imageUrl = emp.image?.startsWith('http')
-          ? emp.image
-          : emp.image
-            ? `http://localhost:5000/${emp.image}`
-            : 'assets/employee (1).png';
-      },
-      error: (err) => console.error('❌ Error fetching employee details:', err),
-    });
-  }
+      this.emp = emp;
+      this.employeeName = emp.name || 'Employee';
+      this.employeeCode = emp.employeeCode || 'N/A';
+      this.branch = emp.branch || 'N/A';
+      this.department = emp.department || 'N/A';
+      this.email = emp.email || 'N/A';
+      this.projectType = emp.projectType || 'N/A';
+      this.joiningDate = this.formatDate(emp.joiningDate);
+      this.dob = this.formatDate(emp.dateOfBirth);
+      this.gender = emp.gender || '';
+      this.imageUrl = emp.image?.startsWith('http')
+        ? emp.image
+        : emp.image
+          ? `http://localhost:5000/${emp.image}`
+          : 'assets/employee (1).png';
+
+      // ✅ Load notifications after employeeCode is confirmed
+      this.loadNotifications();
+    },
+    error: (err) => console.error('❌ Error fetching employee details:', err),
+  });
+}
+
 
   private initClock(): void {
     this.updateTime();
