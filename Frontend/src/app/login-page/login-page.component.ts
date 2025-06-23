@@ -52,12 +52,12 @@ export class LoginPageComponent {
       localStorage.setItem('username', data.username);
       localStorage.setItem('role', data.role);
   
-      alert(`✅ Login successful! Welcome Employee: ${data.employeeId}`);
+      alert(`✅ Login successful! `);
   
       if (data.role === 'admin') {
   this.router.navigate(['/admin-dashboard']);
 } else {
-  this.router.navigate(['/right']); // or your actual employee dashboard route
+  this.router.navigate(['/right']); 
 }
 
     } catch (error: unknown) {

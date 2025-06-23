@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router'; // ⬅️ Import Router
 
 @Component({
   selector: 'app-reset-password',
@@ -17,7 +18,7 @@ export class ResetPasswordComponent {
   successMessage = '';
   errorMessage = '';
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.resetPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -61,6 +62,11 @@ export class ResetPasswordComponent {
         this.successMessage = res.message;
         this.resetPasswordForm.reset();
         this.submitted = false;
+
+        // ✅ Redirect to login page after 2 seconds
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
       },
       error: (err) => {
         this.errorMessage = err?.error?.message || 'Password reset failed.';

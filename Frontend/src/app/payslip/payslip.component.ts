@@ -1,34 +1,55 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { EmployeeService } from '../services/employee.service';
 
 @Component({
   selector: 'app-payslip',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  providers: [EmployeeService], // Optional if already provided globally
   templateUrl: './payslip.component.html',
   styleUrls: ['./payslip.component.css']
 })
-export class PayslipComponent {
+export class PayslipComponent implements OnInit {
   searchQuery = '';
   months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  employees = [
-    { empId: 'E001', name: 'Alice', role: 'Developer' },
-    { empId: 'E002', name: 'Bob', role: 'Designer' },
-    { empId: 'E003', name: 'Charlie', role: 'Tester' },
-  ];
+  employees: { empId: string; name: string; role: string }[] = [];
+  filteredEmployees: typeof this.employees = [];
 
-  filteredEmployees = [...this.employees];
-  selectedMonths: { [key: string]: string | null |undefined } = {};
+  selectedMonths: { [key: string]: string | null | undefined } = {};
   selectedFiles: { [key: string]: File | null } = {};
   fileInputs: { [key: string]: ElementRef<HTMLInputElement> } = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private employeeService: EmployeeService
+  ) {}
+
+  ngOnInit() {
+    this.fetchEmployeesFromDatabase();
+  }
+
+  fetchEmployeesFromDatabase() {
+    this.employeeService.getAllEmployees().subscribe({
+      next: (response: any[]) => {
+        this.employees = response.map((emp: any) => ({
+          empId: emp.employeeCode,
+          name: emp.name,
+          role: emp.designation || '-'
+        }));
+        this.filteredEmployees = [...this.employees];
+      },
+      error: (err) => {
+        console.error('Failed to load employees for payroll:', err);
+      }
+    });
+  }
 
   onSearchChange() {
     const query = this.searchQuery.toLowerCase().trim();
@@ -74,15 +95,10 @@ export class PayslipComponent {
 
     this.http.post('http://localhost:5000/api/payslips/upload', formData).subscribe({
       next: () => {
-        alert("Payslip uploaded successfully");
-
-        // ✅ Reset month dropdown (preserve placeholder)
+        alert('Payslip uploaded successfully');
         this.selectedMonths[empId] = undefined;
-
-        // ✅ Reset file selection
         this.selectedFiles[empId] = null;
 
-        // ✅ Clear file input from DOM
         if (this.fileInputs[empId]) {
           this.fileInputs[empId].nativeElement.value = '';
         }

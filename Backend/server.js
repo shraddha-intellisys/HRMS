@@ -21,6 +21,8 @@ const payslipRoutes = require('./routes/payslip.routes');
 const adminDashboardRoutes = require('./routes/adminDashboard');
 const holidayRoutes = require('./routes/holidayRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const resetPasswordRoute = require('./routes/resetPasswordRoutes');
+
 
 
 
@@ -60,6 +62,9 @@ app.use('/api/payslips', require('./routes/payslip.routes'));
 app.use('/api/admin-dashboard', adminDashboardRoutes);
 app.use('/api/holidays', holidayRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api', require('./routes/resetPasswordRoutes'));
+
+
 
 
 
