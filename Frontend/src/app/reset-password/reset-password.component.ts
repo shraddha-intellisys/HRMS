@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router'; // ⬅️ Import Router
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule,RouterModule]
 })
 export class ResetPasswordComponent {
   resetPasswordForm: FormGroup;
