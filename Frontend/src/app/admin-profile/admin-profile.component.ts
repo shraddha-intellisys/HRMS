@@ -18,7 +18,7 @@ export class AdminProfileComponent implements OnInit {
   defaultPhoto = 'assets/default-profile.png';
   adminNames: string[] = ['Rutik Bhosale', 'Mahesh Jadhav', 'Swapnil Deshmukh'];
 
-  // Zoom functionality
+  // Optional: Zoom functionality
   zoomedPhoto: string | null = null;
   zoomLevel = 1;
   maxZoom = 3;
@@ -30,15 +30,17 @@ export class AdminProfileComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     this.initializeEditModes();
-    this.initializePhotos();
+    this.loadStoredPhotos();
   }
 
   private initializeForm(): void {
-    this.profileFormArray = this.fb.array([
-      this.createProfileForm('rutik@example.com', 'admin123'),
-      this.createProfileForm('mahesh@example.com', 'admin456'),
-      this.createProfileForm('swapnil@example.com', 'admin789'),
-    ]);
+    this.profileFormArray = this.fb.array(
+      this.adminNames.map((name, index) => {
+        const savedEmail = localStorage.getItem(`email_${index}`) || `${name.split(' ')[0].toLowerCase()}@example.com`;
+        const savedPassword = localStorage.getItem(`password_${index}`) || 'admin123';
+        return this.createProfileForm(savedEmail, savedPassword);
+      })
+    );
     this.profileFormArray.controls.forEach(control => control.disable());
   }
 
@@ -47,8 +49,10 @@ export class AdminProfileComponent implements OnInit {
     this.showPassword = new Array(this.adminNames.length).fill(false);
   }
 
-  private initializePhotos(): void {
-    this.profilePhotos = new Array(this.adminNames.length).fill(null);
+  private loadStoredPhotos(): void {
+    this.profilePhotos = this.adminNames.map((_, index) => {
+      return localStorage.getItem('photo_${index}') || null;
+    });
   }
 
   createProfileForm(email: string, password: string): FormGroup {
@@ -58,6 +62,10 @@ export class AdminProfileComponent implements OnInit {
     });
   }
 
+ 
+
+
+
   get profiles(): FormGroup[] {
     return this.profileFormArray.controls as FormGroup[];
   }
@@ -65,18 +73,6 @@ export class AdminProfileComponent implements OnInit {
   enableEdit(index: number): void {
     this.editMode[index] = true;
     this.profileFormArray.at(index).enable();
-  }
-
-  onSave(index: number): void {
-    const profile = this.profileFormArray.at(index);
-    if (profile.valid) {
-      this.editMode[index] = false;
-      this.showPassword[index] = false;
-      profile.disable();
-      console.log(`Profile "${this.adminNames[index]}" updated:`, profile.value);
-    } else {
-      profile.markAllAsTouched();
-    }
   }
 
   togglePassword(index: number): void {
@@ -95,4 +91,39 @@ export class AdminProfileComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }
-  } }
+  }
+
+  onSave(index: number): void {
+    const profileForm = this.profiles[index];
+
+    if (!this.profilePhotos[index]) {
+      alert("Please upload a profile photo.");
+      return;
+    }
+
+    if (profileForm.valid) {
+      const { email, password } = profileForm.value;
+
+      // Save data to localStorage
+      localStorage.setItem(`email_${index}`, email);
+      localStorage.setItem(`password_${index}`, password);
+      localStorage.setItem(`photo_${index}`, this.profilePhotos[index] || '');
+      
+
+      this.editMode[index] = false;
+      this.showPassword[index] = false;
+      this.profileFormArray.at(index).disable();
+      
+     
+      console.log(`Saved: ${email}`);
+      console.log(`Saved: ${email}`);
+    } else {
+      profileForm.markAllAsTouched();
+      
+    }
+  }
+}
+
+function initializeEditModes() {
+  throw new Error('Function not implemented.');
+}
