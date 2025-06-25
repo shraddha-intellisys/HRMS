@@ -18,19 +18,28 @@ export class AdminProfileComponent implements OnInit {
   defaultPhoto = 'assets/default-profile.png';
   adminNames: string[] = ['Rutik Bhosale', 'Mahesh Jadhav', 'Swapnil Deshmukh'];
 
-  // Zoom functionality
-  zoomedPhoto: string | null = null;
-  zoomLevel = 1;
-  maxZoom = 3;
-  minZoom = 0.5;
-  zoomStep = 0.1;
-
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.initializeEditModes();
-    this.initializePhotos();
+    this.loadPhotosFromLocalStorage(); // Load saved photos on init
+  }
+
+  // Load photos from localStorage
+  private loadPhotosFromLocalStorage(): void {
+    const savedPhotos = localStorage.getItem('adminProfilePhotos');
+    if (savedPhotos) {
+      this.profilePhotos = JSON.parse(savedPhotos);
+    } else {
+      // Initialize with default photos if nothing is saved
+      this.profilePhotos = new Array(this.adminNames.length).fill(null);
+    }
+  }
+
+  // Save photos to localStorage
+  private savePhotosToLocalStorage(): void {
+    localStorage.setItem('adminProfilePhotos', JSON.stringify(this.profilePhotos));
   }
 
   private initializeForm(): void {
@@ -45,10 +54,6 @@ export class AdminProfileComponent implements OnInit {
   private initializeEditModes(): void {
     this.editMode = new Array(this.adminNames.length).fill(false);
     this.showPassword = new Array(this.adminNames.length).fill(false);
-  }
-
-  private initializePhotos(): void {
-    this.profilePhotos = new Array(this.adminNames.length).fill(null);
   }
 
   createProfileForm(email: string, password: string): FormGroup {
@@ -73,6 +78,7 @@ export class AdminProfileComponent implements OnInit {
       this.editMode[index] = false;
       this.showPassword[index] = false;
       profile.disable();
+      this.savePhotosToLocalStorage(); // Save photos when clicking "Save"
       console.log(`Profile "${this.adminNames[index]}" updated:`, profile.value);
     } else {
       profile.markAllAsTouched();
@@ -91,8 +97,11 @@ export class AdminProfileComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.profilePhotos[index] = reader.result as string;
+          // Optional: Auto-save immediately when photo changes
+          // this.savePhotosToLocalStorage();
         };
         reader.readAsDataURL(file);
       }
     }
-  } }
+  }
+}

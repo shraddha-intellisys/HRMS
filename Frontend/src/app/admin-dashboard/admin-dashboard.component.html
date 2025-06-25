@@ -12,7 +12,6 @@
       </div>
     </div>
 
-    
     <img
     [src]="emp.imageUrl || 'assets/employee (1).png'"
   (error)="emp.imageUrl = undefined"  
@@ -55,7 +54,6 @@
     </div>
   </div>
 </div>
-   
   </div>
 </div>
 
@@ -80,7 +78,7 @@
     
       <div class="welcome-message">
         <span *ngIf="!editingWelcome">Hope you have a great day at work!</span>
-        <input *ngIf="editingWelcome" [(ngModel)]="welcomeMessage" class="edit-input">
+        
       </div>
     </div>
     <div class="officelogo">
@@ -104,8 +102,7 @@
   </div>
 
   <!-- News Center -->
-  
-  <div class="content-box">
+<div class="content-box">
   <div class="section-header">
     <h4>News Center</h4>
     <button class="edit-btn" (click)="toggleEdit('news')">
@@ -116,7 +113,7 @@
     <p *ngIf="newsItems.length === 0">No records to display</p>
     <ul *ngIf="newsItems.length > 0">
       <li *ngFor="let item of newsItems; let i = index">
-        {{ item }}
+        <span class="news-text">{{ item }}</span>
         <button class="delete-btn" (click)="deleteNewsItem(i)">Delete</button>
       </li>
     </ul>
@@ -204,8 +201,7 @@
     </div>
   </div>
 
-  <!-- Feed -->
-   
+ <!-- Feed -->
 <div class="content-feed">
   <div class="section-header">
     <h4>Feed</h4>
@@ -217,7 +213,7 @@
     <p *ngIf="feedItems.length === 0">No new updates</p>
     <div *ngIf="feedItems.length > 0" class="feed-items">
       <div *ngFor="let item of feedItems; let i = index" class="feed-item">
-        {{ item }}
+        <span class="feed-text">{{ item }}</span>
         <button class="delete-btn" (click)="deleteFeedItem(i)">Delete</button>
       </div>
     </div>
@@ -228,52 +224,62 @@
   </div>
 </div>
 
-  <!-- Employee Documents -->
-  <div class="content-doc">
-    <div class="section-header">
-      <h4>Employee Documents</h4>
-      <button class="edit-btn" (click)="toggleEdit('empDocuments')">
-        {{ editingEmpDocuments ? 'Save' : 'Edit' }}
-      </button>
+
+ <!-- Employee Documents -->
+<div class="content-doc">
+  <div class="section-header">
+    <h4>Employee Documents</h4>
+    <button class="edit-btn" (click)="toggleEdit('empDocuments')">
+      {{ editingEmpDocuments ? 'Save' : 'Edit' }}
+    </button>
+  </div>
+
+  <div class="search-container">
+    <input type="text" placeholder="Search for documents..." class="search-bar" [(ngModel)]="empDocumentSearch" />
+    <button type="button" class="search-button">Search</button>
+  </div>
+
+  <div *ngIf="editingEmpDocuments" class="document-upload">
+    <input type="file" (change)="onEmpDocumentUpload($event)" multiple>
+    <button class="add-btn" (click)="uploadEmpDocuments()">Upload</button>
+  </div>
+
+  <div class="document-list">
+    <div *ngFor="let doc of filteredEmpDocuments" class="document-item">
+      <span class="document-name">{{ doc.name }}</span>
+      <span *ngIf="editingEmpDocuments" class="delete-doc" (click)="deleteEmpDocument(doc)">×</span>
     </div>
-    <div class="search-container">
-      <input type="text" placeholder="Search for documents..." class="search-bar" [(ngModel)]="empDocumentSearch" />
-      <button type="button" class="search-button">Search</button>
-    </div>
-    <div *ngIf="editingEmpDocuments" class="document-upload">
-      <input type="file" (change)="onEmpDocumentUpload($event)" multiple>
-      <button class="add-btn" (click)="uploadEmpDocuments()">Upload</button>
-    </div>
-    <div class="document-list">
-      <div *ngFor="let doc of filteredEmpDocuments" class="document-item">
-        {{ doc.name }}
-        <span *ngIf="editingEmpDocuments" class="delete-doc" (click)="deleteEmpDocument(doc)">×</span>
-      </div>
+  </div>
+</div>
+
+
+  <!-- To Do List -->
+<div class="content-box">
+  <div class="section-header">
+    <h4>To Do List</h4>
+    <button class="edit-btn" (click)="toggleEdit('todo')">
+      {{ editingTodo ? 'Save' : 'Edit' }}
+    </button>
+  </div>
+  <button type="button" class="search-button" (click)="addTodoItem()">+ Add Task</button>
+
+  <!-- Edit Mode -->
+  <div *ngIf="editingTodo" class="todo-edit">
+    <div *ngFor="let item of todoItems; let i = index" class="todo-item">
+      <input type="checkbox" [(ngModel)]="item.completed" />
+      <input [(ngModel)]="item.task" class="todo-input" />
+      <button class="delete-btn" (click)="removeTodoItem(i)">Delete</button>
     </div>
   </div>
 
-  <!-- To Do List -->
-  <div class="content-box">
-    <div class="section-header">
-      <h4>To Do List</h4>
-      <button class="edit-btn" (click)="toggleEdit('todo')">
-        {{ editingTodo ? 'Save' : 'Edit' }}
-      </button>
-    </div>
-    <button type="button" class="search-button" (click)="addTodoItem()">+ Add Task</button>
-    <div *ngIf="editingTodo" class="todo-edit">
-      <div *ngFor="let item of todoItems; let i = index" class="todo-item">
-        <input type="checkbox" [(ngModel)]="item.completed">
-        <input [(ngModel)]="item.task" class="todo-input">
-        <button class="delete-btn" (click)="removeTodoItem(i)">Delete</button>
-      </div>
-    </div>
-    <div *ngIf="!editingTodo" class="todo-list">
-      <div *ngFor="let item of todoItems" class="todo-item-display">
-        <span [class.completed]="item.completed">{{ item.task }}</span>
-      </div>
+  <!-- View Mode -->
+  <div *ngIf="!editingTodo" class="todo-list">
+    <div *ngFor="let item of todoItems" class="todo-item-display">
+      <span class="todo-text" [class.completed]="item.completed">{{ item.task }}</span>
     </div>
   </div>
+</div>
+
 
   <!-- New Joinee -->
   <div class="content-joinee">

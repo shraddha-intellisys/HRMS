@@ -11,6 +11,21 @@
       </div>
 
       <div class="login-form-container">
+        <div class="login-type-toggle">
+          <button 
+            [class.active]="!isAdminLogin" 
+            (click)="toggleLoginType(false)"
+          >
+            User Login
+          </button>
+          <button 
+            [class.active]="isAdminLogin" 
+            (click)="toggleLoginType(true)"
+          >
+            Admin Login
+          </button>
+        </div>
+
         <form
           class="login-form"
           #loginForm="ngForm"
@@ -19,7 +34,9 @@
         >
           <!-- Username Input -->
           <div class="input-group">
-            <label for="username">Username</label>
+            <label for="username">
+              {{ isAdminLogin ? 'Admin Username' : 'Username' }}
+            </label>
             <input
               type="text"
               id="username"
@@ -29,12 +46,14 @@
               minlength="3"
               maxlength="15"
               pattern="^[a-zA-Z0-9]+$"
-              placeholder="Enter your username"
+              [placeholder]="isAdminLogin ? 'Enter admin username' : 'Enter your username'"
               #username="ngModel"
             />
             <!-- Username Validation Errors -->
             <div class="error" *ngIf="username.invalid && (username.dirty || username.touched)">
-              <small *ngIf="username.errors?.['required']">Username is required.</small>
+              <small *ngIf="username.errors?.['required']">
+                {{ isAdminLogin ? 'Admin username is required' : 'Username is required' }}
+              </small>
               <small *ngIf="username.errors?.['minlength']">
                 Username must be at least 3 characters.
               </small>
@@ -49,7 +68,9 @@
 
           <!-- Password Input -->
           <div class="input-group">
-            <label for="password">Password</label>
+            <label for="password">
+              {{ isAdminLogin ? 'Admin Password' : 'Password' }}
+            </label>
             <input
               type="password"
               id="password"
@@ -57,26 +78,26 @@
               ngModel
               required
               minlength="6"
-             
-              placeholder="Enter your password"
+              [placeholder]="isAdminLogin ? 'Enter admin password' : 'Enter your password'"
               #password="ngModel"
             />
             <!-- Password Validation Errors -->
             <div class="error" *ngIf="password.invalid && (password.dirty || password.touched)">
-              <small *ngIf="password.errors?.['required']">Password is required.</small>
+              <small *ngIf="password.errors?.['required']">
+                {{ isAdminLogin ? 'Admin password is required' : 'Password is required' }}
+              </small>
               <small *ngIf="password.errors?.['minlength']">
                 Password must be at least 6 characters.
-              </small>
-              <small *ngIf="password.errors?.['pattern']">
-                Password must include at least one uppercase letter, one lowercase letter, and one number.
               </small>
             </div>
           </div>
 
           <a [routerLink]="['/reset-password']" class="forgot-password">Forgot password?</a>
-          <button type="submit"> Login</button>
+          <button type="submit">
+            {{ isAdminLogin ? 'Login as Admin' : 'Login as User' }}
+          </button>
 
-          <div class="signin-link">
+          <div class="signin-link" *ngIf="isAdminLogin">
             <p>Don't have an account? <a routerLink="/signup">Sign Up</a></p>
           </div>
         </form>
@@ -84,5 +105,3 @@
     </div>
   </div>
 </div>
-
-

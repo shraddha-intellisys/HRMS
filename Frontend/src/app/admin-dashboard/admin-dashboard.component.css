@@ -188,7 +188,7 @@
 }
 
 .edit-btn:hover {
-  background-color: #f8f9fa;
+  background-color: #ef9313;
 }
 
 .add-btn {
@@ -253,12 +253,28 @@
   font-size: 18px;
   margin: 10px 0;
 }
-
 /* News Center */
+.content-box {
+  max-width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .content-box ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 300px; /* limit height if too many items */
+  overflow-y: auto;  /* allow scroll if needed */
 }
 
 .content-box ul li {
@@ -266,8 +282,224 @@
   border-bottom: 1px solid #ecf0f1;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  word-break: break-word; /* break long words */
+  flex-wrap: wrap;
+}
+
+.news-text {
+  flex: 1;
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.edit-textarea {
+  width: 100%;
+  height: 100px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+.edit-btn,
+.delete-btn,
+.add-btn {
+  padding: 6px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+}
+
+.add-btn {
+  margin-top: 10px;
+  background-color: #2ecc71;
+}
+
+
+/* Container */
+.content-doc {
+  max-width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
+
+/* Search bar */
+.search-container {
+  margin: 10px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Upload area */
+.document-upload {
+  margin: 10px 0;
+}
+
+.add-btn {
+  margin-top: 10px;
+  background-color: #2ecc71;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Document list */
+.document-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.document-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid #ecf0f1;
+  gap: 10px;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.document-name {
+  flex: 1;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Delete icon */
+.delete-doc {
+  color: #e74c3c;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Buttons shared style */
+.edit-btn,
+.delete-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+/* Feed */
+.content-feed {
+  max-width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.content-feed .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.feed-items {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.feed-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ecf0f1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.feed-text {
+  flex: 1;
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.edit-feed textarea {
+  width: 100%;
+  height: 100px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+.edit-btn,
+.delete-btn,
+.add-btn {
+  padding: 6px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+}
+
+.add-btn {
+  margin-top: 10px;
+  background-color: #2ecc71;
+}
+
 
 /* Reminders Section - Updated to match other boxes */
 .content-remind {
@@ -307,25 +539,88 @@
   justify-content: space-between;
 }
 
-/* Todo List */
-.todo-item {
+/* Common container */
+.content-box {
+  max-width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.section-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+}
+
+.search-button {
+  background-color: #edc944;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  margin: 10px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Edit Mode Items */
+.todo-edit .todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .todo-input {
   flex: 1;
-  margin: 0 10px;
   padding: 8px;
-  border: 1px solid #ddd;
+  min-width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  word-break: break-word;
+}
+
+/* View Mode Items */
+.todo-list .todo-item-display {
+  padding: 8px 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.todo-text {
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Completed task style */
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* Buttons */
+.edit-btn,
+.delete-btn,
+.add-btn {
+  padding: 6px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  background-color: #f0af46;
+  color: white;
+  border: none;
   border-radius: 4px;
 }
 
-.completed {
-  text-decoration: line-through;
-  color: #95a5a6;
+.delete-btn {
+  background-color: #e74c3c;
 }
+
 
 /* New Joinee Section */
 .joinee-item {
