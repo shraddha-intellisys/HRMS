@@ -1,9 +1,11 @@
-const User = require('../models/user'); // Or Admin, based on your schema
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 exports.resetPassword = async (req, res) => {
   try {
     const { email, newPassword, confirmPassword } = req.body;
 
+    // Basic validation
     if (!email || !newPassword || !confirmPassword) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
@@ -15,12 +17,13 @@ exports.resetPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found.' });
 
-    user.password = newPassword; // You should hash password before saving in real app
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
     await user.save();
 
-    res.json({ message: 'Password reset successful.' });
-  } catch (err) {
-    console.error('Reset error:', err);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(200).json({ message: '✅ Password reset successful.' });
+  } catch (error) {
+    console.error('❌ Password reset error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

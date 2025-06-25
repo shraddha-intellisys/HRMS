@@ -60,13 +60,14 @@ export class LoginPageComponent {
       localStorage.setItem('username', data.username);
       localStorage.setItem('role', data.role);
   
-      alert(`✅ Login successful! Welcome ${this.isAdminLogin ? 'Admin' : 'User'}`);
+      alert(`✅ Login successful! Welcome Employee: ${data.employeeId}`);
   
       if (data.role === 'admin') {
-        this.router.navigate(['/admin-dashboard']);
-      } else {
-        this.router.navigate(['/employee-dashboard']);
-      }
+  this.router.navigate(['/admin-dashboard']);
+} else {
+  this.router.navigate(['/right']); // or your actual employee dashboard route
+}
+
     } catch (error: unknown) {
       alert(error instanceof Error ? error.message : '❌ An unexpected error occurred.');
     }

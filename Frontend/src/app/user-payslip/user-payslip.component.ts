@@ -32,7 +32,7 @@ export class UserPayslipComponentComponent {
   downloadPayslip() {
     const selectedMonth = this.monthControl.value;
     if (!selectedMonth) {
-      alert("Please select month");
+      alert("Please select a month");
       return;
     }
 
@@ -49,7 +49,7 @@ export class UserPayslipComponentComponent {
       },
       error: (error) => {
         console.error('Download error:', error);
-        alert("Payslip not found or server error");
+        alert(`Payslip for ${this.empId} in ${selectedMonth} not found or server error.`);
       }
     });
   }
