@@ -501,34 +501,99 @@
 }
 
 
-/* Reminders Section - Updated to match other boxes */
+/* Reminders Section - Updated with text overflow handling */
 .content-remind {
   background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .reminder-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Changed from center to flex-start for better text alignment */
   padding: 15px;
   margin-bottom: 15px;
   background-color: #f8f9fa;
   border-radius: 8px;
   transition: all 0.3s ease;
+  overflow: hidden; /* Prevents content from overflowing the container */
 }
 
 .reminder-row:hover {
   background-color: #ecf0f1;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .reminder-icon {
   font-size: 24px;
   margin-right: 15px;
   color: #e67e22; /* Orange icon */
+  flex-shrink: 0; /* Prevents icon from shrinking */
+}
+
+.reminder-details, .employee-details {
+  flex: 1;
+  min-width: 0; /* Crucial for text overflow handling in flex containers */
+}
+
+.reminder-details h5, .employee-details h5 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reminder-details p, .employee-details p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #34495e;
+  word-break: break-word; /* Ensures long words break properly */
 }
 
 .birthday-reminder .reminder-icon {
   color: #e84393;
+}
+
+/* Additional styles for edit mode */
+.editable-reminder {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: #e67e22;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .reminder-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .reminder-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }
 
 /* Documents Section */
@@ -623,11 +688,30 @@
 
 
 /* New Joinee Section */
+.content-joinee {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .joinee-item {
   display: flex;
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid #ecf0f1;
+}
+
+.joinee-item:last-child {
+  border-bottom: none;
 }
 
 .joinee-image {
@@ -639,6 +723,122 @@
   border: 2px solid #ecf0f1;
 }
 
+.joinee-details {
+  flex: 1;
+}
+
+.joinee-name {
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+}
+
+.joinee-date {
+  color: #7f8c8d;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Edit Mode Styles */
+.edit-joinee {
+  margin-top: 15px;
+}
+
+.editable-joinee {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Button Styles */
+.edit-btn, .add-btn, .delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.add-btn {
+  background-color: #2ecc71;
+  color: white;
+  margin-top: 10px;
+}
+
+.add-btn:hover {
+  background-color: #27ae60;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* File Upload Styles */
+.file-upload {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  left: -9999px;
+}
+
+.file-upload-label {
+  display: block;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px dashed #bdc3c7;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.file-upload-label:hover {
+  border-color: #3498db;
+  background: #eaf2f8;
+}
+
+.file-upload-text {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+/* Icons */
+.fas {
+  margin-right: 6px;
+  font-size: 12px;
+}
 /* Stat Cards - Updated to Orange Theme */
 .stat-cards {
   display: flex;

@@ -32,9 +32,11 @@ interface CalendarDay {
   holidayName?: string;
   holidayReason?: string;
   approved?: boolean;
+  isSunday?: boolean;
 }
 
 interface Holiday {
+  _id?: string;
   date: Date;
   name: string;
   reason: string;
@@ -67,7 +69,6 @@ export class AttendanceApprovalComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAttendanceRequests();
-    this.generateCalendar();
     this.fetchHolidays();
   }
 
@@ -96,36 +97,31 @@ export class AttendanceApprovalComponent implements OnInit {
     this.requests[index].expanded = !this.requests[index].expanded;
   }
 
- accept(index: number) {
-  const request = this.requests[index];
-  this.http.put('http://localhost:5000/api/attendance-application/approve', {
-    id: request._id
-  }).subscribe({
-    next: () => {
-      console.log('✅ Approved');
-      this.requests.splice(index, 1);
-    },
-    error: (err) => console.error('❌ Error approving request:', err)
-  });
-}
+  accept(index: number) {
+    const request = this.requests[index];
+    this.http.put('http://localhost:5000/api/attendance-application/approve', {
+      id: request._id
+    }).subscribe({
+      next: () => {
+        console.log('✅ Approved');
+        this.requests.splice(index, 1);
+      },
+      error: (err) => console.error('❌ Error approving request:', err)
+    });
+  }
 
-
-
-reject(index: number): void {
-  const request = this.requests[index];
-  this.http.put('http://localhost:5000/api/attendance-application/reject', {
-    id: request._id
-  }).subscribe({
-    next: () => {
-      console.log('❌ Rejected');
-      this.requests.splice(index, 1);
-    },
-    error: (err) => console.error('❌ Error rejecting:', err)
-  });
-}
-
-
-
+  reject(index: number): void {
+    const request = this.requests[index];
+    this.http.put('http://localhost:5000/api/attendance-application/reject', {
+      id: request._id
+    }).subscribe({
+      next: () => {
+        console.log('❌ Rejected');
+        this.requests.splice(index, 1);
+      },
+      error: (err) => console.error('❌ Error rejecting:', err)
+    });
+  }
 
   generateCalendar() {
     const year = this.currentDate.getFullYear();
@@ -134,21 +130,31 @@ reject(index: number): void {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     this.calendarDays = [];
-    for (let i = 0; i < firstDay; i++) this.calendarDays.push({});
+    
+    // Add empty days for the first week
+    for (let i = 0; i < firstDay; i++) {
+      this.calendarDays.push({});
+    }
+    
+    // Add days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = new Date(year, month, i);
+      const isSunday = currentDate.getDay() === 0;
+      
       const holiday = this.holidays.find(h =>
         h.date.getDate() === currentDate.getDate() &&
         h.date.getMonth() === currentDate.getMonth() &&
         h.date.getFullYear() === currentDate.getFullYear()
       );
+      
       this.calendarDays.push({
         date: i,
         fullDate: currentDate,
-        isHoliday: !!holiday,
-        holidayName: holiday?.name,
-        holidayReason: holiday?.reason,
-        approved: holiday?.approved
+        isHoliday: !!holiday || isSunday,
+        holidayName: holiday?.name || (isSunday ? 'Sunday (Official Holiday)' : undefined),
+        holidayReason: holiday?.reason || (isSunday ? 'Weekly off' : undefined),
+        approved: holiday?.approved || isSunday,
+        isSunday: isSunday
       });
     }
   }
@@ -171,30 +177,57 @@ reject(index: number): void {
   }
 
   selectDate(day: CalendarDay) {
-    if (day.date) this.selectedDate = day;
+    if (day.date) {
+      this.selectedDate = day;
+      this.editingHoliday = false;
+    }
   }
 
   startEditing() {
+    if (!this.selectedDate) return;
     this.editingHoliday = true;
-    this.editingHolidayName = this.selectedDate?.holidayName || '';
-    this.editingHolidayReason = this.selectedDate?.holidayReason || '';
+    this.editingHolidayName = this.selectedDate.holidayName || '';
+    this.editingHolidayReason = this.selectedDate.holidayReason || '';
   }
 
   saveHoliday() {
-    if (this.editingHolidayName.trim() && this.selectedDate) {
-      const newHoliday = {
-        date: this.selectedDate.fullDate,
-        name: this.editingHolidayName,
-        reason: this.editingHolidayReason
-      };
-      this.http.post('http://localhost:5000/api/holidays/add', newHoliday).subscribe({
-        next: () => {
-          console.log('✅ Holiday Saved');
-          this.fetchHolidays();
-        },
-        error: (err) => console.error('❌ Failed to save holiday:', err)
-      });
-      this.editingHoliday = false;
+    if (!this.editingHolidayName.trim() || !this.selectedDate || !this.selectedDate.fullDate) return;
+
+    const holidayData = {
+      date: this.selectedDate.fullDate,
+      name: this.editingHolidayName,
+      reason: this.editingHolidayReason,
+      approved: false
+    };
+
+    const existingHoliday = this.holidays.find(h =>
+      h.date.getDate() === this.selectedDate?.fullDate?.getDate() &&
+      h.date.getMonth() === this.selectedDate?.fullDate?.getMonth() &&
+      h.date.getFullYear() === this.selectedDate?.fullDate?.getFullYear()
+    );
+
+    if (existingHoliday && existingHoliday._id) {
+      // Update existing holiday
+      this.http.put(`http://localhost:5000/api/holidays/${existingHoliday._id}`, holidayData)
+        .subscribe({
+          next: () => {
+            console.log('✅ Holiday Updated');
+            this.fetchHolidays();
+            this.editingHoliday = false;
+          },
+          error: (err) => console.error('❌ Failed to update holiday:', err)
+        });
+    } else {
+      // Add new holiday
+      this.http.post('http://localhost:5000/api/holidays/add', holidayData)
+        .subscribe({
+          next: () => {
+            console.log('✅ Holiday Saved');
+            this.fetchHolidays();
+            this.editingHoliday = false;
+          },
+          error: (err) => console.error('❌ Failed to save holiday:', err)
+        });
     }
   }
 
@@ -203,13 +236,93 @@ reject(index: number): void {
   }
 
   approveHoliday() {
-    if (!this.selectedDate) return;
-    const holidayIndex = this.holidays.findIndex(h =>
+    if (!this.selectedDate || !this.selectedDate.fullDate || this.selectedDate.isSunday) return;
+    
+    const holiday = this.holidays.find(h =>
       h.date.getDate() === this.selectedDate?.fullDate?.getDate() &&
       h.date.getMonth() === this.selectedDate?.fullDate?.getMonth() &&
       h.date.getFullYear() === this.selectedDate?.fullDate?.getFullYear()
     );
-    if (holidayIndex >= 0) this.holidays[holidayIndex].approved = true;
-    this.generateCalendar();
+    
+    if (holiday && holiday._id) {
+      this.http.put(`http://localhost:5000/api/holidays/${holiday._id}/approve`, {})
+        .subscribe({
+          next: () => {
+            console.log('✅ Holiday Approved');
+            this.fetchHolidays();
+          },
+          error: (err) => console.error('❌ Failed to approve holiday:', err)
+        });
+    }
+  }
+
+ cancelHoliday() {
+    if (!this.selectedDate || !this.selectedDate.fullDate || this.selectedDate.isSunday) {
+      console.log('Cannot cancel Sunday or invalid date');
+      return;
+    }
+    
+    const holiday = this.holidays.find(h => {
+      const holidayDate = new Date(h.date);
+      const selectedDate = new Date(this.selectedDate!.fullDate!);
+      return (
+        holidayDate.getDate() === selectedDate.getDate() &&
+        holidayDate.getMonth() === selectedDate.getMonth() &&
+        holidayDate.getFullYear() === selectedDate.getFullYear()
+      );
+    });
+    
+    if (holiday && holiday._id) {
+      if (confirm(`Are you sure you want to cancel the holiday "${holiday.name}"?`)) {
+        this.http.delete(`http://localhost:5000/api/holidays/${holiday._id}`)
+          .subscribe({
+            next: () => {
+              console.log('Holiday Cancelled');
+              // Remove the holiday from local state
+              this.holidays = this.holidays.filter(h => h._id !== holiday._id);
+              
+              // Update the calendar
+              this.generateCalendar();
+              
+              // Reset the selected date
+              if (this.selectedDate) {
+                this.selectedDate = {
+                  ...this.selectedDate,
+                  isHoliday: false,
+                  holidayName: undefined,
+                  holidayReason: undefined,
+                  approved: false
+                };
+              }
+            },
+            error: (err) => {
+              console.error('Failed to cancel holiday:', err);
+              if (err.status === 404) {
+                // If holiday not found, update UI anyway
+                this.holidays = this.holidays.filter(h => h._id !== holiday._id);
+                this.generateCalendar();
+                if (this.selectedDate) {
+                  this.selectedDate.isHoliday = false;
+                }
+              } else {
+                alert('Failed to cancel holiday. Please try again.');
+              }
+            }
+          });
+      }
+    } else {
+      console.log('No holiday found to cancel');
+      alert('No holiday found to cancel');
+    }
+  }
+
+  getDayClass(day: CalendarDay): string {
+    if (!day.date) return 'empty-day';
+    
+    let classes = 'calendar-day';
+    if (day.isSunday) classes += ' sunday';
+    if (day.isHoliday && !day.isSunday) classes += day.approved ? ' holiday-approved' : ' holiday';
+    
+    return classes;
   }
 }

@@ -1,74 +1,111 @@
-
 <div class="sidebar">
-    <div class="logo">
-      <h3 class="title">HRMThread</h3>
-    </div>
-    <ul>
-
-      <li *ngIf="role === 'admin'">
-  <a [routerLink]="['/admin-dashboard']"><span>🕵️‍♂️</span> Admin Dashboard</a>
-</li>
-
-        <li *ngIf="role === 'admin'">
-            <a [routerLink]="['/employee-profile']"><span>👤</span> Employee</a></li>
-       
-
-      <!-- Home Section -->
-      <li *ngIf="role === 'user'">
-        <a href="javascript:void(0);" (click)="toggleDropdown('home')">
-          <span>🏠</span> Home
-          <span class="arrow" [ngClass]="{ open: isDropdownOpen.home }">&#9662;</span>
-        </a>
-        <ul *ngIf="isDropdownOpen.home" class="dropdown">
-          <li><a [routerLink]="['/right']" routerLinkActive="active">Home</a></li>
-         
-        </ul>
-      </li>
-  
-      <!-- Profile Section -->
-      <li *ngIf="role === 'user'">
-        <a href="javascript:void(0);" (click)="toggleDropdown('profile')">
-          <span>👤</span> Profile
-          <span class="arrow" [ngClass]="{ open: isDropdownOpen.profile }">&#9662;</span>
-        </a>
-        <ul *ngIf="isDropdownOpen.profile" class="dropdown">
-          <li><a [routerLink]="['/profile']">View Profile</a></li>
-          <!-- <li><a [routerLink]="['/profile']">Edit Profile</a></li> -->
-        </ul>
-      </li>
-  
-      <!-- Other Sections -->
-      <li *ngIf="role === 'user'">
-        <a [routerLink]="['/shedule']"><span>🗓️</span> Time & Attendance</a></li>
-
-      <li *ngIf="role === 'user'">
-        <a [routerLink]="['/leaves']"><span>✅</span> Leave</a></li>
-      
-      <li *ngIf="role === 'user'">
-        <a [routerLink]="['/userpay']"><span>💰</span>Payslip</a></li>
-
-     <li *ngIf="role === 'admin'">
-      <a [routerLink]="['/payroll']"><span>💰</span>Payslip</a></li>
-     
-      <li *ngIf="role === 'user'">
-        <a [routerLink]="['/resignation']"><span>🚪</span> Apply Exit</a></li>
-
-      
-      <li *ngIf="role === 'admin'">
-        <a [routerLink]="['/attendance-approval']"><span>📊</span> Attendance Approval</a></li>
-
-       <li *ngIf="role === 'admin'">
-        <a [routerLink]="['/leaves-approval']"><span>✅</span> Leave Approval</a></li>
-
-        <li *ngIf="role === 'admin'">
-        <a [routerLink]="['/resignation-approval']"><span>🚪</span> Resignation Approval</a></li>
-
-        <li *ngIf="role === 'admin'">
-        <a [routerLink]="['/admin-profile']"><span>👤</span> Admin Profile</a></li>
-
-      <!-- <li><a [routerLink]="['/employee']"><span>✅</span> Employee-Registration</a></li> -->
-           
-     
-    </ul>
+  <div class="logo">
+    <h3 class="title">HRMThread</h3>
   </div>
+  <ul>
+    <!-- Admin Dashboard -->
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/admin-dashboard']">
+        <i class="material-icons">dashboard</i> Admin Dashboard
+      </a>
+    </li>
+
+    <!-- Employee Management -->
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/employee-profile']">
+        <i class="material-icons">groups</i> Employee
+      </a>
+    </li>
+
+    <!-- Home Section -->
+    <li *ngIf="role === 'user'">
+      <a href="javascript:void(0);" (click)="toggleDropdown('home')">
+        <i class="material-icons">home</i> Home
+        <span class="arrow" [ngClass]="{ open: isDropdownOpen.home }">&#9662;</span>
+      </a>
+      <ul *ngIf="isDropdownOpen.home" class="dropdown">
+        <li>
+          <a [routerLink]="['/right']" routerLinkActive="active">
+            <i class="material-icons">home</i> Home
+          </a>
+        </li>
+      </ul>
+    </li>
   
+    <!-- Profile Section -->
+    <li *ngIf="role === 'user'">
+      <a href="javascript:void(0);" (click)="toggleDropdown('profile')">
+        <i class="material-icons">person</i> Profile
+        <span class="arrow" [ngClass]="{ open: isDropdownOpen.profile }">&#9662;</span>
+      </a>
+      <ul *ngIf="isDropdownOpen.profile" class="dropdown">
+        <li>
+          <a [routerLink]="['/profile']">
+            <i class="material-icons">visibility</i> View Profile
+          </a>
+        </li>
+      </ul>
+    </li>
+  
+    <!-- Time & Attendance -->
+    <li *ngIf="role === 'user'">
+      <a [routerLink]="['/shedule']">
+        <i class="material-icons">schedule</i> Time & Attendance
+      </a>
+    </li>
+
+    <!-- Leave Management -->
+    <li *ngIf="role === 'user'">
+      <a [routerLink]="['/leaves']">
+        <i class="material-icons">event_available</i> Leave
+      </a>
+    </li>
+    
+    <!-- Payslip -->
+    <li *ngIf="role === 'user'">
+      <a [routerLink]="['/userpay']">
+        <i class="material-icons">receipt</i> Payslip
+      </a>
+    </li>
+
+    <!-- Admin Payslip -->
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/payroll']">
+        <i class="material-icons">payments</i> Payslip
+      </a>
+    </li>
+    
+    <!-- Exit Application -->
+    <li *ngIf="role === 'user'">
+      <a [routerLink]="['/resignation']">
+        <i class="material-icons">logout</i> Apply Exit
+      </a>
+    </li>
+
+    <!-- Admin Approvals -->
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/attendance-approval']">
+        <i class="material-icons">assignment_turned_in</i> Attendance Approval
+      </a>
+    </li>
+
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/leaves-approval']">
+        <i class="material-icons">approval</i> Leave Approval
+      </a>
+    </li>
+
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/resignation-approval']">
+        <i class="material-icons">person_remove</i> Resignation Approval
+      </a>
+    </li>
+
+    <!-- Admin Profile -->
+    <li *ngIf="role === 'admin'">
+      <a [routerLink]="['/admin-profile']">
+        <i class="material-icons">admin_panel_settings</i> Admin Profile
+      </a>
+    </li>
+  </ul>
+</div>

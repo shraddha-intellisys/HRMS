@@ -528,3 +528,41 @@ button:contains("Add Holiday") {
 button:contains("Edit Holiday") {
   background-color: #FF9800; /* Orange for Edit */
 }
+
+/* Add these to your existing CSS */
+.sunday {
+  background-color: #ffebee;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.calendar-day:hover .holiday-tooltip {
+  display: block;
+}
+
+.cancel-button {
+  background-color: #f44336 !important;
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f !important;
+}
+
+.holiday-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sunday .holiday-indicator {
+  background-color: rgba(211, 47, 47, 0.2);
+}
+

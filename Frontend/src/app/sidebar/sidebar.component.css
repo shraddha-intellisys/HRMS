@@ -123,3 +123,14 @@
       background-color:white;
     }
   }
+
+  i.fas, i.material-icons {
+  margin-right: 8px;
+  width: 20px;
+  text-align: center;
+}
+
+.material-icons {
+  vertical-align: middle;
+  font-size: 18px;
+}

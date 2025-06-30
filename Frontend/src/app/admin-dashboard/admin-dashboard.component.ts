@@ -7,9 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 
-
-
-
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -34,7 +31,6 @@ export class AdminDashboardComponent implements OnInit {
   gender: string = '';
   showProfile = false;
   showNotifications = false;
-  
   unreadNotificationsCount = 0;
   
   // Employee data
@@ -53,7 +49,7 @@ export class AdminDashboardComponent implements OnInit {
   birthdaysThisMonth: any[] = [];
   allEmployees: any[] = [];
   filteredEmployees: any[] = [];
-   notifications: any[] = [];
+  notifications: any[] = [];
   
   // Edit states
   editingWelcome = false;
@@ -68,36 +64,19 @@ export class AdminDashboardComponent implements OnInit {
 
   // Section content
   welcomeMessage = 'Hope you have a great day at work!';
-  newsItems: string[] = ['Company picnic next Friday', 'New HR policies released'];
+  newsItems: string[] = [];
   newsText = '';
   documentSearch = '';
-  documents: any[] = [
-    { name: 'Company Policy.pdf' },
-    { name: 'Employee Handbook.docx' }
-  ];
+  documents: any[] = [];
   selectedDocuments: File[] = [];
-  reminders: any[] = [
-    { title: 'Team meeting', date: '2023-06-15' }
-  ];
-  feedItems: string[] = ['System maintenance scheduled for tonight', 'New project kickoff meeting tomorrow'];
+  reminders: any[] = [];
+  feedItems: {text: string, date: Date}[] = [];
   feedText = '';
   empDocumentSearch = '';
-  empDocuments: any[] = [
-    { name: 'Offer Letter.pdf' },
-    { name: 'NDA Agreement.docx' }
-  ];
+  empDocuments: any[] = [];
   selectedEmpDocuments: File[] = [];
-  todoItems: any[] = [
-    { task: 'Review quarterly reports', completed: false },
-    { task: 'Schedule team building', completed: true }
-  ];
-  newJoinees: any[] = [
-    { 
-      name: 'Amit Patel', 
-      joinDate: '2023-06-01', 
-      imageUrl: 'assets/employee (1).png' 
-    }
-  ];
+  todoItems: any[] = [];
+  newJoinees: any[] = [];
   selectedJoineeImages: File[] = [];
   employeeSearch = '';
 
@@ -125,51 +104,6 @@ export class AdminDashboardComponent implements OnInit {
       ]
     }]
   };
-
-  
-  getTitlePrefix(): string {
-    if (!this.gender) return '';
-
-    const genderLower = this.gender.toLowerCase();
-    if (genderLower === 'male') {
-      return 'Mr.';
-    } else if (genderLower === 'female') {
-      return 'Ms.';
-    }
-    return '';
-  }
-  
-   toggleNotifications(): void {
-    this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) {
-      this.markNotificationsAsRead();
-    }
-  }
-
-  loadNotifications(): void {
-    const headers = this.createAuthHeaders();
-    this.http.get<any>('${this.API_URL}/notifications, { headers }').subscribe({
-      next: (res) => {
-        this.notifications = res?.notifications || [];
-        this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
-      },
-      error: (err) => console.error('Error loading notifications:', err),
-    });
-  }
-
-  markNotificationsAsRead(): void {
-    const headers = this.createAuthHeaders();
-    this.http.post(`${this.API_URL}/notifications/mark-as-read`, {}, { headers }).subscribe({
-      next: () => {
-        this.notifications = this.notifications.map(notification => ({
-          ...notification,
-          isRead: true
-        }));
-        this.unreadNotificationsCount = 0;
-      },
-      error: (err) => console.error('Error marking notifications as read:', err),
-    });
-  }
 
   attendanceOverview: ChartConfiguration<'line'>['data'] = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -202,7 +136,7 @@ export class AdminDashboardComponent implements OnInit {
   ];
 
   private readonly API_URL = 'http://localhost:5000/api/employees';
-
+  private readonly STORAGE_KEY = 'admin_dashboard_data';
 
   constructor(
     private http: HttpClient,
@@ -218,58 +152,103 @@ export class AdminDashboardComponent implements OnInit {
     this.fetchEmployees();
     this.getUpcomingBirthdays();
     this.loadDashboardData();
-    
+    this.loadLocalData();
+    this.loadNotifications();
   }
 
-  
-
-  
-  private loadDashboardData(): void {
-  this.http.get<any>('http://localhost:5000/api/admin-dashboard/public').subscribe({
-    next: (data) => {
-      this.welcomeMessage = data?.welcomeMessage || '';
-      this.newsItems = data?.newsItems || [];
-      this.reminders = data?.reminders || [];
-      this.feedItems = data?.feedItems || [];
-      this.empDocuments = data?.empDocuments || [];
-      this.todoItems = data?.todoItems || [];
-      this.newJoinees = data?.newJoinees || [];
-    },
-    error: (err) => {
-      console.error('Error fetching dashboard data from backend:', err);
+  private loadLocalData(): void {
+    const savedData = localStorage.getItem(this.STORAGE_KEY);
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      this.feedItems = data.feedItems?.map((item: any) => ({
+        text: item.text,
+        date: new Date(item.date)
+      })) || [];
+      this.reminders = data.reminders?.map((reminder: any) => ({
+        ...reminder,
+        date: new Date(reminder.date)
+      })) || [];
     }
-  });
-}
+  }
 
- saveDashboardData(): void {
-  const data = {
-    welcomeMessage: this.welcomeMessage || '',
-    newsItems: this.newsItems || [],
-    reminders: this.reminders?.map(r => ({
-      title: r?.title || '',
-      date: r?.date || '',
-      type: r?.type || '',
-      notes: r?.notes || ''
-    })) || [],
-    feedItems: this.feedItems || [],
-    empDocuments: this.empDocuments?.map(doc => ({ name: doc?.name || '' })) || [],
-    todoItems: this.todoItems?.map(todo => ({
-      task: todo?.task || '',
-      completed: todo?.completed || false
-    })) || [],
-    newJoinees: this.newJoinees?.map(j => ({
-      name: j?.name || '',
-      joinDate: j?.joinDate || '',
-      imageUrl: j?.imageUrl || ''
-    })) || []
-  };
+  private saveLocalData(): void {
+    const data = {
+      feedItems: this.feedItems,
+      reminders: this.reminders
+    };
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+  }
 
-  this.http.put<any>('http://localhost:5000/api/admin-dashboard', data).subscribe({
-    next: () => console.log('✅ Dashboard data updated successfully.'),
-    error: (err) => console.error('❌ Failed to update dashboard:', err)
-  });
-}
+  // Notification methods
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.markNotificationsAsRead();
+    }
+  }
 
+  loadNotifications(): void {
+    const headers = this.createAuthHeaders();
+    this.http.get<any>(`${this.API_URL}/notifications`, { headers }).subscribe({
+      next: (res) => {
+        this.notifications = res?.notifications || [];
+        this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
+      },
+      error: (err) => console.error('Error loading notifications:', err),
+    });
+  }
+
+  markNotificationsAsRead(): void {
+    const headers = this.createAuthHeaders();
+    this.http.post(`${this.API_URL}/notifications/mark-as-read`, {}, { headers }).subscribe({
+      next: () => {
+        this.notifications = this.notifications.map(notification => ({
+          ...notification,
+          isRead: true
+        }));
+        this.unreadNotificationsCount = 0;
+      },
+      error: (err) => console.error('Error marking notifications as read:', err),
+    });
+  }
+
+  getTitlePrefix(): string {
+    if (!this.gender) return '';
+    const genderLower = this.gender.toLowerCase();
+    if (genderLower === 'male') return 'Mr.';
+    if (genderLower === 'female') return 'Ms.';
+    return '';
+  }
+
+  private loadDashboardData(): void {
+    this.http.get<any>('http://localhost:5000/api/admin-dashboard/public').subscribe({
+      next: (data) => {
+        this.welcomeMessage = data?.welcomeMessage || '';
+        this.newsItems = data?.newsItems || [];
+        this.empDocuments = data?.empDocuments || [];
+        this.todoItems = data?.todoItems || [];
+        this.newJoinees = data?.newJoinees || [];
+        this.documents = data?.documents || [];
+      },
+      error: (err) => console.error('Error fetching dashboard data:', err)
+    });
+  }
+
+  saveDashboardData(): void {
+    const data = {
+      welcomeMessage: this.welcomeMessage,
+      newsItems: this.newsItems,
+      empDocuments: this.empDocuments,
+      todoItems: this.todoItems,
+      newJoinees: this.newJoinees,
+      documents: this.documents
+    };
+
+    this.http.put<any>('http://localhost:5000/api/admin-dashboard', data).subscribe({
+      next: () => console.log('Dashboard data saved'),
+      error: (err) => console.error('Error saving dashboard:', err)
+    });
+  }
 
   // Employee management
   get filteredEmployeeList() {
@@ -283,12 +262,11 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   editEmployee(emp: any): void {
-    // In a real app, you would open a modal or form for editing
     console.log('Editing employee:', emp);
   }
 
   deleteEmployee(emp: any): void {
-    if (confirm(`Are you sure you want to delete ${emp.name}?`)) {
+    if (confirm(`Delete ${emp.name}?`)) {
       this.employeeList = this.employeeList.filter(e => e !== emp);
     }
   }
@@ -334,10 +312,7 @@ export class AdminDashboardComponent implements OnInit {
     this.http.get<any>(`${this.API_URL}/profile`, { headers }).subscribe({
       next: (res) => {
         const emp = res?.employee;
-        if (!emp) {
-          console.warn('No employee data found.');
-          return;
-        }
+        if (!emp) return;
 
         this.emp = emp;
         this.employeeName = emp.name || 'Employee';
@@ -397,31 +372,27 @@ export class AdminDashboardComponent implements OnInit {
   getUpcomingBirthdays() {
     const headers = this.createAuthHeaders();
     this.http.get<any>(`${this.API_URL}/upcoming-birthdays`, { headers }).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         if (response?.success) {
           this.upcomingBirthdays = this.filterUpcomingBirthdays(response.upcomingBirthdays || []);
         }
       },
-      error: (err) => {
-        console.error('Error fetching upcoming birthdays:', err);
-      }
+      error: (err) => console.error('Error fetching birthdays:', err)
     });
   }
 
   private filterUpcomingBirthdays(employees: any[]): any[] {
     const today = new Date();
-    const upcoming = employees.filter(emp => {
+    return employees.filter(emp => {
       const empBirthday = new Date(emp.dateOfBirth);
       empBirthday.setFullYear(today.getFullYear());
       return empBirthday >= today;
     }).slice(0, 5);
-    return upcoming;
   }
 
   private fetchEmployees(): void {
     const headers = this.createAuthHeaders();
-    this.http.get<any>(`${this.API_URL}`, { headers })
-.subscribe({
+    this.http.get<any>(`${this.API_URL}`, { headers }).subscribe({
       next: (res) => {
         const employees: any[] = res?.employees || [];
         const loggedInEmpID = this.authService.getEmployeeId();
@@ -451,11 +422,11 @@ export class AdminDashboardComponent implements OnInit {
         break;
       case 'reminders':
         this.editingReminders = !this.editingReminders;
-        if (!this.editingReminders) this.saveDashboardData();
+        if (!this.editingReminders) this.saveLocalData();
         break;
       case 'feed':
         this.editingFeed = !this.editingFeed;
-        if (!this.editingFeed) this.saveDashboardData();
+        if (!this.editingFeed) this.saveLocalData();
         break;
       case 'empDocuments':
         this.editingEmpDocuments = !this.editingEmpDocuments;
@@ -472,25 +443,21 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  onLogoChange(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.emp.imageUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
+  // News methods
   addNewsItem(): void {
     if (this.newsText.trim()) {
-      this.newsItems.push(this.newsText);
+      this.newsItems.unshift(this.newsText);
       this.newsText = '';
       this.saveDashboardData();
     }
   }
 
+  deleteNewsItem(index: number): void {
+    this.newsItems.splice(index, 1);
+    this.saveDashboardData();
+  }
+
+  // Document methods
   onDocumentUpload(event: any): void {
     this.selectedDocuments = Array.from(event.target.files);
   }
@@ -510,22 +477,39 @@ export class AdminDashboardComponent implements OnInit {
     this.saveDashboardData();
   }
 
+  // Reminder methods
   addReminder(): void {
-    this.reminders.push({ title: 'New reminder', date: new Date().toISOString().split('T')[0] });
+    this.reminders.unshift({ 
+      title: 'New reminder', 
+      date: new Date().toISOString().split('T')[0],
+      type: 'General',
+      notes: ''
+    });
   }
 
   removeReminder(index: number): void {
     this.reminders.splice(index, 1);
+    this.saveLocalData();
   }
 
+  // Feed methods
   addFeedItem(): void {
     if (this.feedText.trim()) {
-      this.feedItems.push(this.feedText);
+      this.feedItems.unshift({
+        text: this.feedText,
+        date: new Date()
+      });
       this.feedText = '';
-      this.saveDashboardData();
+      this.saveLocalData();
     }
   }
 
+  deleteFeedItem(index: number): void {
+    this.feedItems.splice(index, 1);
+    this.saveLocalData();
+  }
+
+  // Employee document methods
   onEmpDocumentUpload(event: any): void {
     this.selectedEmpDocuments = Array.from(event.target.files);
   }
@@ -545,8 +529,9 @@ export class AdminDashboardComponent implements OnInit {
     this.saveDashboardData();
   }
 
+  // Todo methods
   addTodoItem(): void {
-    this.todoItems.push({ task: 'New task', completed: false });
+    this.todoItems.unshift({ task: 'New task', completed: false });
   }
 
   removeTodoItem(index: number): void {
@@ -554,8 +539,9 @@ export class AdminDashboardComponent implements OnInit {
     this.saveDashboardData();
   }
 
+  // Joinee methods
   addJoinee(): void {
-    this.newJoinees.push({ 
+    this.newJoinees.unshift({ 
       name: 'New Employee', 
       joinDate: new Date().toISOString().split('T')[0], 
       imageUrl: 'assets/employee (1).png' 
@@ -578,7 +564,7 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  // Filter functions
+  // Filter methods
   get filteredDocuments(): any[] {
     return this.documentSearch 
       ? this.documents.filter(doc => doc.name.toLowerCase().includes(this.documentSearch.toLowerCase()))
@@ -601,14 +587,14 @@ export class AdminDashboardComponent implements OnInit {
     this.showProfile = !this.showProfile;
   }
 
-
-deleteNewsItem(index: number) {
-  this.newsItems.splice(index, 1);
-}
-
-deleteFeedItem(index: number) {
-  this.feedItems.splice(index, 1);
-}
-
-
+  onLogoChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.emp.imageUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 }
