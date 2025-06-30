@@ -1,3 +1,46 @@
+.login-type-toggle {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.login-type-toggle button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background-color: #f0f0f0;
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-type-toggle button.active {
+  background-color: #000;
+  color: white;
+}
+
+.login-type-toggle button:first-child {
+  border-right: 1px solid #ddd;
+}
+
+/* Update the button style to match the toggle */
+.login-form button[type="submit"] {
+  margin-top: 10px;
+  background-color: #000;
+  color: white;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #333;
+}
+
+
+
+
+
 /* Overall Page */
 .login-page {
   display: flex;
@@ -16,7 +59,7 @@
   padding: 40px;
   text-align: center;
   box-sizing: border-box;
-  color: #fff;
+  color: #fefafa;
 }
 
 .left-section .logo {

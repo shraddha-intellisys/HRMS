@@ -87,6 +87,8 @@ export class AdminProfileComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.profilePhotos[index] = reader.result as string;
+          // Optional: Auto-save immediately when photo changes
+          // this.savePhotosToLocalStorage();
         };
         reader.readAsDataURL(file);
       }

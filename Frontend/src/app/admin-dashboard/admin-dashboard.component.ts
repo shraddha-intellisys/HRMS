@@ -271,11 +271,6 @@ export class AdminDashboardComponent implements OnInit {
 }
 
 
-
-
-
-
-
   // Employee management
   get filteredEmployeeList() {
     return this.employeeSearch 
