@@ -30,6 +30,23 @@ export class AdminProfileComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     this.initializeEditModes();
+    this.loadPhotosFromLocalStorage(); // Load saved photos on init
+  }
+
+  // Load photos from localStorage
+  private loadPhotosFromLocalStorage(): void {
+    const savedPhotos = localStorage.getItem('adminProfilePhotos');
+    if (savedPhotos) {
+      this.profilePhotos = JSON.parse(savedPhotos);
+    } else {
+      // Initialize with default photos if nothing is saved
+      this.profilePhotos = new Array(this.adminNames.length).fill(null);
+    }
+  }
+
+  // Save photos to localStorage
+  private savePhotosToLocalStorage(): void {
+    localStorage.setItem('adminProfilePhotos', JSON.stringify(this.profilePhotos));
     this.loadStoredPhotos();
   }
 
@@ -75,6 +92,19 @@ export class AdminProfileComponent implements OnInit {
     this.profileFormArray.at(index).enable();
   }
 
+  onSave(index: number): void {
+    const profile = this.profileFormArray.at(index);
+    if (profile.valid) {
+      this.editMode[index] = false;
+      this.showPassword[index] = false;
+      profile.disable();
+      this.savePhotosToLocalStorage(); // Save photos when clicking "Save"
+      console.log(`Profile "${this.adminNames[index]}" updated:`, profile.value);
+    } else {
+      profile.markAllAsTouched();
+    }
+  }
+
   togglePassword(index: number): void {
     this.showPassword[index] = !this.showPassword[index];
   }
@@ -89,43 +119,11 @@ export class AdminProfileComponent implements OnInit {
           this.profilePhotos[index] = reader.result as string;
           // Optional: Auto-save immediately when photo changes
           // this.savePhotosToLocalStorage();
+          // Optional: Auto-save immediately when photo changes
+          // this.savePhotosToLocalStorage();
         };
         reader.readAsDataURL(file);
       }
     }
   }
-
-  onSave(index: number): void {
-    const profileForm = this.profiles[index];
-
-    if (!this.profilePhotos[index]) {
-      alert("Please upload a profile photo.");
-      return;
-    }
-
-    if (profileForm.valid) {
-      const { email, password } = profileForm.value;
-
-      // Save data to localStorage
-      localStorage.setItem(`email_${index}`, email);
-      localStorage.setItem(`password_${index}`, password);
-      localStorage.setItem(`photo_${index}`, this.profilePhotos[index] || '');
-      
-
-      this.editMode[index] = false;
-      this.showPassword[index] = false;
-      this.profileFormArray.at(index).disable();
-      
-     
-      console.log(`Saved: ${email}`);
-      console.log(`Saved: ${email}`);
-    } else {
-      profileForm.markAllAsTouched();
-      
-    }
-  }
-}
-
-function initializeEditModes() {
-  throw new Error('Function not implemented.');
 }
