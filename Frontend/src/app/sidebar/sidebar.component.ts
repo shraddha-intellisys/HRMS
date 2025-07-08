@@ -16,11 +16,11 @@ export class SidebarComponent {
     profile: false,
     payroll: false
   };
- role: string = '';
+  role: string = '';
 
-ngOnInit() {
-  this.role = localStorage.getItem('role') || 'user';
-}
+  ngOnInit() {
+    this.role = localStorage.getItem('role') || '';
+  }
 
   toggleDropdown(section: keyof typeof this.isDropdownOpen): void {
     this.isDropdownOpen[section] = !this.isDropdownOpen[section];

@@ -19,7 +19,8 @@ import {
   withI18nSupport,
   withIncrementalHydration,
   withNoHttpTransferCache
-} from "./chunk-E2WWXVHO.js";
+} from "./chunk-J65IX2GM.js";
+import "./chunk-LTTVLZRK.js";
 import {
   BrowserDomAdapter,
   BrowserGetTestability,
@@ -39,7 +40,6 @@ import {
   REMOVE_STYLES_ON_COMPONENT_DESTROY,
   SharedStylesHost
 } from "./chunk-TFBX2FTB.js";
-import "./chunk-LTTVLZRK.js";
 import {
   getDOM
 } from "./chunk-NZGRJSNR.js";

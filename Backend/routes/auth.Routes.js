@@ -6,55 +6,59 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 require('dotenv').config();
 
-router.post("/signup", async (req, res) => {
-    try {
-        const { username, email, password, role } = req.body;
-        const existingUser = await User.findOne({ email });
-        if (existingUser) return res.status(400).json({ message: "User already exists!" });
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const empID = uuidv4();
-        const userID = uuidv4();
-
-        const newUser = new User({ username, email, password: hashedPassword, empID, userID, role });
-        await newUser.save();
-
-        res.status(201).json({ message: "User registered successfully!", empID, userID });
-    } catch (error) {
-        res.status(500).json({ message: "Signup failed", error: error.message });
-    }
-});
-
 router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await User.findOne({ username });
-        if (!user) return res.status(401).json({ message: "User not found" });
+        
+        if (!username || !password) {
+            return res.status(400).json({ success: false, message: "Username/Email and password are required" });
+        }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
-
-        const token = jwt.sign(
-            {
+        // 1. Try admin login (users collection, by username)
+        const User = require('../models/user');
+        let user = await User.findOne({ username });
+        if (user && await bcrypt.compare(password, user.password)) {
+            // Admin login
+            const token = jwt.sign({
                 userId: user._id,
-                employeeId: user.empID,
                 username: user.username,
-                role: user.role
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
+                role: 'admin'
+            }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            return res.json({
+                success: true,
+                token,
+                userId: user._id,
+                username: user.username,
+                role: 'admin'
+            });
+        }
 
-        res.json({
-            success: true,
-            token,
-            userId: user._id,
-            employeeId: user.empID,
-            username: user.username,
-            role: user.role
-        });
+        // 2. Try employee login (employees collection, by email)
+        const Employee = require('../models/employeeSchema');
+        let employee = await Employee.findOne({ email: username });
+        if (employee && await bcrypt.compare(password, employee.password)) {
+            const token = jwt.sign({
+                userId: employee._id,
+                employeeId: employee.employeeCode,
+                email: employee.email,
+                role: 'employee'
+            }, process.env.JWT_SECRET, { expiresIn: "1h" });
+            return res.json({
+                success: true,
+                token,
+                userId: employee._id,
+                employeeId: employee.employeeCode,
+                email: employee.email,
+                username: employee.name,
+                role: 'employee'
+            });
+        }
+
+        // 3. If neither found
+        return res.status(401).json({ success: false, message: "Invalid credentials" });
     } catch (error) {
-        res.status(500).json({ message: "Login failed", error: error.message });
+        console.error('Login error:', error);
+        res.status(500).json({ success: false, message: "Login failed", error: error.message });
     }
 });
 

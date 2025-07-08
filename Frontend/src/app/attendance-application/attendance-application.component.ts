@@ -115,10 +115,12 @@ export class AttendanceApplicationComponent implements OnInit {
           alert('Application submitted successfully');
           this.resetForm();
         },
+
         error: (err) => {
           console.error('Error submitting application:', err);
           alert('Error submitting application');
         },
+        
         complete: () => {
           this.isSubmitting = false;
         }

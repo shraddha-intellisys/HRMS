@@ -121,8 +121,11 @@
   <h4>Feed</h4>
   <p *ngIf="feedItems.length === 0">No new updates</p>
   <ul *ngIf="feedItems.length > 0">
-    <li *ngFor="let feed of feedItems">{{ feed }}</li>
-  </ul>
+  <li *ngFor="let feed of feedItems">
+    {{ feed.text }} — <small>{{ feed.date | date:'medium' }}</small>
+  </li>
+</ul>
+
 </div>
 
 

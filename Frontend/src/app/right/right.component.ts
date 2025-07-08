@@ -43,7 +43,8 @@ export class RightComponent implements OnInit {
   // Admin dashboard data
   welcomeMessage = '';
   newsItems: string[] = [];
-  feedItems: string[] = [];
+  feedItems: { text: string; date: string }[] = [];
+
   empDocuments: any[] = [];
   reminders: any[] = [];
   todoItems: any[] = [];

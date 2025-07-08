@@ -11,7 +11,6 @@ import { ProfileComponent } from '../profile/profile.component';
 import { RightComponent } from '../right/right.component';
 import { ScheduleComponent } from '../schedule/schedule.component'; // ✅ Correct spelling
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { SignUpComponent } from '../sign-up/sign-up.component';
 import { TopNavComponent } from '../top-nav/top-nav.component';
 import { EmployeeComponent } from '../employee/employee.component';
 import { Holiday } from '../holiday/holiday.component';
@@ -24,7 +23,6 @@ const routes: Routes = [
    {path: '', component: AdminLoginComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
-  { path: 'signup', component: SignUpComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'right', component: RightComponent },
   { path: 'shedule', component: ScheduleComponent }, // ✅ Correct path for Schedule

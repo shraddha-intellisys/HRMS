@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
 
 import { AttendanceApplicationComponent } from './attendance-application/attendance-application.component';
 import { LeaveComponent } from './leave/leave.component';
@@ -29,7 +28,6 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
-  { path: 'signup', component: SignUpComponent },
 { path: 'right', component: RightComponent },
 { path: 'profile', component: ProfileComponent },
 {path:'shedule', component: ScheduleComponent},

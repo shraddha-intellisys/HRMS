@@ -229,6 +229,8 @@ export class AdminDashboardComponent implements OnInit {
         this.todoItems = data?.todoItems || [];
         this.newJoinees = data?.newJoinees || [];
         this.documents = data?.documents || [];
+        this.feedItems = data?.feedItems || [];
+        this.reminders = data?.reminders || [];
       },
       error: (err) => console.error('Error fetching dashboard data:', err)
     });
@@ -241,7 +243,9 @@ export class AdminDashboardComponent implements OnInit {
       empDocuments: this.empDocuments,
       todoItems: this.todoItems,
       newJoinees: this.newJoinees,
-      documents: this.documents
+      documents: this.documents,
+      feedItems: this.feedItems,
+      reminders: this.reminders
     };
 
     this.http.put<any>('http://localhost:5000/api/admin-dashboard', data).subscribe({
@@ -485,28 +489,31 @@ export class AdminDashboardComponent implements OnInit {
       type: 'General',
       notes: ''
     });
+    this.saveDashboardData();
   }
 
   removeReminder(index: number): void {
     this.reminders.splice(index, 1);
-    this.saveLocalData();
+    this.saveDashboardData();
   }
 
   // Feed methods
   addFeedItem(): void {
-    if (this.feedText.trim()) {
-      this.feedItems.unshift({
-        text: this.feedText,
-        date: new Date()
-      });
-      this.feedText = '';
-      this.saveLocalData();
-    }
+  if (this.feedText.trim()) {
+    const newFeed = {
+      text: this.feedText,
+      date: new Date()
+    };
+    this.feedItems.unshift(newFeed);
+    this.feedText = '';
+    this.saveDashboardData();  // ✅ Save to DB instead of local
   }
+}
+
 
   deleteFeedItem(index: number): void {
     this.feedItems.splice(index, 1);
-    this.saveLocalData();
+    this.saveDashboardData();
   }
 
   // Employee document methods

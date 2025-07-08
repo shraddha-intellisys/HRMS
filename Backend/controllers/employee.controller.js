@@ -1,8 +1,17 @@
 const Employee = require('../models/employeeSchema');
 
+const bcrypt = require('bcryptjs');
+
 exports.addEmployee = async (req, res) => {
   try {
-    const newEmployee = new Employee(req.body);
+    const employeeData = { ...req.body };
+    
+    // Hash password if provided
+    if (employeeData.password) {
+      employeeData.password = await bcrypt.hash(employeeData.password, 10);
+    }
+    
+    const newEmployee = new Employee(employeeData);
     await newEmployee.save();
 
     res.status(201).json({

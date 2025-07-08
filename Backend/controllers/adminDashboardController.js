@@ -79,50 +79,50 @@ exports.updateDashboard = async (req, res) => {
       dashboard = new AdminDashboard(update);
       await dashboard.save();
     } else {
-      // 📌 Check and notify for each section
+      // 📌 Notify for each section
 
       // 🔔 Reminders
       const oldReminders = dashboard.reminders || [];
       const newReminders = update.reminders || [];
       if (newReminders.length > oldReminders.length) {
-        const addedReminders = newReminders.slice(oldReminders.length);
-        for (const reminder of addedReminders) {
+        const added = newReminders.slice(oldReminders.length);
+        for (const reminder of added) {
           await Notification.create({
             recipient: 'all',
             title: 'New Reminder Added',
-            message: `Admin added a new reminder titled "${reminder.title}".`,
+            message: `Admin added a reminder: "${reminder.title}"`,
             source: 'reminders',
             createdAt: new Date(),
           });
         }
       }
 
-      // 🔔 News Items
+      // 🔔 News
       const oldNews = dashboard.newsItems || [];
       const newNews = update.newsItems || [];
       if (newNews.length > oldNews.length) {
-        const addedNews = newNews.slice(oldNews.length);
-        for (const item of addedNews) {
+        const added = newNews.slice(oldNews.length);
+        for (const news of added) {
           await Notification.create({
             recipient: 'all',
             title: 'News Updated',
-            message: `Admin posted in News: "${item}"`,
+            message: `Admin posted in News: "${news}"`,
             source: 'newsItems',
             createdAt: new Date(),
           });
         }
       }
 
-      // 🔔 To-Do List
+      // 🔔 To-Dos
       const oldTodos = dashboard.todoItems || [];
       const newTodos = update.todoItems || [];
       if (newTodos.length > oldTodos.length) {
-        const addedTodos = newTodos.slice(oldTodos.length);
-        for (const todo of addedTodos) {
+        const added = newTodos.slice(oldTodos.length);
+        for (const todo of added) {
           await Notification.create({
             recipient: 'all',
             title: 'New To-Do Added',
-            message: `Admin added a to-do task: "${todo.task}"`,
+            message: `Admin added a task: "${todo.task}"`,
             source: 'todoItems',
             createdAt: new Date(),
           });
@@ -133,28 +133,29 @@ exports.updateDashboard = async (req, res) => {
       const oldFeeds = dashboard.feedItems || [];
       const newFeeds = update.feedItems || [];
       if (newFeeds.length > oldFeeds.length) {
-        const addedFeeds = newFeeds.slice(oldFeeds.length);
-        for (const feed of addedFeeds) {
+        const added = newFeeds.slice(oldFeeds.length);
+        for (const feed of added) {
+          const feedText = typeof feed === 'string' ? feed : feed.text;
           await Notification.create({
             recipient: 'all',
             title: 'Feed Updated',
-            message: `Admin added a feed item: "${feed}"`,
+            message: `Admin added a feed: "${feedText}"`,
             source: 'feedItems',
             createdAt: new Date(),
           });
         }
       }
 
-      // 🔔 Employee Documents
+      // 🔔 Emp Docs
       const oldDocs = dashboard.empDocuments || [];
       const newDocs = update.empDocuments || [];
       if (newDocs.length > oldDocs.length) {
-        const addedDocs = newDocs.slice(oldDocs.length);
-        for (const doc of addedDocs) {
+        const added = newDocs.slice(oldDocs.length);
+        for (const doc of added) {
           await Notification.create({
             recipient: 'all',
-            title: 'Document Uploaded',
-            message: `Admin uploaded a new document: "${doc.name}"`,
+            title: 'New Document',
+            message: `Uploaded: "${doc.name}"`,
             source: 'empDocuments',
             createdAt: new Date(),
           });
@@ -165,11 +166,11 @@ exports.updateDashboard = async (req, res) => {
       const oldJoinees = dashboard.newJoinees || [];
       const newJoinees = update.newJoinees || [];
       if (newJoinees.length > oldJoinees.length) {
-        const addedJoinees = newJoinees.slice(oldJoinees.length);
-        for (const j of addedJoinees) {
+        const added = newJoinees.slice(oldJoinees.length);
+        for (const j of added) {
           await Notification.create({
             recipient: 'all',
-            title: 'New Joiner Alert',
+            title: 'New Joiner',
             message: `${j.name} joined on ${j.joinDate}`,
             source: 'newJoinees',
             createdAt: new Date(),
@@ -184,8 +185,8 @@ exports.updateDashboard = async (req, res) => {
 
     res.json({ success: true, dashboard });
   } catch (err) {
-    console.error('🔥 Error updating dashboard:', err);
-    res.status(500).json({ success: false, message: 'Failed to update dashboard', error: err.message });
+    console.error("🔥 Error updating dashboard:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 };
 

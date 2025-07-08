@@ -26,7 +26,7 @@ const AdminDashboardSchema = new mongoose.Schema({
   welcomeMessage: String,
   newsItems: [String],
   reminders: [ReminderSchema],
-  feedItems: [String],
+  feedItems: [{ text: String, date: Date }],
   empDocuments: [EmpDocumentSchema],
   todoItems: [TodoItemSchema],
   newJoinees: [NewJoineeSchema]

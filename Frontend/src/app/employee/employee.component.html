@@ -11,6 +11,7 @@
                 <h2>Employee Profile</h2>
                 <p><strong>Name:</strong> {{ profileData.name }}</p>
                 <p><strong>Email:</strong> {{ profileData.email }}</p>
+                <p><strong>Password:</strong> {{ profileData.password }}</p>
                 <p><strong>Employee Code:</strong> {{ profileData.employeeCode }}</p>
                 <p><strong>Department:</strong> {{ profileData.department }}</p>
                 <p><strong>Manager:</strong> {{ profileData.manager }}</p>
@@ -32,6 +33,11 @@
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input id="email" formControlName="email" type="email" placeholder="Email" />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" formControlName="password" type="password" placeholder="Password" />
                 </div>
                 
                 <div class="form-group">

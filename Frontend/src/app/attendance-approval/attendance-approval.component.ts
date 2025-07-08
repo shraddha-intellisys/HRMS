@@ -192,8 +192,7 @@ export class AttendanceApprovalComponent implements OnInit {
 
   saveHoliday() {
     if (!this.editingHolidayName.trim() || !this.selectedDate || !this.selectedDate.fullDate) return;
-
-    const holidayData = {
+     const holidayData = {
       date: this.selectedDate.fullDate,
       name: this.editingHolidayName,
       reason: this.editingHolidayReason,
